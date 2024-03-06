@@ -1,0 +1,25 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>io.github.pandier.intellijdiscordrp</id>
+    <name>Discord Rich Presence</name>
+    <vendor url="https://github.com/pandier">Pandier</vendor>
+
+    <description><![CDATA[
+        This plugin adds support for Discord Rich Presence.
+  ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener" />
+    </extensions>
+
+    <applicationListeners>
+        <listener
+                class="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"
+                topic="com.intellij.openapi.project.ProjectManagerListener" />
+        <listener
+                class="io.github.pandier.intellijdiscordrp.listener.RichPresenceFileListener"
+                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
+    </applicationListeners>
+</idea-plugin>
