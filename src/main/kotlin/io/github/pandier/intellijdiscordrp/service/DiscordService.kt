@@ -24,7 +24,7 @@ class DiscordService : Disposable {
             }
         )
     }.getOrElse {
-        DiscordRichPresencePlugin.logger.error("Failed to initialize rich presence", it)
+        DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK could not be initialized", it)
         null
     }
 
