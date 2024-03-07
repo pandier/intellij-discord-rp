@@ -12,6 +12,8 @@ object DefaultIconTheme : IconTheme {
         "java" to "$ICON_REPOSITORY/java.png",
         "rust" to "$ICON_REPOSITORY/rust.png",
         "kotlin" to "$ICON_REPOSITORY/kotlin.png",
+        "javascript" to "$ICON_REPOSITORY/javascript.png",
+        "typescript" to "$ICON_REPOSITORY/typescript.png",
     )
 
     override fun getPlatform(info: ApplicationInfo): String =
