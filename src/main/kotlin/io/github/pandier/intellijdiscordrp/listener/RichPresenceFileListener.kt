@@ -4,10 +4,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.vfs.VirtualFile
-import io.github.pandier.intellijdiscordrp.FileRichPresence
-import io.github.pandier.intellijdiscordrp.ProjectRichPresence
 import io.github.pandier.intellijdiscordrp.service.discordService
-import io.github.pandier.intellijdiscordrp.service.timeTrackingService
 
 class RichPresenceFileListener : FileEditorManagerListener {
 

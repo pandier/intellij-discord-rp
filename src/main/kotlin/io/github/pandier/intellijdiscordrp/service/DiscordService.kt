@@ -8,7 +8,6 @@ import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
-import io.github.pandier.intellijdiscordrp.RichPresence
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactoryBuilder
 
