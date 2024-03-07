@@ -16,7 +16,7 @@ val discordService: DiscordService
 
 @Service
 class DiscordService : Disposable {
-    private val core: Core? = runCatching {
+    private var core: Core? = runCatching {
         Core(
             CreateParams().apply {
                 clientID = 1107202385799041054L
@@ -28,6 +28,20 @@ class DiscordService : Disposable {
         null
     }
 
+    fun accessInternal(block: (Core) -> Unit) {
+        if (core?.isOpen == false) {
+            DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK was disconnected")
+            core = null
+        }
+
+        try {
+            core?.let(block)
+        } catch (ex: RuntimeException) {
+            DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK could not sent activity", ex)
+            core = null
+        }
+    }
+
     fun changeActivity(project: Project, block: ActivityFactoryBuilder.() -> Unit = {}) =
         changeActivity(ActivityFactoryBuilder(project).apply(block).build())
 
@@ -36,14 +50,14 @@ class DiscordService : Disposable {
 
     fun changeActivity(activity: Activity?) {
         if (activity != null) {
-            core?.activityManager()?.updateActivity(activity)
+            accessInternal { it.activityManager()?.updateActivity(activity) }
         } else {
             clearActivity()
         }
     }
 
     fun clearActivity() =
-        core?.activityManager()?.clearActivity()
+        accessInternal { it.activityManager()?.clearActivity() }
 
     override fun dispose() {
         core?.close()
