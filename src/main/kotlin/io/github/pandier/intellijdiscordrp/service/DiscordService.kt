@@ -28,7 +28,7 @@ class DiscordService : Disposable {
         null
     }
 
-    fun accessInternal(block: (Core) -> Unit) {
+    private fun accessInternal(block: (Core) -> Unit) {
         if (core?.isOpen == false) {
             DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK was disconnected")
             core = null
