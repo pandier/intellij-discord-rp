@@ -11,13 +11,16 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener" />
+        <applicationService
+                serviceImplementation="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsState" />
 
         <applicationConfigurable
             parentId="tools"
             instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
             id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
             displayName="Discord Rich Presence" />
+
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener" />
     </extensions>
 
     <applicationListeners>
