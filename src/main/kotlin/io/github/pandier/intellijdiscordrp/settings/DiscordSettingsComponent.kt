@@ -6,14 +6,14 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
 import com.intellij.util.xmlb.XmlSerializerUtil
 
-val discordSettingsState: DiscordSettingsState
+val discordSettingsComponent: DiscordSettingsComponent
     get() = service()
 
 @State(
-    name = "io.github.pandier.intellijdiscordrp.settings.DiscordSettingsState",
+    name = "io.github.pandier.intellijdiscordrp.settings.DiscordSettingsComponent",
     storages = [Storage("discordrp.xml")]
 )
-class DiscordSettingsState : PersistentStateComponent<DiscordSettings> {
+class DiscordSettingsComponent : PersistentStateComponent<DiscordSettings> {
     private val state = DiscordSettings()
 
     override fun getState(): DiscordSettings = state

@@ -9,7 +9,7 @@ import javax.swing.JComponent
 
 class DiscordSettingsConfigurable : Configurable {
     private val panel = panel {
-        val state = discordSettingsState.state
+        val state = discordSettingsComponent.state
 
         group("Project") {
             row("Details:") {

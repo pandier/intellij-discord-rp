@@ -12,7 +12,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceImplementation="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsState" />
+                serviceImplementation="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsComponent" />
 
         <applicationConfigurable
             parentId="tools"
