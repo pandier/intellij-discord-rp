@@ -13,12 +13,12 @@ class DiscordSettingsConfigurable : Configurable {
         group("Project") {
             row("Details:") {
                 textField()
-                    .columns(COLUMNS_LARGE)
+                    .align(AlignX.FILL)
                     .bindText(state::projectDetails)
             }
             row("State:") {
                 textField()
-                    .columns(COLUMNS_LARGE)
+                    .align(AlignX.FILL)
                     .bindText(state::projectState)
             }
 
@@ -59,12 +59,12 @@ class DiscordSettingsConfigurable : Configurable {
         group("File") {
             row("Details:") {
                 textField()
-                    .columns(COLUMNS_LARGE)
+                    .align(AlignX.FILL)
                     .bindText(state::fileDetails)
             }
             row("State:") {
                 textField()
-                    .columns(COLUMNS_LARGE)
+                    .align(AlignX.FILL)
                     .bindText(state::fileState)
             }
 
