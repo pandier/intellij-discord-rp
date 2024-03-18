@@ -4,12 +4,13 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
-import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
-import io.github.pandier.intellijdiscordrp.activity.ActivityFactoryBuilder
+import io.github.pandier.intellijdiscordrp.activity.ActivityInfo
+import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 
 val discordService: DiscordService
     get() = service()
@@ -24,7 +25,10 @@ class DiscordService : Disposable {
             }
         )
     }.getOrElse {
-        DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK could not be initialized", it)
+        DiscordRichPresencePlugin.logger.info(
+            "Ignoring rich presence, because Discord SDK could not be initialized",
+            it
+        )
         null
     }
 
@@ -37,18 +41,21 @@ class DiscordService : Disposable {
         try {
             core?.let(block)
         } catch (ex: RuntimeException) {
-            DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK could not sent activity", ex)
+            DiscordRichPresencePlugin.logger.info(
+                "Ignoring rich presence, because Discord SDK could not sent activity",
+                ex
+            )
             core = null
         }
     }
 
-    fun changeActivity(project: Project, block: ActivityFactoryBuilder.() -> Unit = {}) =
-        changeActivity(ActivityFactoryBuilder(project).apply(block).build())
+    fun changeActivity(project: Project, file: VirtualFile? = null) =
+        changeActivity(ActivityInfo(project, file))
 
-    fun changeActivity(activityFactory: ActivityFactory) =
-        changeActivity(activityFactory.create())
+    fun changeActivity(activityInfo: ActivityInfo) =
+        changeActivity(activityInfo.createActivity(discordSettingsComponent.state))
 
-    fun changeActivity(activity: Activity?) {
+    private fun changeActivity(activity: Activity?) {
         if (activity != null) {
             accessInternal { it.activityManager()?.updateActivity(activity) }
         } else {

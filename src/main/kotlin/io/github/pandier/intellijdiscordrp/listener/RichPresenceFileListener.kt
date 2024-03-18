@@ -9,9 +9,7 @@ import io.github.pandier.intellijdiscordrp.service.discordService
 class RichPresenceFileListener : FileEditorManagerListener {
 
     override fun fileOpened(source: FileEditorManager, file: VirtualFile) {
-        discordService.changeActivity(source.project) {
-            this.file = file
-        }
+        discordService.changeActivity(source.project, file)
     }
 
     override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
@@ -23,8 +21,6 @@ class RichPresenceFileListener : FileEditorManagerListener {
             fileClosed(event.manager, event.oldFile)
             return
         }
-        discordService.changeActivity(event.manager.project) {
-            this.file = event.newFile
-        }
+        discordService.changeActivity(event.manager.project, event.newFile)
     }
 }
