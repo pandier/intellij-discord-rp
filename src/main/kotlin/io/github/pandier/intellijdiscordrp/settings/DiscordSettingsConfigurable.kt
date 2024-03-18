@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.settings
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
+import io.github.pandier.intellijdiscordrp.service.discordService
 import javax.swing.JComponent
 
 class DiscordSettingsConfigurable : Configurable {
@@ -108,7 +109,10 @@ class DiscordSettingsConfigurable : Configurable {
 
     override fun isModified(): Boolean = panel.isModified()
 
-    override fun apply() = panel.apply()
+    override fun apply() {
+        panel.apply()
+        discordService.updateActivity()
+    }
 
     override fun reset() = panel.reset()
 }

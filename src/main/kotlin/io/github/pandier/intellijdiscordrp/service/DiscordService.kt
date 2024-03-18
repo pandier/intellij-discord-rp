@@ -7,7 +7,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
-import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityInfo
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
@@ -32,6 +31,8 @@ class DiscordService : Disposable {
         null
     }
 
+    private var activityInfo: ActivityInfo? = null
+
     private fun accessInternal(block: (Core) -> Unit) {
         if (core?.isOpen == false) {
             DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK was disconnected")
@@ -52,19 +53,18 @@ class DiscordService : Disposable {
     fun changeActivity(project: Project, file: VirtualFile? = null) =
         changeActivity(ActivityInfo(project, file))
 
-    fun changeActivity(activityInfo: ActivityInfo) =
-        changeActivity(activityInfo.createActivity(discordSettingsComponent.state))
-
-    private fun changeActivity(activity: Activity?) {
-        if (activity != null) {
-            accessInternal { it.activityManager()?.updateActivity(activity) }
-        } else {
-            clearActivity()
-        }
+    @Suppress("MemberVisibilityCanBePrivate")
+    fun changeActivity(activityInfo: ActivityInfo?) {
+        this.activityInfo = activityInfo
+        val activity = activityInfo?.createActivity(discordSettingsComponent.state)
+        accessInternal { it.activityManager()?.updateActivity(activity) }
     }
 
     fun clearActivity() =
-        accessInternal { it.activityManager()?.clearActivity() }
+        changeActivity(null)
+
+    fun updateActivity() =
+        changeActivity(activityInfo)
 
     override fun dispose() {
         core?.close()
