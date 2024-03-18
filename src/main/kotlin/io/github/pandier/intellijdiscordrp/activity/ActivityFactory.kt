@@ -19,7 +19,7 @@ class ActivityFactory(
         if (state.isNotEmpty())
             it.state = info.format(state, iconTheme)
 
-        if (largeImage.isNotEmpty() && smallImageText.isNotEmpty()) {
+        if (largeImage.isNotEmpty() && largeImageText.isNotEmpty()) {
             it.assets().largeImage = info.format(largeImage, iconTheme)
             it.assets().largeText = info.format(largeImageText, iconTheme)
         }
