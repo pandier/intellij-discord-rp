@@ -4,8 +4,8 @@ import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.fileTypes.FileType
 
 object DefaultIconTheme : IconTheme {
-    private const val PLATFORM = "idea"
     private const val ICON_REPOSITORY = "https://raw.githubusercontent.com/pandier/intellij-discord-rp/main/icons"
+    private const val PLATFORM = "$ICON_REPOSITORY/idea.png"
     private const val FILE_TYPE_FALLBACK = "$ICON_REPOSITORY/file.png"
 
     private val fileTypeMapping = mapOf(
