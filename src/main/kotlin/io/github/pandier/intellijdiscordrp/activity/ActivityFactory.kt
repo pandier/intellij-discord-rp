@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.activity
 import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.icon.DefaultIconTheme
 import io.github.pandier.intellijdiscordrp.icon.IconTheme
+import io.github.pandier.intellijdiscordrp.service.timeTrackingService
 
 class ActivityFactory(
     private val iconTheme: IconTheme = DefaultIconTheme,
@@ -29,6 +30,6 @@ class ActivityFactory(
             it.assets().smallText = info.format(smallImageText, iconTheme)
         }
 
-        it.timestamps().start = info.start
+        it.timestamps().start = timeTrackingService.getOrTrack(info.project)
     }
 }

@@ -6,14 +6,12 @@ import com.intellij.openapi.vfs.VirtualFile
 import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.icon.IconTheme
 import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
-import java.time.Instant
 
 @Suppress("MemberVisibilityCanBePrivate")
 class ActivityInfo(
     val project: Project,
     val file: VirtualFile? = null,
     val app: ApplicationInfo = ApplicationInfo.getInstance(),
-    val start: Instant = Instant.now(),
 ) {
     fun getActivityFactory(settings: DiscordSettings): ActivityFactory = when {
         file != null -> settings.fileActivityFactory
