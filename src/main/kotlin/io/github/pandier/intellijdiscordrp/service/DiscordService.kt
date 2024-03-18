@@ -24,10 +24,7 @@ class DiscordService : Disposable {
             }
         )
     }.getOrElse {
-        DiscordRichPresencePlugin.logger.info(
-            "Ignoring rich presence, because Discord SDK could not be initialized",
-            it
-        )
+        DiscordRichPresencePlugin.logger.info("Failed to connect to Discord client", it)
         null
     }
 
@@ -35,7 +32,7 @@ class DiscordService : Disposable {
 
     private fun accessInternal(block: (Core) -> Unit) {
         if (core?.isOpen == false) {
-            DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK was disconnected")
+            DiscordRichPresencePlugin.logger.info("Disabling rich presence, because Discord client disconnected")
             core = null
         }
 
@@ -43,7 +40,7 @@ class DiscordService : Disposable {
             core?.let(block)
         } catch (ex: RuntimeException) {
             DiscordRichPresencePlugin.logger.info(
-                "Ignoring rich presence, because Discord SDK could not sent activity",
+                "Disabling rich presence, because Discord activity could not be sent",
                 ex
             )
             core = null
