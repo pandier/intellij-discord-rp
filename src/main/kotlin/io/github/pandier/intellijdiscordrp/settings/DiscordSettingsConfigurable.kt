@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.settings
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
+import io.github.pandier.intellijdiscordrp.icon.IconType
 import io.github.pandier.intellijdiscordrp.service.discordService
 import javax.swing.JComponent
 
@@ -30,8 +31,8 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::projectLargeImage)
+                    comboBox(listOf(IconType.APPLICATION))
+                        .bindItem(state::projectLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::projectLargeImageText)
@@ -47,8 +48,8 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::projectSmallImage)
+                    comboBox(listOf(IconType.APPLICATION))
+                        .bindItem(state::projectSmallImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::projectSmallImageText)
@@ -76,8 +77,8 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::fileLargeImage)
+                    comboBox(listOf(IconType.APPLICATION, IconType.FILE))
+                        .bindItem(state::fileLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::fileLargeImageText)
@@ -93,8 +94,8 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::fileSmallImage)
+                    comboBox(listOf(IconType.APPLICATION, IconType.FILE))
+                        .bindItem(state::fileSmallImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::fileSmallImageText)
