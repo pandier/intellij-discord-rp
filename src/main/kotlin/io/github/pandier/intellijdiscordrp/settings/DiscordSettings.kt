@@ -8,6 +8,7 @@ data class DiscordSettings(
     var projectDetails: String = "{project_name}",
     var projectState: String = "",
     var projectLargeImage: IconType = IconType.APPLICATION,
+    var projectLargeImageEnabled: Boolean = true,
     var projectLargeImageText: String = "{app_name}",
     var projectSmallImage: IconType = IconType.APPLICATION,
     var projectSmallImageEnabled: Boolean = false,
@@ -15,6 +16,7 @@ data class DiscordSettings(
     var fileDetails: String = "{project_name}",
     var fileState: String = "Editing {file_name}",
     var fileLargeImage: IconType = IconType.FILE,
+    var fileLargeImageEnabled: Boolean = true,
     var fileLargeImageText: String = "{file_name}",
     var fileSmallImage: IconType = IconType.APPLICATION,
     var fileSmallImageEnabled: Boolean = true,
@@ -25,10 +27,10 @@ data class DiscordSettings(
             DefaultIconTheme,
             projectDetails,
             projectState,
-            projectLargeImage,
+            if (projectLargeImageEnabled) projectLargeImage else null,
             projectLargeImageText,
             if (projectSmallImageEnabled) projectSmallImage else null,
-            if (projectSmallImageEnabled) projectSmallImageText else ""
+            projectSmallImageText,
         )
 
     val fileActivityFactory: ActivityFactory
@@ -36,9 +38,9 @@ data class DiscordSettings(
             DefaultIconTheme,
             fileDetails,
             fileState,
-            fileLargeImage,
+            if (fileLargeImageEnabled) fileLargeImage else null,
             fileLargeImageText,
             if (fileSmallImageEnabled) fileSmallImage else null,
-            if (fileSmallImageEnabled) fileSmallImageText else ""
+            fileSmallImageText,
         )
 }
