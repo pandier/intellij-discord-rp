@@ -1,26 +1,24 @@
 package io.github.pandier.intellijdiscordrp.icon
 
-import com.intellij.openapi.application.ApplicationInfo
-import com.intellij.openapi.fileTypes.FileType
 import io.github.pandier.intellijdiscordrp.activity.ActivityInfo
 
 interface IconTheme {
 
     fun getByType(
         type: IconType,
-        activity: ActivityInfo,
-    ) = getByType(type, activity.app, activity.file?.fileType)
+        info: ActivityInfo,
+    ) = getByType(type, info.appProductCode, info.file?.type)
 
     fun getByType(
         type: IconType,
-        app: ApplicationInfo?,
-        file: FileType?,
+        appProductCode: String?,
+        fileType: String?,
     ): String? = when (type) {
-        IconType.APPLICATION -> app?.let { getPlatform(it) }
-        IconType.FILE -> file?.let { getFile(it) }
+        IconType.APPLICATION -> appProductCode?.let { getPlatform(it) }
+        IconType.FILE -> fileType?.let { getFile(it) }
     }
 
-    fun getPlatform(info: ApplicationInfo): String
+    fun getPlatform(productCode: String): String
 
-    fun getFile(type: FileType): String
+    fun getFile(type: String): String
 }

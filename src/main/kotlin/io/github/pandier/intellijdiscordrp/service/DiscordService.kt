@@ -57,7 +57,11 @@ class DiscordService : Disposable {
     }
 
     fun changeActivity(project: Project, file: VirtualFile? = null) =
-        changeActivity(ActivityInfo(project, file))
+        changeActivity(ActivityInfo.from(
+            start = timeTrackingService.getOrTrack(project),
+            project = project,
+            file = file,
+        ))
 
     fun changeActivity(activityInfo: ActivityInfo?) {
         this.activityInfo = activityInfo
