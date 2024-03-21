@@ -23,6 +23,18 @@
         <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener" />
     </extensions>
 
+    <actions>
+        <group id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
+               text="Discord Rich Presence"
+               popup="true">
+            <add-to-group group-id="ToolsMenu" />
+            <action id="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
+                    class="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
+                    text="Reconnect to Discord Client">
+            </action>
+        </group>
+    </actions>
+
     <applicationListeners>
         <listener
                 class="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"

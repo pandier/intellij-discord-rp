@@ -14,25 +14,28 @@ import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 val discordService: DiscordService
     get() = service()
 
+private fun connect(): Core? = runCatching {
+    Core(
+        CreateParams().apply {
+            clientID = 1107202385799041054L
+            flags = CreateParams.getDefaultFlags()
+        }
+    )
+}.getOrElse {
+    DiscordRichPresencePlugin.logger.info("Failed to connect to Discord Client", it)
+    null
+}
+
 @Service
+@Suppress("MemberVisibilityCanBePrivate")
 class DiscordService : Disposable {
-    private var core: Core? = runCatching {
-        Core(
-            CreateParams().apply {
-                clientID = 1107202385799041054L
-                flags = CreateParams.getDefaultFlags()
-            }
-        )
-    }.getOrElse {
-        DiscordRichPresencePlugin.logger.info("Failed to connect to Discord client", it)
-        null
-    }
+    private var core: Core? = connect()
 
     private var activityInfo: ActivityInfo? = null
 
     private fun accessInternal(block: (Core) -> Unit) {
         if (core?.isOpen == false) {
-            DiscordRichPresencePlugin.logger.info("Disabling rich presence, because Discord client disconnected")
+            DiscordRichPresencePlugin.logger.info("Disabling rich presence, because Discord Client disconnected")
             core = null
         }
 
@@ -47,10 +50,15 @@ class DiscordService : Disposable {
         }
     }
 
+    fun reconnect() {
+        core?.close()
+        core = connect()
+        updateActivity()
+    }
+
     fun changeActivity(project: Project, file: VirtualFile? = null) =
         changeActivity(ActivityInfo(project, file))
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun changeActivity(activityInfo: ActivityInfo?) {
         this.activityInfo = activityInfo
         val activity = activityInfo?.createActivity(discordSettingsComponent.state)
