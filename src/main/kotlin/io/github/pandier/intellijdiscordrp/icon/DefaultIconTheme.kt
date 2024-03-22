@@ -14,6 +14,10 @@ object DefaultIconTheme : IconTheme {
         "py" to "$APPLICATION_ICON_REPOSITORY/pc.png",
         "pe" to "$APPLICATION_ICON_REPOSITORY/pc.png",
         "ps" to "$APPLICATION_ICON_REPOSITORY/ps.png",
+        "ws" to "$APPLICATION_ICON_REPOSITORY/ws.png",
+        "cl" to "$APPLICATION_ICON_REPOSITORY/cl.png",
+        "go" to "$APPLICATION_ICON_REPOSITORY/go.png",
+        "rd" to "$APPLICATION_ICON_REPOSITORY/rd.png",
     )
 
     private const val FILE_FALLBACK = "$FILE_ICON_REPOSITORY/fallback.png"
