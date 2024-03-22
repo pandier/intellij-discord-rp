@@ -10,6 +10,9 @@ object DefaultIconTheme : IconTheme {
         "ic" to "$APPLICATION_ICON_REPOSITORY/ij.png",
         "iu" to "$APPLICATION_ICON_REPOSITORY/ij.png",
         "ie" to "$APPLICATION_ICON_REPOSITORY/ij.png",
+        "pc" to "$APPLICATION_ICON_REPOSITORY/pc.png",
+        "py" to "$APPLICATION_ICON_REPOSITORY/pc.png",
+        "pe" to "$APPLICATION_ICON_REPOSITORY/pc.png",
     )
 
     private const val FILE_FALLBACK = "$FILE_ICON_REPOSITORY/fallback.png"
