@@ -29,30 +29,30 @@ private fun connect(): Core? = runCatching {
 @Service
 @Suppress("MemberVisibilityCanBePrivate")
 class DiscordService : Disposable {
-    private var core: Core? = connect()
+    private var internal: Core? = connect()
 
     private var activityInfo: ActivityInfo? = null
 
     private fun accessInternal(block: (Core) -> Unit) {
-        if (core?.isOpen == false) {
+        if (internal?.isOpen == false) {
             DiscordRichPresencePlugin.logger.info("Disabling rich presence, because Discord Client disconnected")
-            core = null
+            internal = null
         }
 
         try {
-            core?.let(block)
+            internal?.let(block)
         } catch (ex: RuntimeException) {
             DiscordRichPresencePlugin.logger.info(
                 "Disabling rich presence, because Discord activity could not be sent",
                 ex
             )
-            core = null
+            internal = null
         }
     }
 
     fun reconnect() {
-        core?.close()
-        core = connect()
+        internal?.close()
+        internal = connect()
         updateActivity()
     }
 
@@ -76,6 +76,6 @@ class DiscordService : Disposable {
         changeActivity(activityInfo)
 
     override fun dispose() {
-        core?.close()
+        internal?.close()
     }
 }
