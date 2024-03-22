@@ -5,6 +5,8 @@ import io.github.pandier.intellijdiscordrp.icon.DefaultIconTheme
 import io.github.pandier.intellijdiscordrp.icon.IconType
 
 data class DiscordSettings(
+    var reconnectOnUpdate: Boolean = true,
+
     var projectDetails: String = "{project_name}",
     var projectState: String = "",
     var projectLargeImage: IconType = IconType.APPLICATION,
@@ -13,6 +15,7 @@ data class DiscordSettings(
     var projectSmallImage: IconType = IconType.APPLICATION,
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
+
     var fileDetails: String = "{project_name}",
     var fileState: String = "Editing {file_name}",
     var fileLargeImage: IconType = IconType.FILE,

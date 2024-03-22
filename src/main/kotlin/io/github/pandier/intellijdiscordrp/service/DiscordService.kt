@@ -20,9 +20,11 @@ private fun connect(): Core? = runCatching {
             clientID = 1107202385799041054L
             flags = CreateParams.getDefaultFlags()
         }
-    )
+    ).also {
+        DiscordRichPresencePlugin.logger.info("Connected to Discord Client")
+    }
 }.getOrElse {
-    DiscordRichPresencePlugin.logger.info("Failed to connect to Discord Client", it)
+    DiscordRichPresencePlugin.logger.debug("Failed to connect to Discord Client", it)
     null
 }
 
@@ -30,38 +32,38 @@ private fun connect(): Core? = runCatching {
 @Suppress("MemberVisibilityCanBePrivate")
 class DiscordService : Disposable {
     private var internal: Core? = connect()
-
     private var activityInfo: ActivityInfo? = null
 
     private fun accessInternal(block: (Core) -> Unit) {
-        if (internal?.isOpen == false) {
-            DiscordRichPresencePlugin.logger.info("Disabling rich presence, because Discord Client disconnected")
-            internal = null
-        }
+        if (internal == null && discordSettingsComponent.state.reconnectOnUpdate)
+            reconnect()
 
         try {
-            internal?.let(block)
+            internal?.also(block)
         } catch (ex: RuntimeException) {
+            internal?.close()
+            internal = null
+
             DiscordRichPresencePlugin.logger.info(
-                "Disabling rich presence, because Discord activity could not be sent",
+                "Disconnected from Discord Client",
                 ex
             )
-            internal = null
         }
     }
 
     fun reconnect() {
         internal?.close()
         internal = connect()
-        updateActivity()
     }
 
     fun changeActivity(project: Project, file: VirtualFile? = null) =
-        changeActivity(ActivityInfo.from(
-            start = timeTrackingService.getOrTrack(project),
-            project = project,
-            file = file,
-        ))
+        changeActivity(
+            ActivityInfo.from(
+                start = timeTrackingService.getOrTrack(project),
+                project = project,
+                file = file,
+            )
+        )
 
     fun changeActivity(activityInfo: ActivityInfo?) {
         this.activityInfo = activityInfo

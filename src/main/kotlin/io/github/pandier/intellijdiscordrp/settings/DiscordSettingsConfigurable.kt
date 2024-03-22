@@ -11,6 +11,11 @@ class DiscordSettingsConfigurable : Configurable {
     private val panel = panel {
         val state = discordSettingsComponent.state
 
+        row {
+            checkBox("Try reconnecting on activity update")
+                .bindSelected(state::reconnectOnUpdate)
+        }
+
         // Project activity factory settings
         group("Project") {
             row("Details:") {
