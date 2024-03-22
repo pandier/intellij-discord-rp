@@ -14,11 +14,11 @@ interface IconTheme {
         appProductCode: String?,
         fileType: String?,
     ): String? = when (type) {
-        IconType.APPLICATION -> appProductCode?.let { getPlatform(it) }
+        IconType.APPLICATION -> appProductCode?.let { getApplication(it) }
         IconType.FILE -> fileType?.let { getFile(it) }
     }
 
-    fun getPlatform(productCode: String): String
+    fun getApplication(productCode: String): String
 
     fun getFile(type: String): String
 }
