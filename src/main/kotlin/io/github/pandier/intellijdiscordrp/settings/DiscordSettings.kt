@@ -15,6 +15,8 @@ enum class IconTypeSetting(
 
 data class DiscordSettings(
     var reconnectOnUpdate: Boolean = true,
+    var customApplicationIdEnabled: Boolean = false,
+    var customApplicationId: String = "",
 
     var projectDetails: String = "{project_name}",
     var projectState: String = "",

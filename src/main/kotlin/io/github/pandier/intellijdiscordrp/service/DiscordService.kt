@@ -14,14 +14,20 @@ val discordService: DiscordService
     get() = service()
 
 private fun connect(): Core? = runCatching {
-    Core(
-        CreateParams().apply {
-            clientID = currentActivityApplicationType.discordApplicationId
-            flags = CreateParams.getDefaultFlags()
-        }
-    ).also {
-        DiscordRichPresencePlugin.logger.info("Connected to Discord Client")
+    val settings = discordSettingsComponent.state
+    val applicationId = if (settings.customApplicationIdEnabled) {
+        settings.customApplicationId.toLong()
+    } else {
+        currentActivityApplicationType.discordApplicationId
     }
+
+    val internal = Core(CreateParams().apply {
+        clientID = applicationId
+        flags = CreateParams.getDefaultFlags()
+    })
+
+    DiscordRichPresencePlugin.logger.info("Connected to Discord Client")
+    return internal
 }.getOrElse {
     DiscordRichPresencePlugin.logger.debug("Failed to connect to Discord Client", it)
     null

@@ -15,6 +15,14 @@ class DiscordSettingsConfigurable : Configurable {
                 .bindSelected(state::reconnectOnUpdate)
         }
 
+        row {
+            val customApplicationIdCheckBox = checkBox("Custom application id:")
+                .bindSelected(state::customApplicationIdEnabled)
+            textField()
+                .bindText(state::customApplicationId)
+                .enabledIf(customApplicationIdCheckBox.selected)
+        }
+
         // Project activity factory settings
         group("Project") {
             row("Details:") {
@@ -120,7 +128,7 @@ class DiscordSettingsConfigurable : Configurable {
 
     override fun apply() {
         panel.apply()
-        discordService.updateActivity()
+        discordService.reconnect()
     }
 
     override fun reset() = panel.reset()
