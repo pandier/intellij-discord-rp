@@ -7,6 +7,7 @@ import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
+import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 
 val discordService: DiscordService
@@ -15,7 +16,7 @@ val discordService: DiscordService
 private fun connect(): Core? = runCatching {
     Core(
         CreateParams().apply {
-            clientID = 1107202385799041054L
+            clientID = currentActivityApplicationType.discordApplicationId
             flags = CreateParams.getDefaultFlags()
         }
     ).also {
