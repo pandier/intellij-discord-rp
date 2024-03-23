@@ -9,6 +9,7 @@ import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
+import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
 val discordService: DiscordService
     get() = service()
@@ -65,8 +66,14 @@ class DiscordService : Disposable {
 
     fun changeActivity(activityContext: ActivityContext?) {
         this.activityContext = activityContext
-        val activityFactory = activityContext?.let(discordSettingsComponent.state::getActivityFactory)
-        val activity = activityFactory?.create(activityContext)
+
+        val activity = when {
+            activityContext?.project?.get()?.discordProjectSettingsComponent?.state?.showRichPresence == true ->
+                activityContext.let(discordSettingsComponent.state::getActivityFactory).create(activityContext)
+
+            else -> null
+        }
+
         accessInternal {
             it.activityManager()?.updateActivity(activity)
         }

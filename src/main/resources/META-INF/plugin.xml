@@ -11,26 +11,28 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService
-                serviceImplementation="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsComponent" />
-
         <applicationConfigurable
-            parentId="tools"
-            instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-            id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-            displayName="Discord Rich Presence" />
+                parentId="tools"
+                instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
+                id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
+                displayName="Discord Rich Presence"/>
 
-        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener" />
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"/>
     </extensions>
 
     <actions>
         <group id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
                text="Discord Rich Presence"
+               icon="/icons/pluginActionGroup.svg"
                popup="true">
-            <add-to-group group-id="ToolsMenu" />
+            <add-to-group group-id="ToolsMenu"/>
             <action id="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
                     class="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
                     text="Reconnect to Discord Client">
+            </action>
+            <action id="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+                    class="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+                    text="Show Rich Presence in Current Project">
             </action>
         </group>
     </actions>
@@ -38,9 +40,9 @@
     <applicationListeners>
         <listener
                 class="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"
-                topic="com.intellij.openapi.project.ProjectManagerListener" />
+                topic="com.intellij.openapi.project.ProjectManagerListener"/>
         <listener
                 class="io.github.pandier.intellijdiscordrp.listener.RichPresenceFileListener"
-                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
+                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
     </applicationListeners>
 </idea-plugin>

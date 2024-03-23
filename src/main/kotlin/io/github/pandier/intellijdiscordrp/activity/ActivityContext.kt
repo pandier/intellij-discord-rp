@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import io.github.pandier.intellijdiscordrp.service.timeTrackingService
+import java.lang.ref.WeakReference
 import java.time.Instant
 
 class ActivityFileContext(
@@ -16,6 +17,7 @@ class ActivityContext(
     val start: Instant,
     val appName: String,
     val appFullName: String,
+    val project: WeakReference<Project>,
     val projectName: String,
     val file: ActivityFileContext? = null,
 ) {
@@ -31,6 +33,7 @@ class ActivityContext(
                 appName = app.versionName,
                 appFullName = app.fullApplicationName,
                 projectName = project.name,
+                project = WeakReference(project),
                 file = file?.let {
                     ActivityFileContext(
                         name = it.name,
