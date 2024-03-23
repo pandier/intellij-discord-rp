@@ -3,7 +3,6 @@ package io.github.pandier.intellijdiscordrp.settings
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
-import io.github.pandier.intellijdiscordrp.icon.IconType
 import io.github.pandier.intellijdiscordrp.service.discordService
 import javax.swing.JComponent
 
@@ -38,7 +37,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconType.APPLICATION))
+                    comboBox(listOf(IconTypeSetting.APPLICATION))
                         .bindItem(state::projectLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
@@ -55,7 +54,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconType.APPLICATION))
+                    comboBox(listOf(IconTypeSetting.APPLICATION))
                         .bindItem(state::projectSmallImage.toNullableProperty())
                     label("Text:")
                     textField()
@@ -86,7 +85,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconType.APPLICATION, IconType.FILE))
+                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
                         .bindItem(state::fileLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
@@ -103,7 +102,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconType.APPLICATION, IconType.FILE))
+                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
                         .bindItem(state::fileSmallImage.toNullableProperty())
                     label("Text:")
                     textField()

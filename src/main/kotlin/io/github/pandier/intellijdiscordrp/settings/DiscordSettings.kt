@@ -1,49 +1,61 @@
 package io.github.pandier.intellijdiscordrp.settings
 
+import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
-import io.github.pandier.intellijdiscordrp.icon.DefaultIconTheme
-import io.github.pandier.intellijdiscordrp.icon.IconType
+
+enum class IconTypeSetting(
+    private val friendlyName: String
+) {
+    APPLICATION("Application"),
+    FILE("File");
+
+    override fun toString(): String =
+        friendlyName
+}
 
 data class DiscordSettings(
     var reconnectOnUpdate: Boolean = true,
 
     var projectDetails: String = "{project_name}",
     var projectState: String = "",
-    var projectLargeImage: IconType = IconType.APPLICATION,
+    var projectLargeImage: IconTypeSetting = IconTypeSetting.APPLICATION,
     var projectLargeImageEnabled: Boolean = true,
     var projectLargeImageText: String = "{app_name}",
-    var projectSmallImage: IconType = IconType.APPLICATION,
+    var projectSmallImage: IconTypeSetting = IconTypeSetting.APPLICATION,
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
 
     var fileDetails: String = "{project_name}",
     var fileState: String = "Editing {file_name}",
-    var fileLargeImage: IconType = IconType.FILE,
+    var fileLargeImage: IconTypeSetting = IconTypeSetting.FILE,
     var fileLargeImageEnabled: Boolean = true,
     var fileLargeImageText: String = "{file_name}",
-    var fileSmallImage: IconType = IconType.APPLICATION,
+    var fileSmallImage: IconTypeSetting = IconTypeSetting.APPLICATION,
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
 ) {
     val projectActivityFactory: ActivityFactory
         get() = ActivityFactory(
-            DefaultIconTheme,
-            projectDetails,
-            projectState,
-            if (projectLargeImageEnabled) projectLargeImage else null,
-            projectLargeImageText,
-            if (projectSmallImageEnabled) projectSmallImage else null,
-            projectSmallImageText,
+            details = projectDetails,
+            state = projectState,
+            largeImage = if (projectLargeImageEnabled) projectLargeImage else null,
+            largeImageText = projectLargeImageText,
+            smallImage = if (projectSmallImageEnabled) projectSmallImage else null,
+            smallImageText = projectSmallImageText,
         )
 
     val fileActivityFactory: ActivityFactory
         get() = ActivityFactory(
-            DefaultIconTheme,
-            fileDetails,
-            fileState,
-            if (fileLargeImageEnabled) fileLargeImage else null,
-            fileLargeImageText,
-            if (fileSmallImageEnabled) fileSmallImage else null,
-            fileSmallImageText,
+            details = fileDetails,
+            state = fileState,
+            largeImage = if (fileLargeImageEnabled) fileLargeImage else null,
+            largeImageText = fileLargeImageText,
+            smallImage = if (fileSmallImageEnabled) fileSmallImage else null,
+            smallImageText = fileSmallImageText,
         )
+
+    fun getActivityFactory(context: ActivityContext) = when {
+        context.file != null -> fileActivityFactory
+        else -> projectActivityFactory
+    }
 }

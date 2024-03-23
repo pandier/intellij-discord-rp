@@ -3,12 +3,10 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
-import io.github.pandier.intellijdiscordrp.activity.ActivityInfo
+import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 
 val discordService: DiscordService
@@ -29,10 +27,9 @@ private fun connect(): Core? = runCatching {
 }
 
 @Service
-@Suppress("MemberVisibilityCanBePrivate")
 class DiscordService : Disposable {
     private var internal: Core? = connect()
-    private var activityInfo: ActivityInfo? = null
+    private var activityContext: ActivityContext? = null
 
     private fun accessInternal(block: (Core) -> Unit) {
         if (internal == null && discordSettingsComponent.state.reconnectOnUpdate)
@@ -56,26 +53,20 @@ class DiscordService : Disposable {
         internal = connect()
     }
 
-    fun changeActivity(project: Project, file: VirtualFile? = null) =
-        changeActivity(
-            ActivityInfo.from(
-                start = timeTrackingService.getOrTrack(project),
-                project = project,
-                file = file,
-            )
-        )
-
-    fun changeActivity(activityInfo: ActivityInfo?) {
-        this.activityInfo = activityInfo
-        val activity = activityInfo?.createActivity(discordSettingsComponent.state)
-        accessInternal { it.activityManager()?.updateActivity(activity) }
+    fun changeActivity(activityContext: ActivityContext?) {
+        this.activityContext = activityContext
+        val activityFactory = activityContext?.let(discordSettingsComponent.state::getActivityFactory)
+        val activity = activityFactory?.create(activityContext)
+        accessInternal {
+            it.activityManager()?.updateActivity(activity)
+        }
     }
 
     fun clearActivity() =
         changeActivity(null)
 
     fun updateActivity() =
-        changeActivity(activityInfo)
+        changeActivity(activityContext)
 
     override fun dispose() {
         internal?.close()
