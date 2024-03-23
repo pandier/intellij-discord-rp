@@ -33,7 +33,7 @@ class DiscordService : Disposable {
 
     private fun accessInternal(block: (Core) -> Unit) {
         if (internal == null && discordSettingsComponent.state.reconnectOnUpdate)
-            reconnect()
+            reconnect(false)
 
         try {
             internal?.also(block)
@@ -48,9 +48,12 @@ class DiscordService : Disposable {
         }
     }
 
-    fun reconnect() {
+    fun reconnect(update: Boolean = true) {
         internal?.close()
         internal = connect()
+
+        if (update)
+            updateActivity()
     }
 
     fun changeActivity(activityContext: ActivityContext?) {

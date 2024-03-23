@@ -8,6 +8,5 @@ class DiscordReconnectAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         discordService.reconnect()
-        discordService.updateActivity()
     }
 }
