@@ -11,6 +11,7 @@ class ActivityFileContext(
     val name: String,
     val path: String,
     val type: ActivityFileType,
+    val typeName: String,
 )
 
 class ActivityContext(
@@ -39,6 +40,7 @@ class ActivityContext(
                         name = it.name,
                         path = it.path,
                         type = it.fileType.activityFileType,
+                        typeName = it.fileType.name,
                     )
                 }
             )
@@ -53,6 +55,7 @@ class ActivityContext(
             if (file != null) {
                 put("{file_name}", file.name)
                 put("{file_path}", file.path)
+                put("{file_type}", file.typeName)
             }
         }
 

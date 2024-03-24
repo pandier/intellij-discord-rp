@@ -31,7 +31,7 @@ data class DiscordSettings(
     var fileState: String = "Editing {file_name}",
     var fileLargeImage: IconTypeSetting = IconTypeSetting.FILE,
     var fileLargeImageEnabled: Boolean = true,
-    var fileLargeImageText: String = "{file_name}",
+    var fileLargeImageText: String = "{file_type}",
     var fileSmallImage: IconTypeSetting = IconTypeSetting.APPLICATION,
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
