@@ -5,7 +5,9 @@
     <vendor url="https://github.com/pandier">Pandier</vendor>
 
     <description><![CDATA[
-        A highly customizable IntelliJ plugin that adds stylish Rich Presence support to enhance your Discord status.
+        <p>
+            A highly customizable IntelliJ plugin that adds stylish Rich Presence support to enhance your Discord status.
+        </p>
 
         <ul>
             <li>Display your work in Discord!</li>
@@ -16,7 +18,10 @@
             <li>Use custom Discord application id</li>
         </ul>
 
-        <a href="https://github.com/pandier/intellij-discord-rp">repository</a> · <a href="https://github.com/pandier/intellij-discord-rp/issues">bug tracker</a> · <a href="https://github.com/pandier/intellij-discord-rp?tab=readme-ov-file#%EF%B8%8F-settings">customization</a>
+        <p>
+            <br>
+            <a href="https://github.com/pandier/intellij-discord-rp">repository</a> · <a href="https://github.com/pandier/intellij-discord-rp/issues">bug tracker</a> · <a href="https://github.com/pandier/intellij-discord-rp?tab=readme-ov-file#%EF%B8%8F-settings">customization</a>
+        </p>
   ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
