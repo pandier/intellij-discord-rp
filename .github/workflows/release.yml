@@ -32,6 +32,6 @@ jobs:
           changelog: CHANGELOG.md
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: upload to github release
-        run: gh release upload ${{ github.ref.replace('refs/tags/', '') }} ./build/distributions/*
+        run: gh release upload ${{ github.ref_name }} ./build/distributions/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
