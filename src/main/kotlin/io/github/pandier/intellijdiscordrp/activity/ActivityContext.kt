@@ -36,11 +36,15 @@ class ActivityContext(
                 projectName = project.name,
                 project = WeakReference(project),
                 file = file?.let {
+                    val activityFileType = it.activityFileType
                     ActivityFileContext(
                         name = it.name,
                         path = it.path,
-                        type = it.fileType.activityFileType,
-                        typeName = it.fileType.name,
+                        type = activityFileType,
+                        typeName = when (activityFileType) {
+                            ActivityFileType.OTHER -> it.fileType.name
+                            else -> activityFileType.friendlyName
+                        },
                     )
                 }
             )
