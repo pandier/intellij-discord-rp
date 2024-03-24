@@ -3,6 +3,11 @@
   intellij-discord-rp
 </h1>
 
+[![Version](https://img.shields.io/jetbrains/plugin/v/24027?style=flat-square)](https://plugins.jetbrains.com/plugin/24027-discord-rich-presence)
+[![Rating](https://img.shields.io/jetbrains/plugin/r/rating/24027?style=flat-square)](https://plugins.jetbrains.com/plugin/24027-discord-rich-presence/reviews)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/24027?style=flat-square)](https://plugins.jetbrains.com/plugin/24027-discord-rich-presence)
+[![GitHub License](https://img.shields.io/github/license/pandier/intellij-discord-rp?style=flat-square)](https://github.com/re-ovo/discord-ij/blob/master/LICENSE)
+
 A highly customizable IntelliJ plugin that adds stylish Rich Presence support to enhance your Discord status.
 
 ## ✨ Features
@@ -28,7 +33,7 @@ which gives the user the freedom to customize almost everything while ensuring a
 
 ## 📥 Installation
 
-The recommended way to install this plugin is through the JetBrains Marketplace,
+The recommended way to install this plugin is through the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/24027-discord-rich-presence),
 but there are alternative ways. You can also download a distribution of the plugin in the
 [release page](https://github.com/pandier/intellij-discord-rp/releases) or a build
 available under every commit through GitHub actions (these builds aren't signed).
