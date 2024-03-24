@@ -18,7 +18,7 @@ data class DiscordSettings(
     var customApplicationIdEnabled: Boolean = false,
     var customApplicationId: String = "",
 
-    var projectDetails: String = "{project_name}",
+    var projectDetails: String = "In {project_name}",
     var projectState: String = "",
     var projectLargeImage: IconTypeSetting = IconTypeSetting.APPLICATION,
     var projectLargeImageEnabled: Boolean = true,
@@ -27,7 +27,7 @@ data class DiscordSettings(
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
 
-    var fileDetails: String = "{project_name}",
+    var fileDetails: String = "In {project_name}",
     var fileState: String = "Editing {file_name}",
     var fileLargeImage: IconTypeSetting = IconTypeSetting.FILE,
     var fileLargeImageEnabled: Boolean = true,
