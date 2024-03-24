@@ -11,10 +11,14 @@ class RichPresenceProjectListener : ProjectManagerListener, StartupActivity {
 
     override fun projectClosed(project: Project) {
         timeTrackingService.stop(project)
-        discordService.clearActivity()
+        if (discordService.activityContext?.project?.get() == project) {
+            discordService.clearActivity()
+        }
     }
 
     override fun runActivity(project: Project) {
-        discordService.changeActivity(ActivityContext.create(project = project))
+        if (discordService.activityContext?.project?.get() != project) {
+            discordService.changeActivity(ActivityContext.create(project = project))
+        }
     }
 }

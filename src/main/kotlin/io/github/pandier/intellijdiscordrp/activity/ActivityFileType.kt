@@ -43,5 +43,5 @@ val VirtualFile.activityFileType: ActivityFileType
         val typeName = fileType.name.lowercase()
         val extension = extension?.lowercase()
         return ActivityFileType.values().find { it.typeName == typeName || it.extensions.contains(extension) }
-                ?: ActivityFileType.OTHER
+            ?: ActivityFileType.OTHER
     }

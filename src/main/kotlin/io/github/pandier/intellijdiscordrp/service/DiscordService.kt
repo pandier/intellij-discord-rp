@@ -37,7 +37,8 @@ private fun connect(): Core? = runCatching {
 @Service
 class DiscordService : Disposable {
     private var internal: Core? = connect()
-    private var activityContext: ActivityContext? = null
+    var activityContext: ActivityContext? = null
+        private set
 
     private fun accessInternal(block: (Core) -> Unit) {
         if (internal == null && discordSettingsComponent.state.reconnectOnUpdate)
