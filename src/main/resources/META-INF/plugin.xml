@@ -5,7 +5,18 @@
     <vendor url="https://github.com/pandier">Pandier</vendor>
 
     <description><![CDATA[
-        This plugin adds support for Discord Rich Presence.
+        A highly customizable IntelliJ plugin that adds stylish Rich Presence support to enhance your Discord status.
+
+        <ul>
+            <li>Display your work in Discord!</li>
+            <li>Customize with variables</li>
+            <li>Hide projects that you don't want others to see</li>
+            <li>Support for more than 20 languages (with more to come)</li>
+            <li>Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)</li>
+            <li>Use custom Discord application id</li>
+        </ul>
+
+        <a href="https://github.com/pandier/intellij-discord-rp">repository</a> · <a href="https://github.com/pandier/intellij-discord-rp/issues">bug tracker</a> · <a href="https://github.com/pandier/intellij-discord-rp?tab=readme-ov-file#%EF%B8%8F-settings">customization</a>
   ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
