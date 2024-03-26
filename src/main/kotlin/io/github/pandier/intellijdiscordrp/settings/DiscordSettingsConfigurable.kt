@@ -3,11 +3,25 @@ package io.github.pandier.intellijdiscordrp.settings
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
+import io.github.pandier.intellijdiscordrp.service.discordService
 import javax.swing.JComponent
 
 class DiscordSettingsConfigurable : Configurable {
     private val panel = panel {
         val state = discordSettingsComponent.state
+
+        row {
+            checkBox("Try reconnecting on activity update")
+                .bindSelected(state::reconnectOnUpdate)
+        }
+
+        row {
+            val customApplicationIdCheckBox = checkBox("Custom application id:")
+                .bindSelected(state::customApplicationIdEnabled)
+            textField()
+                .bindText(state::customApplicationId)
+                .enabledIf(customApplicationIdCheckBox.selected)
+        }
 
         // Project activity factory settings
         group("Project") {
@@ -23,14 +37,16 @@ class DiscordSettingsConfigurable : Configurable {
             }
 
             // Large image settings
+            lateinit var largeImageCheckBox: Cell<JBCheckBox>
             row {
-                label("Large image")
-            }
+                largeImageCheckBox = checkBox("Large image")
+                    .bindSelected(state::projectLargeImageEnabled)
+            }.enabledIf(largeImageCheckBox.selected)
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::projectLargeImage)
+                    comboBox(listOf(IconTypeSetting.APPLICATION))
+                        .bindItem(state::projectLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::projectLargeImageText)
@@ -46,8 +62,8 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::projectSmallImage)
+                    comboBox(listOf(IconTypeSetting.APPLICATION))
+                        .bindItem(state::projectSmallImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::projectSmallImageText)
@@ -69,19 +85,21 @@ class DiscordSettingsConfigurable : Configurable {
             }
 
             // Large image settings
+            lateinit var largeImageCheckBox: Cell<JBCheckBox>
             row {
-                label("Large image")
+                largeImageCheckBox = checkBox("Large image")
+                    .bindSelected(state::fileLargeImageEnabled)
             }
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::fileLargeImage)
+                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
+                        .bindItem(state::fileLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::fileLargeImageText)
                 }
-            }
+            }.enabledIf(largeImageCheckBox.selected)
 
             // Small image settings
             lateinit var smallImageCheckBox: Cell<JBCheckBox>
@@ -92,8 +110,8 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    textField()
-                        .bindText(state::fileSmallImage)
+                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
+                        .bindItem(state::fileSmallImage.toNullableProperty())
                     label("Text:")
                     textField()
                         .bindText(state::fileSmallImageText)
@@ -108,7 +126,10 @@ class DiscordSettingsConfigurable : Configurable {
 
     override fun isModified(): Boolean = panel.isModified()
 
-    override fun apply() = panel.apply()
+    override fun apply() {
+        panel.apply()
+        discordService.reconnect()
+    }
 
     override fun reset() = panel.reset()
 }

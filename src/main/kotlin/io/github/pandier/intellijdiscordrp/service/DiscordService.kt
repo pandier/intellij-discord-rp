@@ -3,63 +3,90 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.project.Project
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
-import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
-import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
-import io.github.pandier.intellijdiscordrp.activity.ActivityFactoryBuilder
+import io.github.pandier.intellijdiscordrp.activity.ActivityContext
+import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
+import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
+import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
 val discordService: DiscordService
     get() = service()
 
+private fun connect(): Core? = runCatching {
+    val settings = discordSettingsComponent.state
+    val applicationId = if (settings.customApplicationIdEnabled) {
+        settings.customApplicationId.toLong()
+    } else {
+        currentActivityApplicationType.discordApplicationId
+    }
+
+    val internal = Core(CreateParams().apply {
+        clientID = applicationId
+        flags = CreateParams.getDefaultFlags()
+    })
+
+    DiscordRichPresencePlugin.logger.info("Connected to Discord Client")
+    return internal
+}.getOrElse {
+    DiscordRichPresencePlugin.logger.debug("Failed to connect to Discord Client", it)
+    null
+}
+
 @Service
 class DiscordService : Disposable {
-    private var core: Core? = runCatching {
-        Core(
-            CreateParams().apply {
-                clientID = 1107202385799041054L
-                flags = CreateParams.getDefaultFlags()
-            }
-        )
-    }.getOrElse {
-        DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK could not be initialized", it)
-        null
-    }
+    private var internal: Core? = connect()
+    var activityContext: ActivityContext? = null
+        private set
 
     private fun accessInternal(block: (Core) -> Unit) {
-        if (core?.isOpen == false) {
-            DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK was disconnected")
-            core = null
-        }
+        if (internal == null && discordSettingsComponent.state.reconnectOnUpdate)
+            reconnect(false)
 
         try {
-            core?.let(block)
+            internal?.also(block)
         } catch (ex: RuntimeException) {
-            DiscordRichPresencePlugin.logger.info("Ignoring rich presence, because Discord SDK could not sent activity", ex)
-            core = null
+            internal?.close()
+            internal = null
+
+            DiscordRichPresencePlugin.logger.info(
+                "Disconnected from Discord Client",
+                ex
+            )
         }
     }
 
-    fun changeActivity(project: Project, block: ActivityFactoryBuilder.() -> Unit = {}) =
-        changeActivity(ActivityFactoryBuilder(project).apply(block).build())
+    fun reconnect(update: Boolean = true) {
+        internal?.close()
+        internal = connect()
 
-    fun changeActivity(activityFactory: ActivityFactory) =
-        changeActivity(activityFactory.create())
+        if (update)
+            updateActivity()
+    }
 
-    fun changeActivity(activity: Activity?) {
-        if (activity != null) {
-            accessInternal { it.activityManager()?.updateActivity(activity) }
-        } else {
-            clearActivity()
+    fun changeActivity(activityContext: ActivityContext?) {
+        this.activityContext = activityContext
+
+        val activity = when {
+            activityContext?.project?.get()?.discordProjectSettingsComponent?.state?.showRichPresence == true ->
+                activityContext.let(discordSettingsComponent.state::getActivityFactory).create(activityContext)
+
+            else -> null
+        }
+
+        accessInternal {
+            it.activityManager()?.updateActivity(activity)
         }
     }
 
     fun clearActivity() =
-        accessInternal { it.activityManager()?.clearActivity() }
+        changeActivity(null)
+
+    fun updateActivity() =
+        changeActivity(activityContext)
 
     override fun dispose() {
-        core?.close()
+        internal?.close()
     }
 }

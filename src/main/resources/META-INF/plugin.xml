@@ -5,30 +5,60 @@
     <vendor url="https://github.com/pandier">Pandier</vendor>
 
     <description><![CDATA[
-        This plugin adds support for Discord Rich Presence.
+        <p>
+            A highly customizable IntelliJ plugin that adds stylish Rich Presence support to enhance your Discord status.
+        </p>
+
+        <ul>
+            <li>Display your work in Discord!</li>
+            <li>Customize with variables</li>
+            <li>Hide projects that you don't want others to see</li>
+            <li>Support for more than 20 languages (with more to come)</li>
+            <li>Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)</li>
+            <li>Use custom Discord application id</li>
+        </ul>
+
+        <p>
+            <br>
+            <a href="https://github.com/pandier/intellij-discord-rp">repository</a> · <a href="https://github.com/pandier/intellij-discord-rp/issues">bug tracker</a> · <a href="https://github.com/pandier/intellij-discord-rp?tab=readme-ov-file#%EF%B8%8F-settings">customization</a>
+        </p>
   ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService
-                serviceImplementation="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsComponent" />
-
         <applicationConfigurable
-            parentId="tools"
-            instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-            id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-            displayName="Discord Rich Presence" />
+                parentId="tools"
+                instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
+                id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
+                displayName="Discord Rich Presence"/>
 
-        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener" />
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"/>
     </extensions>
+
+    <actions>
+        <group id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
+               text="Discord Rich Presence"
+               icon="/icons/pluginActionGroup.svg"
+               popup="true">
+            <add-to-group group-id="ToolsMenu"/>
+            <action id="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
+                    class="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
+                    text="Reconnect to Discord Client">
+            </action>
+            <action id="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+                    class="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+                    text="Show Rich Presence in Current Project">
+            </action>
+        </group>
+    </actions>
 
     <applicationListeners>
         <listener
                 class="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"
-                topic="com.intellij.openapi.project.ProjectManagerListener" />
+                topic="com.intellij.openapi.project.ProjectManagerListener"/>
         <listener
                 class="io.github.pandier.intellijdiscordrp.listener.RichPresenceFileListener"
-                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
+                topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
     </applicationListeners>
 </idea-plugin>
