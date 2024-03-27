@@ -41,7 +41,7 @@ class DiscordSettingsConfigurable : Configurable {
             row {
                 largeImageCheckBox = checkBox("Large image")
                     .bindSelected(state::projectLargeImageEnabled)
-            }.enabledIf(largeImageCheckBox.selected)
+            }
             indent {
                 row {
                     label("Image:")
@@ -51,7 +51,7 @@ class DiscordSettingsConfigurable : Configurable {
                     textField()
                         .bindText(state::projectLargeImageText)
                 }
-            }
+            }.enabledIf(largeImageCheckBox.selected)
 
             // Small image settings
             lateinit var smallImageCheckBox: Cell<JBCheckBox>
