@@ -9,6 +9,7 @@ private fun ImageSetting.getIcon(info: ActivityContext) = when (this) {
 }
 
 class ActivityFactory(
+    private val displayMode: ActivityDisplayMode,
     private val details: String = "",
     private val state: String = "",
     private val largeImage: ImageSetting? = null,
@@ -18,18 +19,18 @@ class ActivityFactory(
 ) {
     fun create(info: ActivityContext): Activity = Activity().also {
         if (details.isNotEmpty())
-            it.details = info.format(details)
+            it.details = info.format(displayMode, details)
         if (state.isNotEmpty())
-            it.state = info.format(state)
+            it.state = info.format(displayMode, state)
 
         if (largeImage != null && largeImageText.isNotEmpty()) {
             it.assets().largeImage = largeImage.getIcon(info)
-            it.assets().largeText = info.format(largeImageText)
+            it.assets().largeText = info.format(displayMode, largeImageText)
         }
 
         if (smallImage != null && smallImageText.isNotEmpty()) {
             it.assets().smallImage = smallImage.getIcon(info)
-            it.assets().smallText = info.format(smallImageText)
+            it.assets().smallText = info.format(displayMode, smallImageText)
         }
 
         it.timestamps().start = info.start

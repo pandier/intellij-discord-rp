@@ -70,7 +70,8 @@ class DiscordService : Disposable {
 
         val activity = when {
             activityContext?.project?.get()?.discordProjectSettingsComponent?.state?.showRichPresence == true ->
-                activityContext.let(discordSettingsComponent.state::getActivityFactory).create(activityContext)
+                discordSettingsComponent.state.getActivityFactory(activityContext.highestSupportedDisplayMode)
+                    .create(activityContext)
 
             else -> null
         }

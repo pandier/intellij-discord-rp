@@ -1,6 +1,6 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-import io.github.pandier.intellijdiscordrp.activity.ActivityContext
+import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 
 enum class ImageSetting(
@@ -17,6 +17,15 @@ data class DiscordSettings(
     var reconnectOnUpdate: Boolean = true,
     var customApplicationIdEnabled: Boolean = false,
     var customApplicationId: String = "",
+
+    var applicationDetails: String = "",
+    var applicationState: String = "",
+    var applicationLargeImage: ImageSetting = ImageSetting.APPLICATION,
+    var applicationLargeImageEnabled: Boolean = true,
+    var applicationLargeImageText: String = "{app_name}",
+    var applicationSmallImage: ImageSetting = ImageSetting.APPLICATION,
+    var applicationSmallImageEnabled: Boolean = false,
+    var applicationSmallImageText: String = "",
 
     var projectDetails: String = "In {project_name}",
     var projectState: String = "",
@@ -36,8 +45,20 @@ data class DiscordSettings(
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
 ) {
+    val applicationActivityFactory: ActivityFactory
+        get() = ActivityFactory(
+            displayMode = ActivityDisplayMode.APPLICATION,
+            details = applicationDetails,
+            state = applicationState,
+            largeImage = if (applicationLargeImageEnabled) applicationLargeImage else null,
+            largeImageText = applicationLargeImageText,
+            smallImage = if (applicationSmallImageEnabled) applicationSmallImage else null,
+            smallImageText = applicationSmallImageText,
+        )
+
     val projectActivityFactory: ActivityFactory
         get() = ActivityFactory(
+            displayMode = ActivityDisplayMode.PROJECT,
             details = projectDetails,
             state = projectState,
             largeImage = if (projectLargeImageEnabled) projectLargeImage else null,
@@ -48,6 +69,7 @@ data class DiscordSettings(
 
     val fileActivityFactory: ActivityFactory
         get() = ActivityFactory(
+            displayMode = ActivityDisplayMode.FILE,
             details = fileDetails,
             state = fileState,
             largeImage = if (fileLargeImageEnabled) fileLargeImage else null,
@@ -56,8 +78,9 @@ data class DiscordSettings(
             smallImageText = fileSmallImageText,
         )
 
-    fun getActivityFactory(context: ActivityContext) = when {
-        context.file != null -> fileActivityFactory
-        else -> projectActivityFactory
+    fun getActivityFactory(mode: ActivityDisplayMode) = when (mode) {
+        ActivityDisplayMode.APPLICATION -> applicationActivityFactory
+        ActivityDisplayMode.PROJECT -> projectActivityFactory
+        ActivityDisplayMode.FILE -> fileActivityFactory
     }
 }

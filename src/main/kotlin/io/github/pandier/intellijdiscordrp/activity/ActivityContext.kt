@@ -51,19 +51,28 @@ class ActivityContext(
         }
     }
 
-    val variables: Map<String, String>
-        get() = buildMap {
+    val highestSupportedDisplayMode: ActivityDisplayMode
+        get() = when {
+            file != null -> ActivityDisplayMode.FILE
+            else -> ActivityDisplayMode.PROJECT
+        }
+
+    fun format(displayMode: ActivityDisplayMode, string: String): String {
+        val variables = buildMap {
             put("{app_name}", appName)
             put("{app_full_name}", appFullName)
-            put("{project_name}", projectName)
-            if (file != null) {
-                put("{file_name}", file.name)
-                put("{file_path}", file.path)
-                put("{file_type}", file.typeName)
+
+            if (displayMode >= ActivityDisplayMode.PROJECT) {
+                put("{project_name}", projectName)
+
+                if (file != null && displayMode >= ActivityDisplayMode.FILE) {
+                    put("{file_name}", file.name)
+                    put("{file_path}", file.path)
+                    put("{file_type}", file.typeName)
+                }
             }
         }
 
-    fun format(string: String): String {
         var formatted = string
         variables.forEach { (variable, value) -> formatted = formatted.replace(variable, value) }
         return formatted

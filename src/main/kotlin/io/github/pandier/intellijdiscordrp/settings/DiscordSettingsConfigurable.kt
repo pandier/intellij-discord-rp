@@ -84,29 +84,50 @@ class DiscordSettingsConfigurable : Configurable {
 
         group("Display Modes") {
             tabbed {
-                tab("Project", displayModeSettings(
-                    imageSettings = listOf(ImageSetting.APPLICATION),
-                    details = state::projectDetails,
-                    state = state::projectState,
-                    largeImage = state::projectLargeImage,
-                    largeImageEnabled = state::projectLargeImageEnabled,
-                    largeImageText = state::projectLargeImageText,
-                    smallImage = state::projectSmallImage,
-                    smallImageEnabled = state::projectSmallImageEnabled,
-                    smallImageText = state::projectSmallImageText,
-                ))
+                tab(
+                    "Application",
+                    displayModeSettings(
+                        imageSettings = listOf(ImageSetting.APPLICATION),
+                        details = state::applicationDetails,
+                        state = state::applicationState,
+                        largeImage = state::applicationLargeImage,
+                        largeImageEnabled = state::applicationLargeImageEnabled,
+                        largeImageText = state::applicationLargeImageText,
+                        smallImage = state::applicationSmallImage,
+                        smallImageEnabled = state::applicationSmallImageEnabled,
+                        smallImageText = state::applicationSmallImageText,
+                    )
+                )
 
-                tab("File", displayModeSettings(
-                    imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
-                    details = state::fileDetails,
-                    state = state::fileState,
-                    largeImage = state::fileLargeImage,
-                    largeImageEnabled = state::fileLargeImageEnabled,
-                    largeImageText = state::fileLargeImageText,
-                    smallImage = state::fileSmallImage,
-                    smallImageEnabled = state::fileSmallImageEnabled,
-                    smallImageText = state::fileSmallImageText,
-                ))
+                tab(
+                    "Project",
+                    displayModeSettings(
+                        imageSettings = listOf(ImageSetting.APPLICATION),
+                        details = state::projectDetails,
+                        state = state::projectState,
+                        largeImage = state::projectLargeImage,
+                        largeImageEnabled = state::projectLargeImageEnabled,
+                        largeImageText = state::projectLargeImageText,
+                        smallImage = state::projectSmallImage,
+                        smallImageEnabled = state::projectSmallImageEnabled,
+                        smallImageText = state::projectSmallImageText,
+                    )
+                )
+
+                tab(
+                    "File",
+                    displayModeSettings(
+                        imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
+                        details = state::fileDetails,
+                        state = state::fileState,
+                        largeImage = state::fileLargeImage,
+                        largeImageEnabled = state::fileLargeImageEnabled,
+                        largeImageText = state::fileLargeImageText,
+                        smallImage = state::fileSmallImage,
+                        smallImageEnabled = state::fileSmallImageEnabled,
+                        smallImageText = state::fileSmallImageText,
+                    )
+                )
             }
         }
     }
