@@ -9,13 +9,13 @@ import javax.swing.JComponent
 import kotlin.reflect.KMutableProperty0
 
 private fun displayModeSettings(
-    iconTypes: List<IconTypeSetting>,
+    imageSettings: List<ImageSetting>,
     details: KMutableProperty0<String>,
     state: KMutableProperty0<String>,
-    largeImage: KMutableProperty0<IconTypeSetting>,
+    largeImage: KMutableProperty0<ImageSetting>,
     largeImageEnabled: KMutableProperty0<Boolean>,
     largeImageText: KMutableProperty0<String>,
-    smallImage: KMutableProperty0<IconTypeSetting>,
+    smallImage: KMutableProperty0<ImageSetting>,
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
 ): Panel.() -> Unit = {
@@ -39,7 +39,7 @@ private fun displayModeSettings(
     indent {
         row {
             label("Image:")
-            comboBox(iconTypes)
+            comboBox(imageSettings)
                 .bindItem(largeImage.toNullableProperty())
             label("Text:")
             textField()
@@ -56,7 +56,7 @@ private fun displayModeSettings(
     indent {
         row {
             label("Image:")
-            comboBox(iconTypes)
+            comboBox(imageSettings)
                 .bindItem(smallImage.toNullableProperty())
             label("Text:")
             textField()
@@ -85,7 +85,7 @@ class DiscordSettingsConfigurable : Configurable {
         group("Display Modes") {
             tabbed {
                 tab("Project", displayModeSettings(
-                    iconTypes = listOf(IconTypeSetting.APPLICATION),
+                    imageSettings = listOf(ImageSetting.APPLICATION),
                     details = state::projectDetails,
                     state = state::projectState,
                     largeImage = state::projectLargeImage,
@@ -97,7 +97,7 @@ class DiscordSettingsConfigurable : Configurable {
                 ))
 
                 tab("File", displayModeSettings(
-                    iconTypes = listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE),
+                    imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
                     details = state::fileDetails,
                     state = state::fileState,
                     largeImage = state::fileLargeImage,
