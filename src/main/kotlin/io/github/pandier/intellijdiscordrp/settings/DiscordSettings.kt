@@ -3,7 +3,7 @@ package io.github.pandier.intellijdiscordrp.settings
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 
-enum class IconTypeSetting(
+enum class ImageSetting(
     private val friendlyName: String
 ) {
     APPLICATION("Application"),
@@ -20,19 +20,19 @@ data class DiscordSettings(
 
     var projectDetails: String = "In {project_name}",
     var projectState: String = "",
-    var projectLargeImage: IconTypeSetting = IconTypeSetting.APPLICATION,
+    var projectLargeImage: ImageSetting = ImageSetting.APPLICATION,
     var projectLargeImageEnabled: Boolean = true,
     var projectLargeImageText: String = "{app_name}",
-    var projectSmallImage: IconTypeSetting = IconTypeSetting.APPLICATION,
+    var projectSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
 
     var fileDetails: String = "In {project_name}",
     var fileState: String = "Editing {file_name}",
-    var fileLargeImage: IconTypeSetting = IconTypeSetting.FILE,
+    var fileLargeImage: ImageSetting = ImageSetting.FILE,
     var fileLargeImageEnabled: Boolean = true,
     var fileLargeImageText: String = "{file_type}",
-    var fileSmallImage: IconTypeSetting = IconTypeSetting.APPLICATION,
+    var fileSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
 ) {

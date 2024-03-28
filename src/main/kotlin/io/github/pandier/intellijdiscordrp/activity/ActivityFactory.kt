@@ -1,19 +1,19 @@
 package io.github.pandier.intellijdiscordrp.activity
 
 import de.jcm.discordgamesdk.activity.Activity
-import io.github.pandier.intellijdiscordrp.settings.IconTypeSetting
+import io.github.pandier.intellijdiscordrp.settings.ImageSetting
 
-private fun IconTypeSetting.getIcon(info: ActivityContext) = when (this) {
-    IconTypeSetting.APPLICATION -> currentActivityApplicationType.icon
-    IconTypeSetting.FILE -> info.file?.type?.icon
+private fun ImageSetting.getIcon(info: ActivityContext) = when (this) {
+    ImageSetting.APPLICATION -> currentActivityApplicationType.icon
+    ImageSetting.FILE -> info.file?.type?.icon
 }
 
 class ActivityFactory(
     private val details: String = "",
     private val state: String = "",
-    private val largeImage: IconTypeSetting? = null,
+    private val largeImage: ImageSetting? = null,
     private val largeImageText: String = "",
-    private val smallImage: IconTypeSetting? = null,
+    private val smallImage: ImageSetting? = null,
     private val smallImageText: String = "",
 ) {
     fun create(info: ActivityContext): Activity = Activity().also {

@@ -45,7 +45,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION))
+                    comboBox(listOf(ImageSetting.APPLICATION))
                         .bindItem(state::projectLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
@@ -62,7 +62,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION))
+                    comboBox(listOf(ImageSetting.APPLICATION))
                         .bindItem(state::projectSmallImage.toNullableProperty())
                     label("Text:")
                     textField()
@@ -93,7 +93,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
+                    comboBox(listOf(ImageSetting.APPLICATION, ImageSetting.FILE))
                         .bindItem(state::fileLargeImage.toNullableProperty())
                     label("Text:")
                     textField()
@@ -110,7 +110,7 @@ class DiscordSettingsConfigurable : Configurable {
             indent {
                 row {
                     label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
+                    comboBox(listOf(ImageSetting.APPLICATION, ImageSetting.FILE))
                         .bindItem(state::fileSmallImage.toNullableProperty())
                     label("Text:")
                     textField()
