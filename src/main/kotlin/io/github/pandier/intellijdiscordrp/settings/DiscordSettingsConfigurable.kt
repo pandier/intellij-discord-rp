@@ -4,7 +4,66 @@ import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.service.discordService
+import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
 import javax.swing.JComponent
+import kotlin.reflect.KMutableProperty0
+
+private fun displayModeSettings(
+    iconTypes: List<IconTypeSetting>,
+    details: KMutableProperty0<String>,
+    state: KMutableProperty0<String>,
+    largeImage: KMutableProperty0<IconTypeSetting>,
+    largeImageEnabled: KMutableProperty0<Boolean>,
+    largeImageText: KMutableProperty0<String>,
+    smallImage: KMutableProperty0<IconTypeSetting>,
+    smallImageEnabled: KMutableProperty0<Boolean>,
+    smallImageText: KMutableProperty0<String>,
+): Panel.() -> Unit = {
+    row("Details:") {
+        textField()
+            .align(AlignX.FILL)
+            .bindText(details)
+    }
+    row("State:") {
+        textField()
+            .align(AlignX.FILL)
+            .bindText(state)
+    }
+
+    // Large image settings
+    lateinit var largeImageCheckBox: Cell<JBCheckBox>
+    row {
+        largeImageCheckBox = checkBox("Large image")
+            .bindSelected(largeImageEnabled)
+    }
+    indent {
+        row {
+            label("Image:")
+            comboBox(iconTypes)
+                .bindItem(largeImage.toNullableProperty())
+            label("Text:")
+            textField()
+                .bindText(largeImageText)
+        }
+    }.enabledIf(largeImageCheckBox.selected)
+
+    // Small image settings
+    lateinit var smallImageCheckBox: Cell<JBCheckBox>
+    row {
+        smallImageCheckBox = checkBox("Small image")
+            .bindSelected(smallImageEnabled)
+    }
+    indent {
+        row {
+            label("Image:")
+            comboBox(iconTypes)
+                .bindItem(smallImage.toNullableProperty())
+            label("Text:")
+            textField()
+                .bindText(smallImageText)
+        }
+    }.enabledIf(smallImageCheckBox.selected)
+}
 
 class DiscordSettingsConfigurable : Configurable {
     private val panel = panel {
@@ -23,100 +82,32 @@ class DiscordSettingsConfigurable : Configurable {
                 .enabledIf(customApplicationIdCheckBox.selected)
         }
 
-        // Project activity factory settings
-        group("Project") {
-            row("Details:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::projectDetails)
-            }
-            row("State:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::projectState)
-            }
+        group("Display Modes") {
+            tabbed {
+                tab("Project", displayModeSettings(
+                    iconTypes = listOf(IconTypeSetting.APPLICATION),
+                    details = state::projectDetails,
+                    state = state::projectState,
+                    largeImage = state::projectLargeImage,
+                    largeImageEnabled = state::projectLargeImageEnabled,
+                    largeImageText = state::projectLargeImageText,
+                    smallImage = state::projectSmallImage,
+                    smallImageEnabled = state::projectSmallImageEnabled,
+                    smallImageText = state::projectSmallImageText,
+                ))
 
-            // Large image settings
-            lateinit var largeImageCheckBox: Cell<JBCheckBox>
-            row {
-                largeImageCheckBox = checkBox("Large image")
-                    .bindSelected(state::projectLargeImageEnabled)
+                tab("File", displayModeSettings(
+                    iconTypes = listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE),
+                    details = state::fileDetails,
+                    state = state::fileState,
+                    largeImage = state::fileLargeImage,
+                    largeImageEnabled = state::fileLargeImageEnabled,
+                    largeImageText = state::fileLargeImageText,
+                    smallImage = state::fileSmallImage,
+                    smallImageEnabled = state::fileSmallImageEnabled,
+                    smallImageText = state::fileSmallImageText,
+                ))
             }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION))
-                        .bindItem(state::projectLargeImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::projectLargeImageText)
-                }
-            }.enabledIf(largeImageCheckBox.selected)
-
-            // Small image settings
-            lateinit var smallImageCheckBox: Cell<JBCheckBox>
-            row {
-                smallImageCheckBox = checkBox("Small image")
-                    .bindSelected(state::projectSmallImageEnabled)
-            }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION))
-                        .bindItem(state::projectSmallImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::projectSmallImageText)
-                }
-            }.enabledIf(smallImageCheckBox.selected)
-        }
-
-        // File activity factory settings
-        group("File") {
-            row("Details:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::fileDetails)
-            }
-            row("State:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::fileState)
-            }
-
-            // Large image settings
-            lateinit var largeImageCheckBox: Cell<JBCheckBox>
-            row {
-                largeImageCheckBox = checkBox("Large image")
-                    .bindSelected(state::fileLargeImageEnabled)
-            }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
-                        .bindItem(state::fileLargeImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::fileLargeImageText)
-                }
-            }.enabledIf(largeImageCheckBox.selected)
-
-            // Small image settings
-            lateinit var smallImageCheckBox: Cell<JBCheckBox>
-            row {
-                smallImageCheckBox = checkBox("Small image")
-                    .bindSelected(state::fileSmallImageEnabled)
-            }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(IconTypeSetting.APPLICATION, IconTypeSetting.FILE))
-                        .bindItem(state::fileSmallImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::fileSmallImageText)
-                }
-            }.enabledIf(smallImageCheckBox.selected)
         }
     }
 
