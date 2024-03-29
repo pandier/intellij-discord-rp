@@ -44,11 +44,31 @@
             <add-to-group group-id="ToolsMenu"/>
             <action id="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
                     class="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
-                    text="Reconnect to Discord Client">
+                    text="Reconnect Discord Client">
             </action>
+            <separator />
             <action id="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
                     class="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
-                    text="Show Rich Presence in Current Project">
+                    text="Show Rich Presence in Project">
+            </action>
+        </group>
+        <group id="io.github.pandier.intellijdiscordrp.action.DiscordChangeDisplayModeActionGroup"
+               text="Change Display Mode in Project"
+               popup="true">
+            <add-to-group group-id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
+                          relative-to-action="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+                          anchor="before" />
+            <action id="io.github.pandier.intellijdiscordrp.action.DiscordApplicationDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.DiscordApplicationDisplayModeAction"
+                    text="Application">
+            </action>
+            <action id="io.github.pandier.intellijdiscordrp.action.DiscordProjectDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.DiscordProjectDisplayModeAction"
+                    text="Project">
+            </action>
+            <action id="io.github.pandier.intellijdiscordrp.action.DiscordFileDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.DiscordFileDisplayModeAction"
+                    text="File">
             </action>
         </group>
     </actions>
