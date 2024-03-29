@@ -15,7 +15,7 @@ object DiscordRichPresencePlugin {
             return
         val eventMulticaster = EditorFactory.getInstance().eventMulticaster
         val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
-        eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener) {}
+        eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, discordRichPresencePluginDisposable)
         editorListenersRegistered = true
     }
 }

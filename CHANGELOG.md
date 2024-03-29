@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Display mode settings are now grouped into tabs
 
+## [1.0.2] - 2024-03-29
+
+### Fixed
+
+- Focus change listener not disposing correctly - causing error on shutdown
+
 ## [1.0.1] - 2024-03-27
 
 ### Fixed
@@ -20,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/pandier/intellij-discord-rp/commits/v1.0.0
