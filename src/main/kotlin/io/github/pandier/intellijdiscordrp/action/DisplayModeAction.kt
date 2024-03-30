@@ -6,7 +6,7 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
-abstract class DiscordDisplayModeAction(
+abstract class DisplayModeAction(
     private val displayMode: ActivityDisplayMode,
 ) : DumbAwareToggleAction() {
 
@@ -31,6 +31,6 @@ abstract class DiscordDisplayModeAction(
     }
 }
 
-class DiscordApplicationDisplayModeAction : DiscordDisplayModeAction(ActivityDisplayMode.APPLICATION)
-class DiscordProjectDisplayModeAction : DiscordDisplayModeAction(ActivityDisplayMode.PROJECT)
-class DiscordFileDisplayModeAction : DiscordDisplayModeAction(ActivityDisplayMode.FILE)
+class ApplicationDisplayModeAction : DisplayModeAction(ActivityDisplayMode.APPLICATION)
+class ProjectDisplayModeAction : DisplayModeAction(ActivityDisplayMode.PROJECT)
+class FileDisplayModeAction : DisplayModeAction(ActivityDisplayMode.FILE)

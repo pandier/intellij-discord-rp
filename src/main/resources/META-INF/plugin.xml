@@ -58,16 +58,16 @@
             <add-to-group group-id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
                           relative-to-action="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
                           anchor="before" />
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordApplicationDisplayModeAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordApplicationDisplayModeAction"
+            <action id="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
                     text="Application">
             </action>
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordProjectDisplayModeAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordProjectDisplayModeAction"
+            <action id="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
                     text="Project">
             </action>
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordFileDisplayModeAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordFileDisplayModeAction"
+            <action id="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
                     text="File">
             </action>
         </group>
