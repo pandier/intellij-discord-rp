@@ -14,7 +14,7 @@ A highly customizable IntelliJ plugin that adds stylish Rich Presence support to
 
 - Display your work in Discord!
 - Customize with variables
-- Change display mode per project
+- Change display mode per project (or hide the project)
 - Support for more than 20 languages (with more to come)
 - Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)
 - Use custom Discord application id

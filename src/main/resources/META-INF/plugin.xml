@@ -12,7 +12,7 @@
         <ul>
             <li>Display your work in Discord!</li>
             <li>Customize with variables</li>
-            <li>Hide projects that you don't want others to see</li>
+            <li>Change display mode per project (or hide the project)</li>
             <li>Support for more than 20 languages (with more to come)</li>
             <li>Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)</li>
             <li>Use custom Discord application id</li>
