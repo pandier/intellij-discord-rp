@@ -4,5 +4,5 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 
 data class DiscordProjectSettings(
     var showRichPresence: Boolean = true,
-    var displayMode: ActivityDisplayMode = ActivityDisplayMode.FILE,
+    var displayMode: ActivityDisplayMode? = null,
 )

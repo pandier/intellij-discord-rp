@@ -23,8 +23,10 @@ abstract class DiscordDisplayModeAction(
         e.project?.discordProjectSettingsComponent?.state?.displayMode == displayMode
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {
-        if (state) {
-            e.project?.discordProjectSettingsComponent?.state?.displayMode = displayMode
+        e.project?.discordProjectSettingsComponent?.state?.displayMode = if (state) {
+            displayMode
+        } else {
+            null
         }
     }
 }
