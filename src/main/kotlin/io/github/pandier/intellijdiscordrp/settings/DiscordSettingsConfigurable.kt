@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.settings
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
+import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.discordService
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
 import javax.swing.JComponent
@@ -80,6 +81,12 @@ class DiscordSettingsConfigurable : Configurable {
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
+        }
+
+        row {
+            label("Default display mode:")
+            comboBox(ActivityDisplayMode.values().toList())
+                .bindItem(state::defaultDisplayMode.toNullableProperty())
         }
 
         group("Display Modes") {

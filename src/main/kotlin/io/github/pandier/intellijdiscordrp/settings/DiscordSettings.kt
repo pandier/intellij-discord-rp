@@ -17,6 +17,7 @@ data class DiscordSettings(
     var reconnectOnUpdate: Boolean = true,
     var customApplicationIdEnabled: Boolean = false,
     var customApplicationId: String = "",
+    var defaultDisplayMode: ActivityDisplayMode = ActivityDisplayMode.FILE,
 
     var applicationDetails: String = "",
     var applicationState: String = "",

@@ -68,11 +68,14 @@ class DiscordService : Disposable {
     fun changeActivity(activityContext: ActivityContext?) {
         this.activityContext = activityContext
 
+        val projectSettings = activityContext?.project?.get()?.discordProjectSettingsComponent?.state
         val activity = when {
-            activityContext?.project?.get()?.discordProjectSettingsComponent?.state?.showRichPresence == true ->
-                discordSettingsComponent.state.getActivityFactory(activityContext.highestSupportedDisplayMode)
+            projectSettings != null && projectSettings.showRichPresence -> {
+                val defaultDisplayMode = discordSettingsComponent.state.defaultDisplayMode
+                val displayMode = (projectSettings.displayMode ?: defaultDisplayMode).getLower(activityContext.highestSupportedDisplayMode)
+                discordSettingsComponent.state.getActivityFactory(displayMode)
                     .create(activityContext)
-
+            }
             else -> null
         }
 

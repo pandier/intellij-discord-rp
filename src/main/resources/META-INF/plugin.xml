@@ -12,7 +12,7 @@
         <ul>
             <li>Display your work in Discord!</li>
             <li>Customize with variables</li>
-            <li>Hide projects that you don't want others to see</li>
+            <li>Change display mode per project (or hide the project)</li>
             <li>Support for more than 20 languages (with more to come)</li>
             <li>Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)</li>
             <li>Use custom Discord application id</li>
@@ -44,11 +44,31 @@
             <add-to-group group-id="ToolsMenu"/>
             <action id="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
                     class="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
-                    text="Reconnect to Discord Client">
+                    text="Reconnect Discord Client">
             </action>
+            <separator />
             <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
-                    text="Show Rich Presence in Current Project">
+                    text="Show Rich Presence in Project">
+            </action>
+        </group>
+        <group id="io.github.pandier.intellijdiscordrp.action.DiscordChangeDisplayModeActionGroup"
+               text="Change Display Mode in Project"
+               popup="true">
+            <add-to-group group-id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
+                          relative-to-action="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
+                          anchor="before" />
+            <action id="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
+                    text="Application">
+            </action>
+            <action id="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
+                    text="Project">
+            </action>
+            <action id="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
+                    class="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
+                    text="File">
             </action>
         </group>
     </actions>
