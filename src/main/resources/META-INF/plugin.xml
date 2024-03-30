@@ -1,5 +1,5 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin url="https://github.com/pandier/intellij-discord-rp">
     <id>io.github.pandier.intellijdiscordrp</id>
     <name>Discord Rich Presence</name>
     <vendor url="https://github.com/pandier">Pandier</vendor>
@@ -42,13 +42,13 @@
                icon="/icons/pluginActionGroup.svg"
                popup="true">
             <add-to-group group-id="ToolsMenu"/>
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
+            <action id="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
                     text="Reconnect Discord Client">
             </action>
             <separator />
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+            <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     text="Show Rich Presence in Project">
             </action>
         </group>
@@ -56,7 +56,7 @@
                text="Change Display Mode in Project"
                popup="true">
             <add-to-group group-id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
-                          relative-to-action="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+                          relative-to-action="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                           anchor="before" />
             <action id="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
                     class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
