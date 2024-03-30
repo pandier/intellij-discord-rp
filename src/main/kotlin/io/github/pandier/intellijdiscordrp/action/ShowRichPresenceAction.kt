@@ -6,7 +6,7 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.service.discordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
-class DiscordShowRichPresenceAction : DumbAwareToggleAction() {
+class ShowRichPresenceAction : DumbAwareToggleAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread =
         ActionUpdateThread.BGT

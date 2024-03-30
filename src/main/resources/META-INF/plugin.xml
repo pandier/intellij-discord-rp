@@ -42,12 +42,12 @@
                icon="/icons/pluginActionGroup.svg"
                popup="true">
             <add-to-group group-id="ToolsMenu"/>
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
+            <action id="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
                     text="Reconnect to Discord Client">
             </action>
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
+            <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     text="Show Rich Presence in Current Project">
             </action>
         </group>
