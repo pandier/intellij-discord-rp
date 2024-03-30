@@ -2,11 +2,12 @@ package io.github.pandier.intellijdiscordrp.action
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.ToggleAction
+import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.service.discordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
-class DiscordShowRichPresenceAction : ToggleAction() {
+class DiscordShowRichPresenceAction : DumbAwareToggleAction() {
+
     override fun getActionUpdateThread(): ActionUpdateThread =
         ActionUpdateThread.BGT
 
