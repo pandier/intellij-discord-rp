@@ -3,11 +3,14 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
+import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
@@ -39,6 +42,13 @@ class DiscordService : Disposable {
     private var internal: Core? = connect()
     var activityContext: ActivityContext? = null
         private set
+
+    init {
+        // Register focus change listener
+        val eventMulticaster = EditorFactory.getInstance().eventMulticaster
+        val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
+        eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
+    }
 
     private fun accessInternal(block: (Core) -> Unit) {
         if (internal == null && discordSettingsComponent.state.reconnectOnUpdate)
