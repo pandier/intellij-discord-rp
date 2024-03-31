@@ -22,6 +22,8 @@ kotlin {
 
 intellij {
     version.set("2022.3.3")
+
+    plugins.set(listOf("Git4Idea"))
 }
 
 changelog {
