@@ -89,7 +89,7 @@ class DiscordSettingsConfigurable : Configurable {
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
         }
 
-        group("Display Modes") {
+        group("Display") {
             tabbed {
                 tab(
                     "Application",
