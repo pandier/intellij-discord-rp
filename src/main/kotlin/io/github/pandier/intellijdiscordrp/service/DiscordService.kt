@@ -130,10 +130,12 @@ class DiscordService(
         val activity = when {
             projectSettings != null && projectSettings.showRichPresence -> {
                 val defaultDisplayMode = discordSettingsComponent.state.defaultDisplayMode
-                val displayMode = (projectSettings.displayMode ?: defaultDisplayMode).getLower(activityContext.highestSupportedDisplayMode)
+                val displayMode = (projectSettings.displayMode
+                    ?: defaultDisplayMode).getLower(activityContext.highestSupportedDisplayMode)
                 discordSettingsComponent.state.getActivityFactory(displayMode)
                     .create(activityContext)
             }
+
             else -> null
         }
 
