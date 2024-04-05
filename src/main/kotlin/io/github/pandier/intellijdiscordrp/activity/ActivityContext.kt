@@ -26,7 +26,7 @@ class ActivityContext(
         fun create(
             project: Project,
             file: VirtualFile? = null,
-            start: Instant = TimeTrackingService.getInstance().getOrTrack(project),
+            start: Instant = TimeTrackingService.getInstance(project).start,
         ): ActivityContext {
             val app = ApplicationInfo.getInstance()
             return ActivityContext(
