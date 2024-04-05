@@ -18,10 +18,12 @@ class RichPresenceFileListener : FileEditorManagerListener {
     }
 
     override fun selectionChanged(event: FileEditorManagerEvent) {
-        if (event.newFile == null) {
-            fileClosed(event.manager, event.oldFile)
-        } else {
-            fileOpened(event.manager, event.newFile)
+        val newFile = event.newFile
+        val oldFile = event.oldFile
+        if (newFile == null && oldFile != null) {
+            fileClosed(event.manager, oldFile)
+        } else if (newFile != null) {
+            fileOpened(event.manager, newFile)
         }
     }
 }
