@@ -44,7 +44,7 @@ private fun connect(): Core? = runCatching {
  */
 @Service
 class DiscordService(
-    private val scope: CoroutineScope,
+    val scope: CoroutineScope,
 ) : Disposable {
 
     /**

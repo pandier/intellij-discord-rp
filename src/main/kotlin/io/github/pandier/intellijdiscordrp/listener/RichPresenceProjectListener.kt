@@ -1,5 +1,6 @@
 package io.github.pandier.intellijdiscordrp.listener
 
+import com.intellij.openapi.application.EDT
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.openapi.startup.StartupActivity
@@ -7,13 +8,17 @@ import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.service.discordService
 import io.github.pandier.intellijdiscordrp.service.timeTrackingService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RichPresenceProjectListener : ProjectManagerListener, StartupActivity {
 
     override fun projectClosed(project: Project) {
         timeTrackingService.stop(project)
         if (discordService.activityContext?.project?.get() == project) {
-            discordService.clearActivity()
+            discordService.scope.launch(Dispatchers.EDT) {
+                discordService.clearActivity()
+            }
         }
     }
 
@@ -21,7 +26,10 @@ class RichPresenceProjectListener : ProjectManagerListener, StartupActivity {
         DiscordRichPresencePlugin.registerEditorListeners()
 
         if (discordService.activityContext?.project?.get() != project) {
-            discordService.changeActivity(ActivityContext.create(project = project))
+            val context = ActivityContext.create(project = project)
+            discordService.scope.launch(Dispatchers.EDT) {
+                discordService.changeActivity(context)
+            }
         }
     }
 }
