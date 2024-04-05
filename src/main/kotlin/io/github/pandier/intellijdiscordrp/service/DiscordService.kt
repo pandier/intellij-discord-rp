@@ -4,12 +4,15 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.util.concurrency.annotations.RequiresEdt
+import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
+import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 import kotlinx.coroutines.*
@@ -46,6 +49,13 @@ class DiscordService(
     companion object {
         @JvmStatic
         fun getInstance(): DiscordService = service()
+    }
+
+    init {
+        // Register focus change listener
+        val eventMulticaster = EditorFactory.getInstance().eventMulticaster
+        val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
+        eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
     }
 
     /**
