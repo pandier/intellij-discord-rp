@@ -3,13 +3,17 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.util.concurrency.annotations.RequiresEdt
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
+import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 
 val discordService: DiscordService
     get() = service()
@@ -34,37 +38,89 @@ private fun connect(): Core? = runCatching {
     null
 }
 
+/**
+ * A service that handles a connection with the Discord client and manages Rich Presence activities.
+ * The current implementation is not thread-safe and requires to be run on the Event Dispatch Thread.
+ */
 @Service
-class DiscordService : Disposable {
-    private var internal: Core? = connect()
+class DiscordService(
+    private val scope: CoroutineScope,
+) : Disposable {
+
+    /**
+     * The [ActivityContext] that is currently displayed.
+     *
+     * This property can only be accessed from the EDT thread.
+     */
     var activityContext: ActivityContext? = null
-        private set
+        @RequiresEdt get
+        @RequiresEdt private set
 
-    private fun accessInternal(block: (Core) -> Unit) {
-        if (internal == null && discordSettingsComponent.state.reconnectOnUpdate)
-            reconnect(false)
+    /**
+     * A conflated channel for communicating [Activity] changes with the connection coroutine.
+     *
+     * @see launchConnection
+     */
+    private val activityChannel: Channel<Activity?> = Channel(Channel.CONFLATED)
 
-        try {
-            internal?.also(block)
-        } catch (ex: RuntimeException) {
-            internal?.close()
-            internal = null
+    /**
+     * The connection coroutine that is currently running.
+     */
+    private var connectionJob = launchConnection()
 
-            DiscordRichPresencePlugin.logger.info(
-                "Disconnected from Discord Client",
-                ex
-            )
+    /**
+     * Returns true if connection coroutine is active.
+     */
+    val isConnected: Boolean
+        get() = connectionJob.isActive
+
+    /**
+     * Launches a new coroutine on [Dispatchers.IO] that connects
+     * to the Discord client and receives activites from [activityChannel]
+     * and sends them to the client.
+     *
+     * The connection is closed if an error happens while sending
+     * the activity or the coroutine is cancelled.
+     *
+     * TODO: Add support for reconnect setting
+     */
+    private fun launchConnection() = scope.launch(Dispatchers.IO) {
+        connect()?.use {
+            for (activity in activityChannel) {
+                try {
+                    it.activityManager()?.updateActivity(activity)
+                } catch (ex: RuntimeException) {
+                    // INFO level because error also happens when the Discord client is closed
+                    DiscordRichPresencePlugin.logger.info("An error happened while updating activity", ex)
+                    break
+                }
+            }
         }
     }
 
-    fun reconnect(update: Boolean = true) {
-        internal?.close()
-        internal = connect()
-
-        if (update)
-            updateActivity()
+    /**
+     * Closes the current connection and launches a new one.
+     * Suspends only until the connection is closed, so this function
+     * finishes before successfully connected to the client.
+     *
+     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
+     */
+    @RequiresEdt
+    suspend fun reconnect() {
+        if (isConnected)
+            connectionJob.cancelAndJoin()
+        connectionJob = launchConnection()
     }
 
+    /**
+     * Renders the [ActivityContext] and changes the activity.
+     * The [activityContext] parameter can be null for hiding the Rich Presence.
+     *
+     * The activity context is stored and can be re-rendered using [updateActivity] function.
+     *
+     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
+     */
+    @RequiresEdt
     fun changeActivity(activityContext: ActivityContext?) {
         this.activityContext = activityContext
 
@@ -79,18 +135,44 @@ class DiscordService : Disposable {
             else -> null
         }
 
-        accessInternal {
-            it.activityManager()?.updateActivity(activity)
+        // We can run blocking here, the send function of a conflated channel doesn't actually suspend
+        runBlocking {
+            activityChannel.send(activity)
         }
     }
 
+    /**
+     * Clears the activity. Equals to:
+     *
+     * ```
+     * discordService.changeActivity(null)
+     * ```
+     *
+     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
+     *
+     * @see changeActivity
+     */
+    @RequiresEdt
     fun clearActivity() =
         changeActivity(null)
 
+    /**
+     * Re-renders the latest [ActivityContext] and updates the activity. Equals to:
+     *
+     * ```
+     * discordService.changeActivity(discordService.activityContext)
+     * ```
+     *
+     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
+     *
+     * @see changeActivity
+     */
+    @RequiresEdt
     fun updateActivity() =
         changeActivity(activityContext)
 
     override fun dispose() {
-        internal?.close()
+        connectionJob.cancel()
+        activityChannel.close()
     }
 }
