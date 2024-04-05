@@ -29,7 +29,7 @@ private fun connect(): Core? = runCatching {
     })
 
     DiscordRichPresencePlugin.logger.info("Connected to Discord Client")
-    return internal
+    internal
 }.getOrElse {
     DiscordRichPresencePlugin.logger.debug("Failed to connect to Discord Client", it)
     null
