@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The default value can be configured in global settings
 
 - Added application display mode
+
+### Changed
+
+- Minimum supported IntelliJ version is now 2023.1
 - Display mode settings are now grouped into tabs
 - All actions are now dumb aware
 

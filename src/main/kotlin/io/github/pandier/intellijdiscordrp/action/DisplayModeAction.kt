@@ -2,17 +2,20 @@ package io.github.pandier.intellijdiscordrp.action
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.EDT
 import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
+import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 abstract class DisplayModeAction(
     private val displayMode: ActivityDisplayMode,
 ) : DumbAwareToggleAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread =
-        ActionUpdateThread.BGT
-
+        ActionUpdateThread.EDT
 
     override fun update(e: AnActionEvent) {
         super.update(e)
@@ -27,6 +30,11 @@ abstract class DisplayModeAction(
             displayMode
         } else {
             null
+        }
+
+        val discordService = DiscordService.getInstance()
+        discordService.scope.launch(Dispatchers.EDT) {
+            discordService.updateActivity()
         }
     }
 }

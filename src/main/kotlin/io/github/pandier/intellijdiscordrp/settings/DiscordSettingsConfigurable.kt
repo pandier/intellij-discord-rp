@@ -1,11 +1,14 @@
 package io.github.pandier.intellijdiscordrp.settings
 
+import com.intellij.openapi.application.EDT
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
-import io.github.pandier.intellijdiscordrp.service.discordService
+import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.swing.JComponent
 import kotlin.reflect.KMutableProperty0
 
@@ -89,7 +92,7 @@ class DiscordSettingsConfigurable : Configurable {
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
         }
 
-        group("Display Modes") {
+        group("Display") {
             tabbed {
                 tab(
                     "Application",
@@ -147,7 +150,11 @@ class DiscordSettingsConfigurable : Configurable {
 
     override fun apply() {
         panel.apply()
-        discordService.reconnect()
+
+        val discordService = DiscordService.getInstance()
+        discordService.scope.launch(Dispatchers.EDT) {
+            discordService.reconnect()
+        }
     }
 
     override fun reset() = panel.reset()
