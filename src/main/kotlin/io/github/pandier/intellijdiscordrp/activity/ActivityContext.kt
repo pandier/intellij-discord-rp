@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.activity
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import git4idea.GitUtil
 import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
 import java.lang.ref.WeakReference
 import java.time.Instant
@@ -20,6 +21,7 @@ class ActivityContext(
     val appFullName: String,
     val project: WeakReference<Project>,
     val projectName: String,
+    val projectRepositoryUrl: String?,
     val file: ActivityFileContext? = null,
 ) {
     companion object Factory {
@@ -28,13 +30,17 @@ class ActivityContext(
             file: VirtualFile? = null,
             start: Instant = TimeTrackingService.getInstance(project).start,
         ): ActivityContext {
+            val repositoryManager = GitUtil.getRepositoryManager(project)
+            val repository = file?.let { repositoryManager.getRepositoryForFileQuick(it) }
+                ?: repositoryManager.repositories.firstOrNull()
             val app = ApplicationInfo.getInstance()
             return ActivityContext(
                 start = start,
                 appName = app.versionName,
                 appFullName = app.fullApplicationName,
-                projectName = project.name,
                 project = WeakReference(project),
+                projectName = project.name,
+                projectRepositoryUrl = repository?.remotes?.let(GitUtil::getDefaultOrFirstRemote)?.firstUrl,
                 file = file?.let {
                     val activityFileType = it.activityFileType
                     ActivityFileContext(
