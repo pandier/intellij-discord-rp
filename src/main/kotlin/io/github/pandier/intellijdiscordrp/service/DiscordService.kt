@@ -81,8 +81,6 @@ class DiscordService(
      *
      * The connection is closed if an error happens while sending
      * the activity or the coroutine is cancelled.
-     *
-     * TODO: Add support for reconnect setting
      */
     private fun launchConnection() = scope.launch(Dispatchers.IO) {
         connect()?.use {
@@ -118,10 +116,13 @@ class DiscordService(
      *
      * The activity context is stored and can be re-rendered using [updateActivity] function.
      *
+     * When the `reconnectOnUpdate` setting is enabled, [reconnect] is called
+     * and can suspend this function until the connection is closed.
+     *
      * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
      */
     @RequiresEdt
-    fun changeActivity(activityContext: ActivityContext?) {
+    suspend fun changeActivity(activityContext: ActivityContext?) {
         this.activityContext = activityContext
 
         val projectSettings = activityContext?.project?.get()?.discordProjectSettingsComponent?.state
@@ -139,6 +140,9 @@ class DiscordService(
         runBlocking {
             activityChannel.send(activity)
         }
+
+        if (!isConnected && discordSettingsComponent.state.reconnectOnUpdate)
+            reconnect()
     }
 
     /**
@@ -153,7 +157,7 @@ class DiscordService(
      * @see changeActivity
      */
     @RequiresEdt
-    fun clearActivity() =
+    suspend fun clearActivity() =
         changeActivity(null)
 
     /**
@@ -168,7 +172,7 @@ class DiscordService(
      * @see changeActivity
      */
     @RequiresEdt
-    fun updateActivity() =
+    suspend fun updateActivity() =
         changeActivity(activityContext)
 
     override fun dispose() {
