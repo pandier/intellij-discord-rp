@@ -5,11 +5,13 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import java.time.Instant
 
-val timeTrackingService: TimeTrackingService
-    get() = service()
-
 @Service
 class TimeTrackingService {
+    companion object {
+        @JvmStatic
+        fun getInstance(): TimeTrackingService = service()
+    }
+
     private val times: MutableMap<String, Instant> = mutableMapOf()
 
     fun track(

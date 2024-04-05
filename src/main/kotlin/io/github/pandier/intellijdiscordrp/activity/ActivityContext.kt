@@ -3,7 +3,7 @@ package io.github.pandier.intellijdiscordrp.activity
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import io.github.pandier.intellijdiscordrp.service.timeTrackingService
+import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
 import java.lang.ref.WeakReference
 import java.time.Instant
 
@@ -26,7 +26,7 @@ class ActivityContext(
         fun create(
             project: Project,
             file: VirtualFile? = null,
-            start: Instant = timeTrackingService.getOrTrack(project),
+            start: Instant = TimeTrackingService.getInstance().getOrTrack(project),
         ): ActivityContext {
             val app = ApplicationInfo.getInstance()
             return ActivityContext(

@@ -15,9 +15,6 @@ import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettin
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 
-val discordService: DiscordService
-    get() = service()
-
 private fun connect(): Core? = runCatching {
     val settings = discordSettingsComponent.state
     val applicationId = if (settings.customApplicationIdEnabled) {
@@ -46,6 +43,10 @@ private fun connect(): Core? = runCatching {
 class DiscordService(
     val scope: CoroutineScope,
 ) : Disposable {
+    companion object {
+        @JvmStatic
+        fun getInstance(): DiscordService = service()
+    }
 
     /**
      * The [ActivityContext] that is currently displayed.
