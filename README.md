@@ -16,7 +16,7 @@ A highly customizable IntelliJ plugin that adds stylish Rich Presence support to
 - Customize with variables
 - Change display mode per project (or hide the project)
 - Support for more than 20 languages (with more to come)
-- Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)
+- Support for all JetBrains IDEs
 - Use custom Discord application id
 
 ## 👀 Showcase

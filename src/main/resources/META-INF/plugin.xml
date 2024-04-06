@@ -14,7 +14,7 @@
             <li>Customize with variables</li>
             <li>Change display mode per project (or hide the project)</li>
             <li>Support for more than 20 languages (with more to come)</li>
-            <li>Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)</li>
+            <li>Support for all JetBrains IDEs</li>
             <li>Use custom Discord application id</li>
         </ul>
 
