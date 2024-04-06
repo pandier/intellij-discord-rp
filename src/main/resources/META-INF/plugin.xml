@@ -33,7 +33,7 @@
                 id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 displayName="Discord Rich Presence"/>
 
-        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"/>
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
     </extensions>
 
     <actions>
