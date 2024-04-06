@@ -8,13 +8,13 @@ enum class ActivityApplicationType(
     private val iconFile: String = "fallback.png",
     val discordApplicationId: Long = 1221061074640703588L,
 ) {
-    INTELLIJ_IDEA(listOf("IC", "IU", "IE"), "ij.png", 1107202385799041054L),
-    PYCHARM(listOf("PC", "PY", "PE"), "pc.png", 1221060663066234961L),
-    PHPSTORM(listOf("PS"), "ps.png", 1221061217385189477L),
-    WEBSTORM(listOf("WS"), "ws.png", 1221061703505281114L),
-    CLION(listOf("CL"), "cl.png", 1221061311719280710L),
-    GOLAND(listOf("GO"), "go.png", 1221061846522658837L),
-    RIDER(listOf("RD"), "rd.png", 1221061953783336960L),
+    INTELLIJ_IDEA(listOf("IC", "IU", "IE"), "idea.png", 1107202385799041054L),
+    PYCHARM(listOf("PC", "PY", "PE"), "pycharm.png", 1221060663066234961L),
+    PHPSTORM(listOf("PS"), "phpstorm.png", 1221061217385189477L),
+    WEBSTORM(listOf("WS"), "webstorm.png", 1221061703505281114L),
+    CLION(listOf("CL"), "clion.png", 1221061311719280710L),
+    GOLAND(listOf("GO"), "goland.png", 1221061846522658837L),
+    RIDER(listOf("RD"), "rider.png", 1221061953783336960L),
     OTHER;
 
     val icon: String
