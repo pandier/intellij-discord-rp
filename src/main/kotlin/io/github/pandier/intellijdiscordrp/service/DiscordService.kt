@@ -3,9 +3,9 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.util.concurrency.annotations.RequiresEdt
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
+import com.intellij.util.concurrency.annotations.RequiresEdt
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import de.jcm.discordgamesdk.activity.Activity
@@ -17,6 +17,8 @@ import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 private fun connect(): Core? = runCatching {
     val settings = discordSettingsComponent.state
@@ -86,39 +88,71 @@ class DiscordService(
         get() = connectionJob.isActive
 
     /**
+     * A [Mutex] that is locked when a connection is being established.
+     */
+    private val reconnectMutex = Mutex(true)
+
+    /**
      * Launches a new coroutine on [Dispatchers.IO] that connects
      * to the Discord client and receives activites from [activityChannel]
      * and sends them to the client.
      *
      * The connection is closed if an error happens while sending
      * the activity or the coroutine is cancelled.
+     *
+     * The [reconnectMutex] is unlocked when a connection
+     * with the Discord client was created or failed creating.
      */
     private fun launchConnection() = scope.launch(Dispatchers.IO) {
-        connect()?.use {
-            for (activity in activityChannel) {
-                try {
-                    it.activityManager()?.updateActivity(activity)
-                } catch (ex: RuntimeException) {
-                    // INFO level because error also happens when the Discord client is closed
-                    DiscordRichPresencePlugin.logger.info("An error happened while updating activity", ex)
-                    break
+        var reconnectUnlocked = false
+        try {
+            connect()?.use {
+                if (reconnectMutex.isLocked) {
+                    reconnectUnlocked = true
+                    reconnectMutex.unlock()
+                }
+
+                for (activity in activityChannel) {
+                    try {
+                        it.activityManager()?.updateActivity(activity)
+                    } catch (ex: RuntimeException) {
+                        // INFO level because error also happens when the Discord client is closed
+                        DiscordRichPresencePlugin.logger.info("An error happened while updating activity", ex)
+                        break
+                    }
                 }
             }
+        } finally {
+            if (!reconnectUnlocked && reconnectMutex.isLocked)
+                reconnectMutex.unlock()
         }
     }
 
     /**
      * Closes the current connection and launches a new one.
-     * Suspends only until the connection is closed, so this function
-     * finishes before successfully connected to the client.
+     * Suspends until a connection was achieved with the client.
      *
-     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
+     * When this function is called while a reconnecting process is already happening,
+     * it doesn't start a new reconnecting process, but suspends until the existing one has finished.
+     *
+     * This function is thread-safe.
      */
-    @RequiresEdt
     suspend fun reconnect() {
+        // If already reconnecting
+        if (reconnectMutex.isLocked) {
+            // Wait until reconnect is finished
+            reconnectMutex.withLock {}
+            return
+        }
+
+        // Start reconnecting
+        reconnectMutex.lock()
         if (isConnected)
             connectionJob.cancelAndJoin()
         connectionJob = launchConnection()
+
+        // Wait until reconnect mutex is unlocked by connection coroutine
+        reconnectMutex.withLock {}
     }
 
     /**
@@ -127,8 +161,8 @@ class DiscordService(
      *
      * The activity context is stored and can be re-rendered using [updateActivity] function.
      *
-     * When the `reconnectOnUpdate` setting is enabled, [reconnect] is called
-     * and can suspend this function until the connection is closed.
+     * When the `reconnectOnUpdate` setting is enabled, [reconnect] is called when not connected
+     * and suspends this function until the reconnect process has finished.
      *
      * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
      */
@@ -140,10 +174,12 @@ class DiscordService(
         val activity = when {
             projectSettings != null && projectSettings.showRichPresence -> {
                 val defaultDisplayMode = discordSettingsComponent.state.defaultDisplayMode
-                val displayMode = (projectSettings.displayMode ?: defaultDisplayMode).getLower(activityContext.highestSupportedDisplayMode)
+                val displayMode = (projectSettings.displayMode
+                    ?: defaultDisplayMode).getLower(activityContext.highestSupportedDisplayMode)
                 discordSettingsComponent.state.getActivityFactory(displayMode)
                     .create(activityContext)
             }
+
             else -> null
         }
 
