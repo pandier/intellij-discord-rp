@@ -1,6 +1,5 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-import com.intellij.openapi.application.EDT
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
@@ -152,7 +151,7 @@ class DiscordSettingsConfigurable : Configurable {
         panel.apply()
 
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.EDT) {
+        discordService.scope.launch(Dispatchers.Default) {
             discordService.reconnect()
         }
     }
