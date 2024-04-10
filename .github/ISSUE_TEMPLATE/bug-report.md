@@ -1,6 +1,6 @@
 ---
 name: "\U0001F41E Bug report"
-about: Found a bug? We'll fix it as soon as possible!
+about: Found a bug? It'll be fixed as soon as possible!
 title: ''
 labels: 'type: bug'
 assignees: ''
@@ -9,13 +9,13 @@ assignees: ''
 
 **Replace this** with a clear and concise description of the bug.
 
-## Expected behaviour
+### Expected behaviour
 
 
-## Actual outcome
+### Actual outcome
 
 
-## Environment
+### Environment
 
 - IDE with version: 
 - Plugin version:
