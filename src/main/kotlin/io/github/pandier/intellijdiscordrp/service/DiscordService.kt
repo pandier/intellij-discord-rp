@@ -5,7 +5,6 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
-import com.intellij.util.concurrency.annotations.RequiresEdt
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
 import de.jcm.discordgamesdk.activity.Activity
@@ -42,7 +41,6 @@ private fun connect(): Core? = runCatching {
 
 /**
  * A service that handles a connection with the Discord client and manages Rich Presence activities.
- * The current implementation is not thread-safe and requires to be run on the Event Dispatch Thread.
  */
 @Service
 class DiscordService(
@@ -62,12 +60,10 @@ class DiscordService(
 
     /**
      * The [ActivityContext] that is currently displayed.
-     *
-     * This property can only be accessed from the EDT thread.
      */
+    @Volatile
     var activityContext: ActivityContext? = null
-        @RequiresEdt get
-        @RequiresEdt private set
+        private set
 
     /**
      * A conflated channel for communicating [Activity] changes with the connection coroutine.
@@ -163,10 +159,7 @@ class DiscordService(
      *
      * When the `reconnectOnUpdate` setting is enabled, [reconnect] is called when not connected
      * and suspends this function until the reconnect process has finished.
-     *
-     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
      */
-    @RequiresEdt
     suspend fun changeActivity(activityContext: ActivityContext?) {
         this.activityContext = activityContext
 
@@ -183,10 +176,7 @@ class DiscordService(
             else -> null
         }
 
-        // We can run blocking here, the send function of a conflated channel doesn't actually suspend
-        runBlocking {
-            activityChannel.send(activity)
-        }
+        activityChannel.send(activity)
 
         if (!isConnected && discordSettingsComponent.state.reconnectOnUpdate)
             reconnect()
@@ -199,11 +189,8 @@ class DiscordService(
      * discordService.changeActivity(null)
      * ```
      *
-     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
-     *
      * @see changeActivity
      */
-    @RequiresEdt
     suspend fun clearActivity() =
         changeActivity(null)
 
@@ -214,11 +201,8 @@ class DiscordService(
      * discordService.changeActivity(discordService.activityContext)
      * ```
      *
-     * This function is not thread-safe and requires to be run on the Event Dispatch Thread.
-     *
      * @see changeActivity
      */
-    @RequiresEdt
     suspend fun updateActivity() =
         changeActivity(activityContext)
 
