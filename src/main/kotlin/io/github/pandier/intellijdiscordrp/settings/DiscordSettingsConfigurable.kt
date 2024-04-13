@@ -1,14 +1,14 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
+import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.swing.JComponent
 import kotlin.reflect.KMutableProperty0
 
 private fun displayModeSettings(
@@ -68,8 +68,9 @@ private fun displayModeSettings(
     }.enabledIf(smallImageCheckBox.selected)
 }
 
-class DiscordSettingsConfigurable : Configurable {
-    private val panel = panel {
+class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
+
+    override fun createPanel(): DialogPanel = panel {
         val state = discordSettingsComponent.state
 
         row {
@@ -141,20 +142,12 @@ class DiscordSettingsConfigurable : Configurable {
         }
     }
 
-    override fun getDisplayName(): String = "Discord Rich Presence"
-
-    override fun createComponent(): JComponent = panel
-
-    override fun isModified(): Boolean = panel.isModified()
-
     override fun apply() {
-        panel.apply()
-
-        val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.IO) {
-            discordService.reconnect()
+        if (validateAndApply()) {
+            val discordService = DiscordService.getInstance()
+            discordService.scope.launch(Dispatchers.IO) {
+                discordService.reconnect()
+            }
         }
     }
-
-    override fun reset() = panel.reset()
 }
