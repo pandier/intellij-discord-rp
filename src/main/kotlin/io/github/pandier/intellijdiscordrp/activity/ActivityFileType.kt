@@ -13,6 +13,7 @@ enum class ActivityFileType(
     CPP("C++", "c++", hashSetOf("cpp", "h", "hpp", "tcc"), "cpp.png"),
     CSHARP("C#", "c#", hashSetOf("cs"), "csharp.png"),
     CSS("CSS", "css", hashSetOf("css"), "css.png"),
+    DART("DART", "dart", hashSetOf("dart"), "dart.png"),
     GO("Go", "go", hashSetOf("go"), "go.png"),
     GRADLE("Gradle", "gradle", hashSetOf("gradle"), "gradle.png"),
     GROOVY("Groovy", "groovy", hashSetOf("groovy", "gy"), "groovy.png"),
