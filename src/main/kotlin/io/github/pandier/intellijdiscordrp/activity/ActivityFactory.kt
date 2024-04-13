@@ -18,17 +18,17 @@ class ActivityFactory(
     private val smallImageText: String = "",
 ) {
     fun create(info: ActivityContext): Activity = Activity().also {
-        if (details.isNotEmpty())
+        if (details.isNotBlank())
             it.details = info.format(displayMode, details)
-        if (state.isNotEmpty())
+        if (state.isNotBlank())
             it.state = info.format(displayMode, state)
 
-        if (largeImage != null && largeImageText.isNotEmpty()) {
+        if (largeImage != null && largeImageText.isNotBlank()) {
             it.assets().largeImage = largeImage.getIcon(info)
             it.assets().largeText = info.format(displayMode, largeImageText)
         }
 
-        if (smallImage != null && smallImageText.isNotEmpty()) {
+        if (smallImage != null && smallImageText.isNotBlank()) {
             it.assets().smallImage = smallImage.getIcon(info)
             it.assets().smallText = info.format(displayMode, smallImageText)
         }

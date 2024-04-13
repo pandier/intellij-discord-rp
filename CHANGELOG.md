@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Display mode settings are now grouped into tabs
 - All actions are now dumb aware
 
+### Fixed
+
+- Blank fields causing the activity to not show up
+
 ## [1.0.2] - 2024-03-29
 
 ### Fixed
