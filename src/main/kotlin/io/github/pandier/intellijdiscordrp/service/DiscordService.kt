@@ -22,7 +22,7 @@ import kotlinx.coroutines.sync.withLock
 private fun connect(): Core? = runCatching {
     val settings = discordSettingsComponent.state
     val applicationId = if (settings.customApplicationIdEnabled) {
-        settings.customApplicationId.toLong()
+        settings.customApplicationId.toULong().toLong()
     } else {
         currentActivityApplicationType.discordApplicationId
     }
