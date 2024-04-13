@@ -2,7 +2,6 @@ package io.github.pandier.intellijdiscordrp.action
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.application.EDT
 import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
@@ -26,7 +25,7 @@ class ShowRichPresenceAction : DumbAwareToggleAction() {
         e.project?.discordProjectSettingsComponent?.state?.showRichPresence = state
 
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.EDT) {
+        discordService.scope.launch(Dispatchers.IO) {
             discordService.updateActivity()
         }
     }

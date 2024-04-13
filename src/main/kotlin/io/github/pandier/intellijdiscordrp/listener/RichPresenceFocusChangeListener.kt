@@ -1,6 +1,5 @@
 package io.github.pandier.intellijdiscordrp.listener
 
-import com.intellij.openapi.application.EDT
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.ex.FocusChangeListener
 import com.intellij.openapi.fileEditor.FileEditorManager
@@ -19,7 +18,7 @@ object RichPresenceFocusChangeListener : FocusChangeListener {
             val file = fileEditorManager.selectedFiles.firstOrNull()
 
             val context = ActivityContext.create(project = project, file = file)
-            discordService.scope.launch(Dispatchers.EDT) {
+            discordService.scope.launch(Dispatchers.IO) {
                 discordService.changeActivity(context)
             }
         }

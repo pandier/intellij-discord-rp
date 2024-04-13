@@ -1,6 +1,5 @@
 package io.github.pandier.intellijdiscordrp.listener
 
-import com.intellij.openapi.application.EDT
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
@@ -15,7 +14,7 @@ class RichPresenceFileListener : FileEditorManagerListener {
     override fun fileOpened(source: FileEditorManager, file: VirtualFile) {
         val context = ActivityContext.create(project = source.project, file = file)
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.EDT) {
+        discordService.scope.launch(Dispatchers.IO) {
             discordService.changeActivity(context)
         }
     }
@@ -23,7 +22,7 @@ class RichPresenceFileListener : FileEditorManagerListener {
     override fun fileClosed(source: FileEditorManager, file: VirtualFile) {
         val context = ActivityContext.create(project = source.project)
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.EDT) {
+        discordService.scope.launch(Dispatchers.IO) {
             discordService.changeActivity(context)
         }
     }

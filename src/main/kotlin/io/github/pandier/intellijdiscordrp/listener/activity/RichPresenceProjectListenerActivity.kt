@@ -1,6 +1,5 @@
 package io.github.pandier.intellijdiscordrp.listener.activity
 
-import com.intellij.openapi.application.EDT
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
@@ -12,9 +11,9 @@ class RichPresenceProjectListenerActivity : ProjectActivity {
 
     override suspend fun execute(project: Project) {
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.EDT) {
-            if (discordService.activityContext?.project?.get() != project) {
-                val context = ActivityContext.create(project = project)
+        if (discordService.activityContext?.project?.get() != project) {
+            val context = ActivityContext.create(project = project)
+            discordService.scope.launch(Dispatchers.IO) {
                 discordService.changeActivity(context)
             }
         }
