@@ -4,7 +4,6 @@ import com.intellij.openapi.util.NlsContexts
 import com.intellij.ui.dsl.builder.Cell
 import javax.swing.JComponent
 
-
 fun <T : JComponent> Cell<T>.errorOnInput(
     @NlsContexts.DialogMessage message: String,
     condition: (T) -> Boolean

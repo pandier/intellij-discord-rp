@@ -69,11 +69,6 @@ enum class ActivityDisplayMode(
     companion object {
 
         /**
-         * The default display mode that will be used when other display modes are not available.
-         */
-        val default = APPLICATION
-
-        /**
          * Returns the highest display mode that isn't higher the given display mode
          * and supports the given [ActivityContext].
          */
@@ -82,7 +77,7 @@ enum class ActivityDisplayMode(
             for (i in highest.ordinal downTo 0)
                 if (values[i].supports(context))
                     return values[i]
-            return default
+            return APPLICATION
         }
 
         /**
@@ -93,7 +88,7 @@ enum class ActivityDisplayMode(
             for (i in values.lastIndex downTo 0)
                 if (values[i].supports(context))
                     return values[i]
-            return default
+            return APPLICATION
         }
     }
 
