@@ -10,6 +10,7 @@ import de.jcm.discordgamesdk.CreateParams
 import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
+import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
@@ -174,8 +175,10 @@ class DiscordService(
         val activity = when {
             projectSettings != null && projectSettings.showRichPresence -> {
                 val defaultDisplayMode = discordSettingsComponent.state.defaultDisplayMode
-                val displayMode = (projectSettings.displayMode
-                    ?: defaultDisplayMode).getLower(activityContext.highestSupportedDisplayMode)
+                val displayMode = ActivityDisplayMode.getSupportedFrom(
+                    projectSettings.displayMode ?: defaultDisplayMode,
+                    activityContext
+                )
                 discordSettingsComponent.state.getActivityFactory(displayMode)
                     .create(activityContext)
             }

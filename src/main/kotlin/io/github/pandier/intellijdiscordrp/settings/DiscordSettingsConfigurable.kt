@@ -6,12 +6,15 @@ import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
+import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
+import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.reflect.KMutableProperty0
 
-private fun displayModeSettings(
+private fun TabbedBuilder.displayModeTab(
+    displayMode: ActivityDisplayMode,
     imageSettings: List<ImageSetting>,
     details: KMutableProperty0<String>,
     state: KMutableProperty0<String>,
@@ -21,51 +24,62 @@ private fun displayModeSettings(
     smallImage: KMutableProperty0<ImageSetting>,
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
-): Panel.() -> Unit = {
-    row("Details:") {
-        textField()
-            .align(AlignX.FILL)
-            .bindText(details)
-    }
-    row("State:") {
-        textField()
-            .align(AlignX.FILL)
-            .bindText(state)
-    }
-
-    // Large image settings
-    lateinit var largeImageCheckBox: Cell<JBCheckBox>
-    row {
-        largeImageCheckBox = checkBox("Large image")
-            .bindSelected(largeImageEnabled)
-    }
-    indent {
-        row {
-            label("Image:")
-            comboBox(imageSettings)
-                .bindItem(largeImage.toNullableProperty())
-            label("Text:")
+) {
+    tab(displayMode.toString()) {
+        row("Details:") {
             textField()
-                .bindText(largeImageText)
+                .columns(COLUMNS_LARGE)
+                .bindText(details)
+                .also { it.component.emptyText.text = "Optional" }
         }
-    }.enabledIf(largeImageCheckBox.selected)
-
-    // Small image settings
-    lateinit var smallImageCheckBox: Cell<JBCheckBox>
-    row {
-        smallImageCheckBox = checkBox("Small image")
-            .bindSelected(smallImageEnabled)
-    }
-    indent {
-        row {
-            label("Image:")
-            comboBox(imageSettings)
-                .bindItem(smallImage.toNullableProperty())
-            label("Text:")
+        row("State:") {
             textField()
-                .bindText(smallImageText)
+                .columns(COLUMNS_LARGE)
+                .bindText(state)
+                .also { it.component.emptyText.text = "Optional" }
         }
-    }.enabledIf(smallImageCheckBox.selected)
+
+        // Large image settings
+        lateinit var largeImageCheckBox: Cell<JBCheckBox>
+        row {
+            largeImageCheckBox = checkBox("Large image")
+                .bindSelected(largeImageEnabled)
+        }
+        indent {
+            row {
+                label("Icon:")
+                comboBox(imageSettings)
+                    .bindItem(largeImage.toNullableProperty())
+                label("Text:")
+                textField()
+                    .bindText(largeImageText)
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+            }
+        }.enabledIf(largeImageCheckBox.selected)
+
+        // Small image settings
+        lateinit var smallImageCheckBox: Cell<JBCheckBox>
+        row {
+            smallImageCheckBox = checkBox("Small image")
+                .bindSelected(smallImageEnabled)
+        }
+        indent {
+            row {
+                label("Icon:")
+                comboBox(imageSettings)
+                    .bindItem(smallImage.toNullableProperty())
+                label("Text:")
+                textField()
+                    .bindText(smallImageText)
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+            }
+        }.enabledIf(smallImageCheckBox.selected)
+
+        row {
+            val lines = displayMode.variables.map { variable -> "<code>$variable</code> - ${variable.description}" }
+            comment(lines.joinToString("<br/>"))
+        }
+    }
 }
 
 class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
@@ -84,59 +98,60 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
+                .errorOnInput("Must be a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+                .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                .errorOnApply("Must be a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
         }
 
         row {
             label("Default display mode:")
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
+                .comment(
+                    "Applied to all projects that don't configure a specific display mode.<br/>" +
+                            "Use 'Change Display Mode in Project' action for changing the display mode in a project."
+                )
         }
 
         group("Display") {
             tabbed {
-                tab(
-                    "Application",
-                    displayModeSettings(
-                        imageSettings = listOf(ImageSetting.APPLICATION),
-                        details = state::applicationDetails,
-                        state = state::applicationState,
-                        largeImage = state::applicationLargeImage,
-                        largeImageEnabled = state::applicationLargeImageEnabled,
-                        largeImageText = state::applicationLargeImageText,
-                        smallImage = state::applicationSmallImage,
-                        smallImageEnabled = state::applicationSmallImageEnabled,
-                        smallImageText = state::applicationSmallImageText,
-                    )
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.APPLICATION,
+                    imageSettings = listOf(ImageSetting.APPLICATION),
+                    details = state::applicationDetails,
+                    state = state::applicationState,
+                    largeImage = state::applicationLargeImage,
+                    largeImageEnabled = state::applicationLargeImageEnabled,
+                    largeImageText = state::applicationLargeImageText,
+                    smallImage = state::applicationSmallImage,
+                    smallImageEnabled = state::applicationSmallImageEnabled,
+                    smallImageText = state::applicationSmallImageText,
                 )
 
-                tab(
-                    "Project",
-                    displayModeSettings(
-                        imageSettings = listOf(ImageSetting.APPLICATION),
-                        details = state::projectDetails,
-                        state = state::projectState,
-                        largeImage = state::projectLargeImage,
-                        largeImageEnabled = state::projectLargeImageEnabled,
-                        largeImageText = state::projectLargeImageText,
-                        smallImage = state::projectSmallImage,
-                        smallImageEnabled = state::projectSmallImageEnabled,
-                        smallImageText = state::projectSmallImageText,
-                    )
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.PROJECT,
+                    imageSettings = listOf(ImageSetting.APPLICATION),
+                    details = state::projectDetails,
+                    state = state::projectState,
+                    largeImage = state::projectLargeImage,
+                    largeImageEnabled = state::projectLargeImageEnabled,
+                    largeImageText = state::projectLargeImageText,
+                    smallImage = state::projectSmallImage,
+                    smallImageEnabled = state::projectSmallImageEnabled,
+                    smallImageText = state::projectSmallImageText,
                 )
 
-                tab(
-                    "File",
-                    displayModeSettings(
-                        imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
-                        details = state::fileDetails,
-                        state = state::fileState,
-                        largeImage = state::fileLargeImage,
-                        largeImageEnabled = state::fileLargeImageEnabled,
-                        largeImageText = state::fileLargeImageText,
-                        smallImage = state::fileSmallImage,
-                        smallImageEnabled = state::fileSmallImageEnabled,
-                        smallImageText = state::fileSmallImageText,
-                    )
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.FILE,
+                    imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
+                    details = state::fileDetails,
+                    state = state::fileState,
+                    largeImage = state::fileLargeImage,
+                    largeImageEnabled = state::fileLargeImageEnabled,
+                    largeImageText = state::fileLargeImageText,
+                    smallImage = state::fileSmallImage,
+                    smallImageEnabled = state::fileSmallImageEnabled,
+                    smallImageText = state::fileSmallImageText,
                 )
             }
         }

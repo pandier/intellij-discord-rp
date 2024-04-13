@@ -1,14 +1,118 @@
 package io.github.pandier.intellijdiscordrp.activity
 
+/**
+ * Represents an activity display mode.
+ */
 enum class ActivityDisplayMode(
     private val friendlyName: String,
+    private val condition: ActivityContext.() -> Boolean = { true },
+    val variables: List<ActivityVariable>,
 ) {
-    APPLICATION("Application"),
-    PROJECT("Project"),
-    FILE("File");
+    /**
+     * Shown only when deliberately configured in settings, mainly used for privacy reasons.
+     */
+    APPLICATION(
+        friendlyName = "Application",
+        variables = listOf(
+            ActivityVariable(
+                name = "app_name",
+                description = "Name of the application",
+                getter = { appName }
+            ),
+            ActivityVariable(
+                name = "app_full_name",
+                description = "Name and version of the application",
+                getter = { appFullName }
+            ),
+        )
+    ),
 
-    fun getLower(other: ActivityDisplayMode) =
-        if (other < this) other else this
+    /**
+     * Shown when not editing a file or configured in settings.
+     */
+    PROJECT(
+        friendlyName = "Project",
+        variables = APPLICATION.variables.plus(listOf(
+            ActivityVariable(
+                name = "project_name",
+                description = "Name of the current project",
+                getter = { projectName }
+            ),
+        ))
+    ),
+
+    /**
+     * Shown when editing a file.
+     */
+    FILE(
+        friendlyName = "File",
+        condition = { file != null },
+        variables = PROJECT.variables.plus(listOf(
+            ActivityVariable(
+                name = "file_name",
+                description = "Name of the edited file",
+                getter = { file?.name }
+            ),
+            ActivityVariable(
+                name = "file_path",
+                description = "Path of the edited file",
+                getter = { file?.path }
+            ),
+            ActivityVariable(
+                name = "file_type",
+                description = "The determined type of the edited file",
+                getter = { file?.typeName }
+            ),
+        ))
+    );
+
+    companion object {
+
+        /**
+         * The default display mode that will be used when other display modes are not available.
+         */
+        val default = APPLICATION
+
+        /**
+         * Returns the highest display mode that isn't higher the given display mode
+         * and supports the given [ActivityContext].
+         */
+        fun getSupportedFrom(highest: ActivityDisplayMode, context: ActivityContext): ActivityDisplayMode {
+            val values = values()
+            for (i in highest.ordinal downTo 0)
+                if (values[i].supports(context))
+                    return values[i]
+            return default
+        }
+
+        /**
+         * Returns the highest display mode that supports the given [ActivityContext].
+         */
+        fun getSupported(context: ActivityContext): ActivityDisplayMode {
+            val values = values()
+            for (i in values.lastIndex downTo 0)
+                if (values[i].supports(context))
+                    return values[i]
+            return default
+        }
+    }
+
+    /**
+     * Returns true if this display mode supports the given [ActivityContext].
+     */
+    fun supports(context: ActivityContext): Boolean =
+        condition(context)
+
+    /**
+     * Formats the given [string] with all the variables in this display mode.
+     *
+     * @see ActivityVariable.format
+     */
+    fun format(string: String, context: ActivityContext): String {
+        var formatted = string
+        variables.forEach { formatted = it.format(formatted, context) }
+        return formatted
+    }
 
     override fun toString(): String =
         friendlyName
