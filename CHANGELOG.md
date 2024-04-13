@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Progress indicator and notification for reconnecting action
 - Language support for Dart
 - Improved settings user interface
 - Support for remaining JetBrains IDEs

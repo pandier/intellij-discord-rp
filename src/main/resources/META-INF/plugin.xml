@@ -27,13 +27,18 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
+
         <applicationConfigurable
+                id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 parentId="tools"
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-                id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 displayName="Discord Rich Presence"/>
 
-        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
+        <notificationGroup id="io.github.pandier.intellijdiscordrp.notification.Reconnecting"
+                           displayType="BALLOON"
+                           bundle="messages.DiscordRichPresence"
+                           key="notification.group.reconnecting"/>
     </extensions>
 
     <actions>
