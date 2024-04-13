@@ -158,10 +158,28 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
     }
 
     override fun apply() {
+        val applicationIdBefore =
+            if (discordSettingsComponent.state.customApplicationIdEnabled)
+                discordSettingsComponent.state.customApplicationId
+            else null
+
         if (validateAndApply()) {
+            val applicationIdAfter =
+                if (discordSettingsComponent.state.customApplicationIdEnabled)
+                    discordSettingsComponent.state.customApplicationId
+                else null
+
             val discordService = DiscordService.getInstance()
-            discordService.scope.launch(Dispatchers.IO) {
-                discordService.reconnect()
+
+            // Reconnect if custom application id has been modified
+            if (applicationIdBefore != applicationIdAfter) {
+                discordService.scope.launch(Dispatchers.IO) {
+                    discordService.reconnect()
+                }
+            } else {
+                discordService.scope.launch(Dispatchers.IO) {
+                    discordService.updateActivity()
+                }
             }
         }
     }

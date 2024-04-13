@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Apply settings reconnecting only when custom application id is modified
 - Minimum supported IntelliJ version is now 2023.1
 - Display mode settings are now grouped into tabs
 - All actions are now dumb aware
