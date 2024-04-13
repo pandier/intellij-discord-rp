@@ -131,9 +131,12 @@ class DiscordService(
      * When this function is called while a reconnecting process is already happening,
      * it doesn't start a new reconnecting process, but suspends until the existing one has finished.
      *
+     * When the [update] parameter is true, [updateActivity] will be called after reconnecting
+     * with the `enableReconnecting` parameter set as false.
+     *
      * This function is thread-safe.
      */
-    suspend fun reconnect() {
+    suspend fun reconnect(update: Boolean = true) {
         // If already reconnecting
         if (reconnectMutex.isLocked) {
             // Wait until reconnect is finished
@@ -149,6 +152,9 @@ class DiscordService(
 
         // Wait until reconnect mutex is unlocked by connection coroutine
         reconnectMutex.withLock {}
+
+        if (update)
+            updateActivity()
     }
 
     /**
@@ -161,8 +167,6 @@ class DiscordService(
      * and suspends this function until the reconnect process has finished.
      */
     suspend fun changeActivity(activityContext: ActivityContext?) {
-        this.activityContext = activityContext
-
         val projectSettings = activityContext?.project?.get()?.discordProjectSettingsComponent?.state
         val activity = when {
             projectSettings != null && projectSettings.showRichPresence -> {
@@ -176,10 +180,11 @@ class DiscordService(
             else -> null
         }
 
+        this.activityContext = activityContext
         activityChannel.send(activity)
 
         if (!isConnected && discordSettingsComponent.state.reconnectOnUpdate)
-            reconnect()
+            reconnect(false)
     }
 
     /**

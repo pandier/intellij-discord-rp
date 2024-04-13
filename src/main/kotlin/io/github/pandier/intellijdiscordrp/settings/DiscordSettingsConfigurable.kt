@@ -151,7 +151,7 @@ class DiscordSettingsConfigurable : Configurable {
         panel.apply()
 
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.Default) {
+        discordService.scope.launch(Dispatchers.IO) {
             discordService.reconnect()
         }
     }
