@@ -12,7 +12,7 @@ class RichPresenceProjectListener : ProjectManagerListener {
         val discordService = DiscordService.getInstance()
         if (discordService.activityContext?.project?.get() == project) {
             discordService.scope.launch(Dispatchers.IO) {
-                discordService.clearActivity()
+                discordService.changeActivity(null)
             }
         }
     }

@@ -23,7 +23,7 @@ class ReconnectAction : DumbAwareAction() {
         discordService.scope.launch(Dispatchers.EDT) {
             @Suppress("UnstableApiUsage")
             withBackgroundProgress(project, "Reconnecting Discord client", false) {
-                discordService.reconnect()
+                discordService.reconnect().await()
 
                 NotificationGroupManager.getInstance()
                     .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")

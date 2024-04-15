@@ -7,21 +7,16 @@ import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import de.jcm.discordgamesdk.Core
 import de.jcm.discordgamesdk.CreateParams
-import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
-import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
-import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
+import io.github.pandier.intellijdiscordrp.util.MergingRunner
+import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.nio.channels.ClosedChannelException
 
 private fun connect(): Core? = runCatching {
     val settings = discordSettingsComponent.state
@@ -60,165 +55,88 @@ class DiscordService(
         val eventMulticaster = EditorFactory.getInstance().eventMulticaster
         val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
         eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
+
+        // Connect to Discord client
+        scope.launch(Dispatchers.IO) {
+            reconnect().await()
+        }
     }
 
     /**
-     * The [ActivityContext] that is currently displayed.
+     * A [Mutex] for accessing the connection.
      */
-    @Volatile
+    private val mutex: Mutex = Mutex()
+
+    /**
+     * A connection with the Discord client.
+     */
+    private var connection: Core? = null
+
+    /**
+     * The latest [ActivityContext] that was changed.
+     */
     var activityContext: ActivityContext? = null
         private set
 
     /**
-     * A conflated channel for communicating [Activity] changes with the connection coroutine.
-     *
-     * @see launchConnection
+     * A [MergingRunner] for the [reconnect] function.
      */
-    private val activityChannel: Channel<Activity?> = Channel(Channel.CONFLATED)
+    private val reconnectRunner = MergingRunner<Unit>(scope, Dispatchers.IO)
 
     /**
-     * The connection coroutine that is currently running.
+     * Starts the reconnection process or merges into an existing one.
+     * The reconnection process consists of closing the connection and starting a new one.
+     * It's executed using [MergingRunner].
      */
-    private var connectionJob = launchConnection()
-
-    /**
-     * Returns true if connection coroutine is active.
-     */
-    val isConnected: Boolean
-        get() = connectionJob.isActive
-
-    /**
-     * A [Mutex] that is locked when a connection is being established.
-     */
-    private val reconnectMutex = Mutex(true)
-
-    /**
-     * Launches a new coroutine on [Dispatchers.IO] that connects
-     * to the Discord client and receives activites from [activityChannel]
-     * and sends them to the client.
-     *
-     * The connection is closed if an error happens while sending
-     * the activity or the coroutine is cancelled.
-     *
-     * The [reconnectMutex] is unlocked when a connection
-     * with the Discord client was created or failed creating.
-     */
-    private fun launchConnection() = scope.launch(Dispatchers.IO) {
-        var reconnectUnlocked = false
-        try {
-            connect()?.use {
-                if (reconnectMutex.isLocked) {
-                    reconnectUnlocked = true
-                    reconnectMutex.unlock()
-                }
-
-                for (activity in activityChannel) {
-                    try {
-                        it.activityManager()?.updateActivity(activity)
-                    } catch (ex: RuntimeException) {
-                        // INFO level because error also happens when the Discord client is closed
-                        DiscordRichPresencePlugin.logger.info("An error happened while updating activity", ex)
-                        break
-                    }
-                }
-            }
-        } finally {
-            if (!reconnectUnlocked && reconnectMutex.isLocked)
-                reconnectMutex.unlock()
+    suspend fun reconnect(): Deferred<Unit> = reconnectRunner.run {
+        mutex.withLock {
+            connection?.close()
         }
-    }
-
-    /**
-     * Closes the current connection and launches a new one.
-     * Suspends until a connection was achieved with the client.
-     *
-     * When this function is called while a reconnecting process is already happening,
-     * it doesn't start a new reconnecting process, but suspends until the existing one has finished.
-     *
-     * When the [update] parameter is true, [updateActivity] will be called after reconnecting
-     * with the `enableReconnecting` parameter set as false.
-     *
-     * This function is thread-safe.
-     */
-    suspend fun reconnect(update: Boolean = true) {
-        // If already reconnecting
-        if (reconnectMutex.isLocked) {
-            // Wait until reconnect is finished
-            reconnectMutex.withLock {}
-            return
+        val newConnection = connect()
+        mutex.withLock {
+            connection = newConnection
         }
-
-        // Start reconnecting
-        reconnectMutex.lock()
-        if (isConnected)
-            connectionJob.cancelAndJoin()
-        connectionJob = launchConnection()
-
-        // Wait until reconnect mutex is unlocked by connection coroutine
-        reconnectMutex.withLock {}
-
-        if (update)
-            updateActivity()
+        update()
     }
 
     /**
      * Renders the [ActivityContext] and changes the activity.
      * The [activityContext] parameter can be null for hiding the Rich Presence.
      *
-     * The activity context is stored and can be re-rendered using [updateActivity] function.
+     * The latest activity context is stored and can be updated using [update] function.
      *
-     * When the `reconnectOnUpdate` setting is enabled, [reconnect] is called when not connected
-     * and suspends this function until the reconnect process has finished.
+     * When the `reconnectOnUpdate` setting is enabled and the connection is closed,
+     * the reconnect process is launched.
      */
     suspend fun changeActivity(activityContext: ActivityContext?) {
-        val projectSettings = activityContext?.project?.get()?.discordProjectSettingsComponent?.state
-        val activity = when {
-            projectSettings != null && projectSettings.showRichPresence -> {
-                val defaultDisplayMode = discordSettingsComponent.state.defaultDisplayMode
-                val displayMode = ActivityDisplayMode.getSupportedFrom(
-                    projectSettings.displayMode ?: defaultDisplayMode,
-                    activityContext
-                )
-                discordSettingsComponent.state.getActivityFactory(displayMode)
-                    .create(activityContext)
+        val activity = activityContext?.createActivity()
+        val success = mutex.withLock {
+            this.activityContext = activityContext
+            try {
+                connection?.activityManager()?.updateActivity(activity) != null
+            } catch (_: ClosedChannelException) {
+                false
             }
-
-            else -> null
         }
 
-        this.activityContext = activityContext
-        activityChannel.send(activity)
-
-        if (!isConnected && discordSettingsComponent.state.reconnectOnUpdate)
-            reconnect(false)
+        if (!success && discordSettingsComponent.state.reconnectOnUpdate) {
+            @Suppress("DeferredResultUnused")
+            reconnect()
+        }
     }
 
     /**
-     * Clears the activity. Equals to:
-     *
-     * ```
-     * discordService.changeActivity(null)
-     * ```
-     *
-     * @see changeActivity
+     * Re-creates the stored activity context and updates the activity.
      */
-    suspend fun clearActivity() =
-        changeActivity(null)
-
-    /**
-     * Re-renders the latest [ActivityContext] and updates the activity. Equals to:
-     *
-     * ```
-     * discordService.changeActivity(discordService.activityContext)
-     * ```
-     *
-     * @see changeActivity
-     */
-    suspend fun updateActivity() =
-        changeActivity(activityContext)
+    suspend fun update() {
+        mutex.withLock {
+            try {
+                connection?.activityManager()?.updateActivity(activityContext?.createActivity())
+            } catch (_: ClosedChannelException) {}
+        }
+    }
 
     override fun dispose() {
-        connectionJob.cancel()
-        activityChannel.close()
+        connection?.close()
     }
 }

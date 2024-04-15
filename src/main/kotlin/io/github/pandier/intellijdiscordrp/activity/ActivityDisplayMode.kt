@@ -71,10 +71,12 @@ enum class ActivityDisplayMode(
         /**
          * Returns the highest display mode that isn't higher the given display mode
          * and supports the given [ActivityContext].
+         *
+         * If the given display mode is null, the highest display mode is used as starting point.
          */
-        fun getSupportedFrom(highest: ActivityDisplayMode, context: ActivityContext): ActivityDisplayMode {
+        fun getSupportedFrom(highest: ActivityDisplayMode?, context: ActivityContext): ActivityDisplayMode {
             val values = values()
-            for (i in highest.ordinal downTo 0)
+            for (i in (highest?.ordinal ?: values.lastIndex) downTo 0)
                 if (values[i].supports(context))
                     return values[i]
             return APPLICATION
@@ -83,13 +85,8 @@ enum class ActivityDisplayMode(
         /**
          * Returns the highest display mode that supports the given [ActivityContext].
          */
-        fun getSupported(context: ActivityContext): ActivityDisplayMode {
-            val values = values()
-            for (i in values.lastIndex downTo 0)
-                if (values[i].supports(context))
-                    return values[i]
-            return APPLICATION
-        }
+        fun getSupported(context: ActivityContext): ActivityDisplayMode =
+            getSupportedFrom(null, context)
     }
 
     /**

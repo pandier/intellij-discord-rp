@@ -3,7 +3,12 @@ package io.github.pandier.intellijdiscordrp.activity
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
+import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
+import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
+import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
+import io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettings
+import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 import java.lang.ref.WeakReference
 import java.time.Instant
 
@@ -49,5 +54,36 @@ class ActivityContext(
                 }
             )
         }
+    }
+
+    /**
+     * Renders this activity context to an [Activity] using global plugin settings
+     * and plugin settings of the project with respect to settings hiding the activity.
+     * Returns null if the reference to the projet was already dropped.
+     */
+    fun createActivity(): Activity? {
+        return project.get()?.discordProjectSettingsComponent?.state?.let { projectSettings ->
+            createActivity(
+                discordSettingsComponent.state,
+                projectSettings
+            )
+        }
+    }
+
+    /**
+     * Renders this activity context to an [Activity] using the given [settings]
+     * and the display mode of the given [projectSettings] with respect to settings hiding the activity.
+     */
+    fun createActivity(
+        settings: DiscordSettings,
+        projectSettings: DiscordProjectSettings,
+    ): Activity? {
+        if (!projectSettings.showRichPresence)
+            return null
+        val displayMode = ActivityDisplayMode.getSupportedFrom(
+            projectSettings.displayMode ?: settings.defaultDisplayMode,
+            this
+        )
+        return settings.getActivityFactory(displayMode).create(this)
     }
 }

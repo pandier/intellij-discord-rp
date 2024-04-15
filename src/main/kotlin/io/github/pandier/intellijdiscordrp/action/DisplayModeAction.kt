@@ -33,7 +33,7 @@ abstract class DisplayModeAction(
 
         val discordService = DiscordService.getInstance()
         discordService.scope.launch(Dispatchers.IO) {
-            discordService.updateActivity()
+            discordService.update()
         }
     }
 }
