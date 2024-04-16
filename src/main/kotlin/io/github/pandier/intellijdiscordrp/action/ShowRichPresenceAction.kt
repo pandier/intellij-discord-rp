@@ -5,8 +5,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class ShowRichPresenceAction : DumbAwareToggleAction() {
 
@@ -25,8 +23,6 @@ class ShowRichPresenceAction : DumbAwareToggleAction() {
         e.project?.discordProjectSettingsComponent?.state?.showRichPresence = state
 
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.IO) {
-            discordService.update()
-        }
+        discordService.updateBackground()
     }
 }

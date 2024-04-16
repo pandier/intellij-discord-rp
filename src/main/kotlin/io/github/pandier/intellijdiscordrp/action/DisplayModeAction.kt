@@ -6,8 +6,6 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 abstract class DisplayModeAction(
     private val displayMode: ActivityDisplayMode,
@@ -32,9 +30,7 @@ abstract class DisplayModeAction(
         }
 
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.IO) {
-            discordService.update()
-        }
+        discordService.updateBackground()
     }
 }
 

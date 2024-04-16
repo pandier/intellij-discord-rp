@@ -62,8 +62,8 @@ private class TabbedHeader : JBTabbedPane() {
                 .sumOf { calculateTabWidth(tabPane.tabPlacement, it, metrics) }
         }
 
-         fun getHeight(): Int =
-             calculateMaxTabHeight(tabPane.tabPlacement)
+        fun getHeight(): Int =
+            calculateMaxTabHeight(tabPane.tabPlacement)
     }
 }
 

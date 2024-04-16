@@ -62,23 +62,23 @@ class ActivityContext(
      * Returns null if the reference to the projet was already dropped.
      */
     fun createActivity(): Activity? {
-        return project.get()?.discordProjectSettingsComponent?.state?.let { projectSettings ->
-            createActivity(
-                discordSettingsComponent.state,
-                projectSettings
-            )
-        }
+        return createActivity(
+            discordSettingsComponent.state,
+            project.get()?.discordProjectSettingsComponent?.state
+        )
     }
 
     /**
      * Renders this activity context to an [Activity] using the given [settings]
      * and the display mode of the given [projectSettings] with respect to settings hiding the activity.
+     *
+     * Returns null if [projectSettings] is null.
      */
     fun createActivity(
         settings: DiscordSettings,
-        projectSettings: DiscordProjectSettings,
+        projectSettings: DiscordProjectSettings?,
     ): Activity? {
-        if (!projectSettings.showRichPresence)
+        if (projectSettings == null || !projectSettings.showRichPresence)
             return null
         val displayMode = ActivityDisplayMode.getSupportedFrom(
             projectSettings.displayMode ?: settings.defaultDisplayMode,

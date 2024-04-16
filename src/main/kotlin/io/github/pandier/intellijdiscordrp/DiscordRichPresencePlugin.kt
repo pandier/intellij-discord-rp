@@ -1,7 +1,7 @@
 package io.github.pandier.intellijdiscordrp
 
-import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.diagnostic.logger
 
 object DiscordRichPresencePlugin {
-    val logger = Logger.getInstance(DiscordRichPresencePlugin.javaClass)
+    val logger = logger<DiscordRichPresencePlugin>()
 }
