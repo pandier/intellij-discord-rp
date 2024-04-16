@@ -27,29 +27,31 @@ class ReconnectAction : DumbAwareAction() {
             if (!mutex.tryLock())
                 return@launch
 
-            @Suppress("UnstableApiUsage")
-            withBackgroundProgress(project, "Reconnecting Discord client", false) {
-                try {
-                    discordService.reconnect().await()
+            try {
+                @Suppress("UnstableApiUsage")
+                withBackgroundProgress(project, "Reconnecting Discord client", false) {
+                    try {
+                        discordService.reconnect().await()
 
-                    NotificationGroupManager.getInstance()
-                        .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
-                        .createNotification("Reconnected with Discord client", "", NotificationType.INFORMATION)
-                        .notify(project)
-                } catch (ex: Exception) {
-                    DiscordRichPresencePlugin.logger.warn("Failed to reconnect with Discord client", ex)
-                    NotificationGroupManager.getInstance()
-                        .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
-                        .createNotification(
-                            "Failed to reconnect with Discord client",
-                            ex.message ?: "",
-                            NotificationType.ERROR
-                        )
-                        .notify(project)
+                        NotificationGroupManager.getInstance()
+                            .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
+                            .createNotification("Reconnected with Discord client", "", NotificationType.INFORMATION)
+                            .notify(project)
+                    } catch (ex: Exception) {
+                        DiscordRichPresencePlugin.logger.warn("Failed to reconnect with Discord client", ex)
+                        NotificationGroupManager.getInstance()
+                            .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
+                            .createNotification(
+                                "Failed to reconnect with Discord client",
+                                ex.message ?: "",
+                                NotificationType.ERROR
+                            )
+                            .notify(project)
+                    }
                 }
+            } finally {
+                mutex.unlock()
             }
-
-            mutex.unlock()
         }
     }
 }
