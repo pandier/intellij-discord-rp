@@ -9,8 +9,6 @@ import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
 import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlin.reflect.KMutableProperty0
 
 private fun TabbedBuilder.displayModeTab(
