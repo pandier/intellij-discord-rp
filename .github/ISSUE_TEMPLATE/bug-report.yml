@@ -1,0 +1,34 @@
+name: "🐞 Bug report"
+description: Found a bug? It'll be fixed as soon as possible!
+labels: ["type: bug"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        **Thanks for reporting a bug!** You are helping to make this project better.
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Describe how this bug occured and how to reproduce it.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behaviour
+      description: Describe what you expect should happen.
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: What version of the plugin are you using?
+      description: Enter the version of the plugin or a git commit hash you're using.
+      placeholder: "ex: 1.1.0"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: What IDE and version are you using?
+      description: Enter the full IDE name with the version you are using.
+      placeholder: "ex: IntelliJ IDEA Community 2024.1"
+    validations:
+      required: true
