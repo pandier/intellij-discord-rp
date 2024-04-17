@@ -13,7 +13,7 @@ package io.github.pandier.intellijdiscordrp.activity.icon
  * When these changes make it into the repository, the icons
  * will start displaying correctly.
  */
-private const val ICON_REPOSITORY_COMMIT = "70ea5976065e2ac0afaf30f79919c44c2b006e0e"
+private const val ICON_REPOSITORY_COMMIT = "8274487024611f9ce0c40bf994a81b8841706041"
 const val ICON_REPOSITORY =
     "https://raw.githubusercontent.com/pandier/intellij-discord-rp/$ICON_REPOSITORY_COMMIT/icons"
 const val FILE_ICON_REPOSITORY = "$ICON_REPOSITORY/file"
