@@ -18,6 +18,7 @@ enum class ActivityFileType(
     GRADLE("Gradle", "gradle", hashSetOf("gradle"), "gradle.png"),
     GROOVY("Groovy", "groovy", hashSetOf("groovy", "gy"), "groovy.png"),
     HTML("HTML", "html", hashSetOf("htm", "html", "xhtm", "xhtml"), "html.png"),
+    IMAGE("Image", "image", hashSetOf(".png", ".gif", ".jpg", ".jpeg", ".svg", ".webp", ".tif", ".tiff"), "image.png"),
     JAVA("Java", "java", hashSetOf("java"), "java.png"),
     JAVASCRIPT("JavaScript", "javascript", hashSetOf("js", "jsx"), "javascript.png"),
     JSON("JSON", "json", hashSetOf("json", "jsonc"), "json.png"),

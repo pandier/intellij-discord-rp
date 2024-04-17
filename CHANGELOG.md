@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Progress indicator and notification for reconnecting action
-- Language support for Dart
+- New icons for Dart, images
 - Improved settings user interface
 - Support for remaining JetBrains IDEs
 - Setting for changing display mode per project (Tools -> Discord Rich Presence -> Change Display Mode in Project)
