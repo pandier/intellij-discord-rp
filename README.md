@@ -50,7 +50,7 @@ Each display mode can be configured using the corresponding tab. Variables are u
 | Variable          | File mode | Project mode | Application mode | Value                                  |
 |-------------------|-----------|--------------|------------------|----------------------------------------|
 | `{app_name}`      | ✅         | ✅            | ✅                | Name of the IDE                        |
-| `{app_full_name}` | ✅         | ✅            | ✅                | Name and version of the IDE            |
+| `{app_full_name}` | ✅         | ✅            | ✅                | Name and edition of the IDE            |
 | `{project_name}`  | ✅         | ✅            | ❌                | Name of the current project            |
 | `{file_name}`     | ✅         | ❌            | ❌                | Name of the edited file                |
 | `{file_path}`     | ✅         | ❌            | ❌                | Path to the edited file                |

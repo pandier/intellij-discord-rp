@@ -1,6 +1,6 @@
 package io.github.pandier.intellijdiscordrp.activity
 
-import com.intellij.openapi.application.ApplicationInfo
+import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import de.jcm.discordgamesdk.activity.Activity
@@ -33,11 +33,11 @@ class ActivityContext(
             file: VirtualFile? = null,
             start: Instant = TimeTrackingService.getInstance(project).start,
         ): ActivityContext {
-            val app = ApplicationInfo.getInstance()
+            val appNames = ApplicationNamesInfo.getInstance()
             return ActivityContext(
                 start = start,
-                appName = app.versionName,
-                appFullName = app.fullApplicationName,
+                appName = appNames.fullProductName,
+                appFullName = appNames.fullProductNameWithEdition,
                 projectName = project.name,
                 project = WeakReference(project),
                 file = file?.let {
