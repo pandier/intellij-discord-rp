@@ -16,6 +16,7 @@ import java.time.Instant
 class ActivityFileContext(
     val name: String,
     val path: String,
+    val directoryName: String,
     val type: ActivityFileType,
     val typeName: String,
 )
@@ -49,6 +50,7 @@ class ActivityContext(
                     ActivityFileContext(
                         name = it.name,
                         path = it.path,
+                        directoryName = it.parent?.name ?: "",
                         type = activityFileType,
                         typeName = when (activityFileType) {
                             ActivityFileType.OTHER -> it.fileType.name

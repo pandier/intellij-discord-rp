@@ -68,6 +68,11 @@ enum class ActivityDisplayMode(
                 description = "The determined type of the edited file",
                 getter = { file?.typeName }
             ),
+            ActivityVariable(
+                name = "file_dir_name",
+                description = "Name of the directory of the edited file",
+                getter = { file?.directoryName }
+            )
         ))
     );
 
