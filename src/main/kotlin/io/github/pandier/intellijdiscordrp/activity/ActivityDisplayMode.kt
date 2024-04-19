@@ -24,6 +24,11 @@ enum class ActivityDisplayMode(
                 description = "Name and edition of the application",
                 getter = { appFullName }
             ),
+            ActivityVariable(
+                name = "app_version",
+                description = "Version of the application",
+                getter = { appVersion }
+            )
         )
     ),
 

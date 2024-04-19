@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `{app_version}` variable that displays the version of the IDE
 - Progress indicator and notification for reconnecting action
 - New icons for Dart, images
 - Improved settings user interface
