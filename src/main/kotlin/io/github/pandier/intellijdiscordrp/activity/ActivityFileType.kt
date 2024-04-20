@@ -46,6 +46,18 @@ enum class ActivityFileType(
         regex = "^(.*\\.)?dockerfile\$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "docker.png"
     ),
+    DOCKERIGNORE(
+        friendlyName = "Dockerignore",
+        typeName = "dockerignore file",
+        extensions = hashSetOf("dockerignore"),
+        iconFile = "docker.png",
+    ),
+    GITIGNORE(
+        friendlyName = "Gitignore",
+        typeName = "gitignore file",
+        extensions = hashSetOf("gitignore"),
+        iconFile = "git.png",
+    ),
     GO(
         friendlyName = "Go",
         typeName = "go",
