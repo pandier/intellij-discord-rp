@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2024-04-20
+
 ### Added
 
 - `{file_dir_name}` variable that displays the directory name of the edited file
@@ -17,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setting for changing display mode per project (Tools -> Discord Rich Presence -> Change Display Mode in Project)
 
   - The default value can be configured in global settings
-
 - Added application display mode
 
 ### Changed
@@ -49,7 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/pandier/intellij-discord-rp/commits/v1.0.0
