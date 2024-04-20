@@ -12,9 +12,9 @@
         <ul>
             <li>Display your work in Discord!</li>
             <li>Customize with variables</li>
-            <li>Hide projects that you don't want others to see</li>
+            <li>Change display mode per project (or hide the project)</li>
             <li>Support for more than 20 languages (with more to come)</li>
-            <li>Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)</li>
+            <li>Support for all JetBrains IDEs</li>
             <li>Use custom Discord application id</li>
         </ul>
 
@@ -27,13 +27,18 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
+
         <applicationConfigurable
+                id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 parentId="tools"
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-                id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 displayName="Discord Rich Presence"/>
 
-        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"/>
+        <notificationGroup id="io.github.pandier.intellijdiscordrp.notification.Reconnecting"
+                           displayType="BALLOON"
+                           bundle="messages.DiscordRichPresence"
+                           key="notification.group.reconnecting"/>
     </extensions>
 
     <actions>
@@ -42,13 +47,30 @@
                icon="/icons/pluginActionGroup.svg"
                popup="true">
             <add-to-group group-id="ToolsMenu"/>
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordReconnectAction"
-                    text="Reconnect to Discord Client">
+            <action id="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
+                    text="Reconnect Discord Client">
             </action>
-            <action id="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
-                    class="io.github.pandier.intellijdiscordrp.action.DiscordShowRichPresenceAction"
-                    text="Show Rich Presence in Current Project">
+            <separator />
+            <group id="io.github.pandier.intellijdiscordrp.action.DiscordChangeDisplayModeActionGroup"
+                   text="Change Display Mode in Project"
+                   popup="true">
+                <action id="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
+                        class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
+                        text="Application">
+                </action>
+                <action id="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
+                        class="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
+                        text="Project">
+                </action>
+                <action id="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
+                        class="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
+                        text="File">
+                </action>
+            </group>
+            <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
+                    text="Show Rich Presence in Project">
             </action>
         </group>
     </actions>

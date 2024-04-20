@@ -6,6 +6,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `{file_dir_name}` variable that displays the directory name of the edited file
+- `{app_version}` variable that displays the version of the IDE
+- Progress indicator and notification for reconnecting action
+- New icons for Dart, images
+- Improved settings user interface
+- Support for remaining JetBrains IDEs
+- Setting for changing display mode per project (Tools -> Discord Rich Presence -> Change Display Mode in Project)
+
+  - The default value can be configured in global settings
+
+- Added application display mode
+
+### Changed
+
+- `{file_path}` now uses path relative to content root
+- `{app_full_name}` now uses edition instead of version
+- Apply settings reconnecting only when custom application id is modified
+- Minimum supported IntelliJ version is now 2023.1
+- Display mode settings are now grouped into tabs
+- All actions are now dumb aware
+
+### Fixed
+
+- Blank fields causing the activity to not show up
+
 ## [1.0.2] - 2024-03-29
 
 ### Fixed

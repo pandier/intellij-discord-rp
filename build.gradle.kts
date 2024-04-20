@@ -21,7 +21,7 @@ kotlin {
 }
 
 intellij {
-    version.set("2022.3.3")
+    version.set("2023.1.6")
 }
 
 changelog {
@@ -31,7 +31,7 @@ changelog {
 
 tasks {
     patchPluginXml {
-        sinceBuild.set("223")
+        sinceBuild.set("231")
         untilBuild.set("241.*")
 
         changeNotes.set(provider {

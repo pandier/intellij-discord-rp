@@ -1,13 +1,88 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
-import io.github.pandier.intellijdiscordrp.service.discordService
-import javax.swing.JComponent
+import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
+import io.github.pandier.intellijdiscordrp.service.DiscordService
+import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
+import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
+import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
+import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
+import kotlin.reflect.KMutableProperty0
 
-class DiscordSettingsConfigurable : Configurable {
-    private val panel = panel {
+private fun TabbedBuilder.displayModeTab(
+    displayMode: ActivityDisplayMode,
+    imageSettings: List<ImageSetting>,
+    details: KMutableProperty0<String>,
+    state: KMutableProperty0<String>,
+    largeImage: KMutableProperty0<ImageSetting>,
+    largeImageEnabled: KMutableProperty0<Boolean>,
+    largeImageText: KMutableProperty0<String>,
+    smallImage: KMutableProperty0<ImageSetting>,
+    smallImageEnabled: KMutableProperty0<Boolean>,
+    smallImageText: KMutableProperty0<String>,
+) {
+    tab(displayMode.toString()) {
+        row("Details:") {
+            textField()
+                .columns(COLUMNS_LARGE)
+                .bindText(details)
+                .also { it.component.emptyText.text = "Optional" }
+        }
+        row("State:") {
+            textField()
+                .columns(COLUMNS_LARGE)
+                .bindText(state)
+                .also { it.component.emptyText.text = "Optional" }
+        }
+
+        // Large image settings
+        lateinit var largeImageCheckBox: Cell<JBCheckBox>
+        row {
+            largeImageCheckBox = checkBox("Large image")
+                .bindSelected(largeImageEnabled)
+        }
+        indent {
+            row {
+                label("Icon:")
+                comboBox(imageSettings)
+                    .bindItem(largeImage.toNullableProperty())
+                label("Text:")
+                textField()
+                    .bindText(largeImageText)
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+            }
+        }.enabledIf(largeImageCheckBox.selected)
+
+        // Small image settings
+        lateinit var smallImageCheckBox: Cell<JBCheckBox>
+        row {
+            smallImageCheckBox = checkBox("Small image")
+                .bindSelected(smallImageEnabled)
+        }
+        indent {
+            row {
+                label("Icon:")
+                comboBox(imageSettings)
+                    .bindItem(smallImage.toNullableProperty())
+                label("Text:")
+                textField()
+                    .bindText(smallImageText)
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+            }
+        }.enabledIf(smallImageCheckBox.selected)
+
+        row {
+            val lines = displayMode.variables.map { variable -> "<code>$variable</code> - ${variable.description}" }
+            comment(lines.joinToString("<br/>"))
+        }
+    }
+}
+
+class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
+
+    override fun createPanel(): DialogPanel = panel {
         val state = discordSettingsComponent.state
 
         row {
@@ -21,115 +96,85 @@ class DiscordSettingsConfigurable : Configurable {
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
+                .errorOnInput("Must be a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+                .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                .errorOnApply("Must be a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
         }
 
-        // Project activity factory settings
-        group("Project") {
-            row("Details:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::projectDetails)
-            }
-            row("State:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::projectState)
-            }
-
-            // Large image settings
-            lateinit var largeImageCheckBox: Cell<JBCheckBox>
-            row {
-                largeImageCheckBox = checkBox("Large image")
-                    .bindSelected(state::projectLargeImageEnabled)
-            }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(ImageSetting.APPLICATION))
-                        .bindItem(state::projectLargeImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::projectLargeImageText)
-                }
-            }.enabledIf(largeImageCheckBox.selected)
-
-            // Small image settings
-            lateinit var smallImageCheckBox: Cell<JBCheckBox>
-            row {
-                smallImageCheckBox = checkBox("Small image")
-                    .bindSelected(state::projectSmallImageEnabled)
-            }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(ImageSetting.APPLICATION))
-                        .bindItem(state::projectSmallImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::projectSmallImageText)
-                }
-            }.enabledIf(smallImageCheckBox.selected)
+        row {
+            label("Default display mode:")
+            comboBox(ActivityDisplayMode.values().toList())
+                .bindItem(state::defaultDisplayMode.toNullableProperty())
+                .comment(
+                    "Applied to all projects that don't configure a specific display mode.<br/>" +
+                            "Use 'Change Display Mode in Project' action for changing the display mode in a project."
+                )
         }
 
-        // File activity factory settings
-        group("File") {
-            row("Details:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::fileDetails)
-            }
-            row("State:") {
-                textField()
-                    .align(AlignX.FILL)
-                    .bindText(state::fileState)
-            }
+        group("Display") {
+            tabbed {
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.APPLICATION,
+                    imageSettings = listOf(ImageSetting.APPLICATION),
+                    details = state::applicationDetails,
+                    state = state::applicationState,
+                    largeImage = state::applicationLargeImage,
+                    largeImageEnabled = state::applicationLargeImageEnabled,
+                    largeImageText = state::applicationLargeImageText,
+                    smallImage = state::applicationSmallImage,
+                    smallImageEnabled = state::applicationSmallImageEnabled,
+                    smallImageText = state::applicationSmallImageText,
+                )
 
-            // Large image settings
-            lateinit var largeImageCheckBox: Cell<JBCheckBox>
-            row {
-                largeImageCheckBox = checkBox("Large image")
-                    .bindSelected(state::fileLargeImageEnabled)
-            }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(ImageSetting.APPLICATION, ImageSetting.FILE))
-                        .bindItem(state::fileLargeImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::fileLargeImageText)
-                }
-            }.enabledIf(largeImageCheckBox.selected)
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.PROJECT,
+                    imageSettings = listOf(ImageSetting.APPLICATION),
+                    details = state::projectDetails,
+                    state = state::projectState,
+                    largeImage = state::projectLargeImage,
+                    largeImageEnabled = state::projectLargeImageEnabled,
+                    largeImageText = state::projectLargeImageText,
+                    smallImage = state::projectSmallImage,
+                    smallImageEnabled = state::projectSmallImageEnabled,
+                    smallImageText = state::projectSmallImageText,
+                )
 
-            // Small image settings
-            lateinit var smallImageCheckBox: Cell<JBCheckBox>
-            row {
-                smallImageCheckBox = checkBox("Small image")
-                    .bindSelected(state::fileSmallImageEnabled)
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.FILE,
+                    imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
+                    details = state::fileDetails,
+                    state = state::fileState,
+                    largeImage = state::fileLargeImage,
+                    largeImageEnabled = state::fileLargeImageEnabled,
+                    largeImageText = state::fileLargeImageText,
+                    smallImage = state::fileSmallImage,
+                    smallImageEnabled = state::fileSmallImageEnabled,
+                    smallImageText = state::fileSmallImageText,
+                )
             }
-            indent {
-                row {
-                    label("Image:")
-                    comboBox(listOf(ImageSetting.APPLICATION, ImageSetting.FILE))
-                        .bindItem(state::fileSmallImage.toNullableProperty())
-                    label("Text:")
-                    textField()
-                        .bindText(state::fileSmallImageText)
-                }
-            }.enabledIf(smallImageCheckBox.selected)
         }
     }
-
-    override fun getDisplayName(): String = "Discord Rich Presence"
-
-    override fun createComponent(): JComponent = panel
-
-    override fun isModified(): Boolean = panel.isModified()
 
     override fun apply() {
-        panel.apply()
-        discordService.reconnect()
-    }
+        val applicationIdBefore =
+            if (discordSettingsComponent.state.customApplicationIdEnabled)
+                discordSettingsComponent.state.customApplicationId
+            else null
 
-    override fun reset() = panel.reset()
+        if (validateAndApply()) {
+            val applicationIdAfter =
+                if (discordSettingsComponent.state.customApplicationIdEnabled)
+                    discordSettingsComponent.state.customApplicationId
+                else null
+
+            val discordService = DiscordService.getInstance()
+
+            // Reconnect if custom application id has been modified
+            if (applicationIdBefore != applicationIdAfter) {
+                discordService.reconnectBackground()
+            } else {
+                discordService.updateBackground()
+            }
+        }
+    }
 }
