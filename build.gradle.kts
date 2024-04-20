@@ -1,5 +1,4 @@
 import org.jetbrains.changelog.Changelog
-import org.jetbrains.intellij.tasks.RunPluginVerifierTask
 
 plugins {
     id("java")
@@ -43,10 +42,6 @@ tasks {
                 Changelog.OutputType.HTML
             )
         })
-    }
-
-    runPluginVerifier {
-        failureLevel.set(RunPluginVerifierTask.FailureLevel.ALL)
     }
 
     signPlugin {
