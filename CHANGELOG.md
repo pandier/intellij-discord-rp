@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `{file_path}` now uses path relative to content root
 - `{app_full_name}` now uses edition instead of version
 - Apply settings reconnecting only when custom application id is modified
 - Minimum supported IntelliJ version is now 2023.1

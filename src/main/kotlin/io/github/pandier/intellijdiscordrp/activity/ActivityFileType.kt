@@ -156,12 +156,11 @@ enum class ActivityFileType(
         friendlyName
 }
 
-val VirtualFile.activityFileType: ActivityFileType
+val VirtualFile.activityFileType: ActivityFileType?
     get() {
         val name = name
         val typeName = fileType.name.lowercase()
         val extension = extension?.lowercase()
         return ActivityFileType.values()
             .find { it.typeName == typeName || it.extensions.contains(extension) || it.regex?.matches(name) == true }
-                ?: ActivityFileType.OTHER
     }

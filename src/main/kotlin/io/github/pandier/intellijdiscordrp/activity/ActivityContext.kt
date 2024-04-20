@@ -2,7 +2,10 @@ package io.github.pandier.intellijdiscordrp.activity
 
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationNamesInfo
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.roots.ProjectFileIndex
+import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
@@ -36,26 +39,27 @@ class ActivityContext(
             file: VirtualFile? = null,
             start: Instant = TimeTrackingService.getInstance(project).start,
         ): ActivityContext {
-            val app = ApplicationInfo.getInstance()
+            val appInfo = ApplicationInfo.getInstance()
             val appNames = ApplicationNamesInfo.getInstance()
             return ActivityContext(
                 start = start,
                 appName = appNames.fullProductName,
                 appFullName = appNames.fullProductNameWithEdition,
-                appVersion = app.fullVersion,
+                appVersion = appInfo.fullVersion,
                 projectName = project.name,
                 project = WeakReference(project),
                 file = file?.let {
+                    val contentRoot = ReadAction.compute<VirtualFile?, Exception> {
+                        ProjectFileIndex.getInstance(project).getContentRootForFile(it)
+                    }
+                    val relativePath = contentRoot?.let { i -> VfsUtil.getRelativePath(it, i) } ?: it.name
                     val activityFileType = it.activityFileType
                     ActivityFileContext(
                         name = it.name,
-                        path = it.path,
+                        path = relativePath,
                         directoryName = it.parent?.name ?: "",
-                        type = activityFileType,
-                        typeName = when (activityFileType) {
-                            ActivityFileType.OTHER -> it.fileType.name
-                            else -> activityFileType.friendlyName
-                        },
+                        type = activityFileType ?: ActivityFileType.OTHER,
+                        typeName = activityFileType?.friendlyName ?: it.fileType.name,
                     )
                 }
             )
