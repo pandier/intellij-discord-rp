@@ -19,15 +19,12 @@ abstract class DisplayModeAction(
         e.presentation.isEnabledAndVisible = e.project != null
     }
 
-    override fun isSelected(e: AnActionEvent): Boolean =
-        e.project?.discordProjectSettingsComponent?.state?.displayMode == displayMode
+    override fun isSelected(e: AnActionEvent): Boolean {
+        return e.project?.discordProjectSettingsComponent?.state?.displayMode == displayMode
+    }
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {
-        e.project?.discordProjectSettingsComponent?.state?.displayMode = if (state) {
-            displayMode
-        } else {
-            null
-        }
+        e.project?.discordProjectSettingsComponent?.state?.displayMode = if (state) displayMode else null
 
         val discordService = DiscordService.getInstance()
         discordService.updateBackground()

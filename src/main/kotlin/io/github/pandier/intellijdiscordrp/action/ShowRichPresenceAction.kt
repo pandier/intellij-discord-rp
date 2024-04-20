@@ -16,8 +16,9 @@ class ShowRichPresenceAction : DumbAwareToggleAction() {
         e.presentation.isEnabledAndVisible = e.project != null
     }
 
-    override fun isSelected(e: AnActionEvent): Boolean =
-        e.project?.discordProjectSettingsComponent?.state?.showRichPresence ?: true
+    override fun isSelected(e: AnActionEvent): Boolean {
+        return e.project?.discordProjectSettingsComponent?.state?.showRichPresence ?: true
+    }
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {
         e.project?.discordProjectSettingsComponent?.state?.showRichPresence = state
