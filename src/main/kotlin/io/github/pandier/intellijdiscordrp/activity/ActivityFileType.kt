@@ -40,6 +40,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("dart"),
         iconFile = "dart.png"
     ),
+    DOCKERFILE(
+        friendlyName = "Dockerfile",
+        typeName = "dockerfile",
+        regex = "^(.*\\.)?dockerfile\$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "docker.png"
+    ),
     GO(
         friendlyName = "Go",
         typeName = "go",
