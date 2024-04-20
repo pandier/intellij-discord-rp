@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `{file_dir_name}` variable that displays the directory name of the edited file
+- `{app_version}` variable that displays the version of the IDE
 - Progress indicator and notification for reconnecting action
 - New icons for Dart, images
 - Improved settings user interface
@@ -20,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `{app_full_name}` now uses edition instead of version
 - Apply settings reconnecting only when custom application id is modified
 - Minimum supported IntelliJ version is now 2023.1
 - Display mode settings are now grouped into tabs

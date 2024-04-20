@@ -21,9 +21,14 @@ enum class ActivityDisplayMode(
             ),
             ActivityVariable(
                 name = "app_full_name",
-                description = "Name and version of the application",
+                description = "Name and edition of the application",
                 getter = { appFullName }
             ),
+            ActivityVariable(
+                name = "app_version",
+                description = "Version of the application",
+                getter = { appVersion }
+            )
         )
     ),
 
@@ -63,6 +68,11 @@ enum class ActivityDisplayMode(
                 description = "The determined type of the edited file",
                 getter = { file?.typeName }
             ),
+            ActivityVariable(
+                name = "file_dir_name",
+                description = "Name of the directory of the edited file",
+                getter = { file?.directoryName }
+            )
         ))
     );
 

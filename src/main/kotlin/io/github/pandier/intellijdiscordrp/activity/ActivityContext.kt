@@ -1,6 +1,7 @@
 package io.github.pandier.intellijdiscordrp.activity
 
 import com.intellij.openapi.application.ApplicationInfo
+import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import de.jcm.discordgamesdk.activity.Activity
@@ -15,6 +16,7 @@ import java.time.Instant
 class ActivityFileContext(
     val name: String,
     val path: String,
+    val directoryName: String,
     val type: ActivityFileType,
     val typeName: String,
 )
@@ -23,6 +25,7 @@ class ActivityContext(
     val start: Instant,
     val appName: String,
     val appFullName: String,
+    val appVersion: String,
     val project: WeakReference<Project>,
     val projectName: String,
     val file: ActivityFileContext? = null,
@@ -34,10 +37,12 @@ class ActivityContext(
             start: Instant = TimeTrackingService.getInstance(project).start,
         ): ActivityContext {
             val app = ApplicationInfo.getInstance()
+            val appNames = ApplicationNamesInfo.getInstance()
             return ActivityContext(
                 start = start,
-                appName = app.versionName,
-                appFullName = app.fullApplicationName,
+                appName = appNames.fullProductName,
+                appFullName = appNames.fullProductNameWithEdition,
+                appVersion = app.fullVersion,
                 projectName = project.name,
                 project = WeakReference(project),
                 file = file?.let {
@@ -45,6 +50,7 @@ class ActivityContext(
                     ActivityFileContext(
                         name = it.name,
                         path = it.path,
+                        directoryName = it.parent?.name ?: "",
                         type = activityFileType,
                         typeName = when (activityFileType) {
                             ActivityFileType.OTHER -> it.fileType.name
