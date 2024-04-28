@@ -66,3 +66,13 @@ Create a new **Language request** issue in the [issue tracker](https://github.co
 ## 📜 License
 
 This project is licensed under the [MIT License](https://github.com/pandier/intellij-discord-rp/blob/main/LICENSE).
+
+## ⭐ Star History
+
+<a href="https://star-history.com/#pandier/intellij-discord-rp&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
+ </picture>
+</a>
