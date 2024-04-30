@@ -22,6 +22,7 @@ private fun TabbedBuilder.displayModeTab(
     smallImage: KMutableProperty0<ImageSetting>,
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
+    timestampEnabled: KMutableProperty0<Boolean>,
 ) {
     tab(displayMode.toString()) {
         row("Details:") {
@@ -74,6 +75,11 @@ private fun TabbedBuilder.displayModeTab(
         }.enabledIf(smallImageCheckBox.selected)
 
         row {
+            checkBox("Show elapsed time")
+                .bindSelected(timestampEnabled)
+        }
+
+        row {
             val lines = displayMode.variables.map { variable -> "<code>$variable</code> - ${variable.description}" }
             comment(lines.joinToString("<br/>"))
         }
@@ -124,6 +130,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::applicationSmallImage,
                     smallImageEnabled = state::applicationSmallImageEnabled,
                     smallImageText = state::applicationSmallImageText,
+                    timestampEnabled = state::applicationTimestampEnabled,
                 )
 
                 displayModeTab(
@@ -137,6 +144,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::projectSmallImage,
                     smallImageEnabled = state::projectSmallImageEnabled,
                     smallImageText = state::projectSmallImageText,
+                    timestampEnabled = state::projectTimestampEnabled,
                 )
 
                 displayModeTab(
@@ -150,6 +158,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::fileSmallImage,
                     smallImageEnabled = state::fileSmallImageEnabled,
                     smallImageText = state::fileSmallImageText,
+                    timestampEnabled = state::fileTimestampEnabled,
                 )
             }
         }

@@ -16,6 +16,7 @@ class ActivityFactory(
     private val largeImageText: String = "",
     private val smallImage: ImageSetting? = null,
     private val smallImageText: String = "",
+    private val timestampEnabled: Boolean = true,
 ) {
     fun create(context: ActivityContext): Activity = Activity().also {
         if (details.isNotBlank())
@@ -33,6 +34,7 @@ class ActivityFactory(
             it.assets().smallText = displayMode.format(smallImageText, context)
         }
 
-        it.timestamps().start = context.start
+        if (timestampEnabled)
+            it.timestamps().start = context.start
     }
 }
