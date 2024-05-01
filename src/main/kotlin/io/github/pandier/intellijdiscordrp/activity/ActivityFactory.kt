@@ -1,7 +1,8 @@
 package io.github.pandier.intellijdiscordrp.activity
 
-import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.settings.ImageSetting
+import io.github.vyfor.kpresence.rpc.Activity
+import io.github.vyfor.kpresence.rpc.activity
 
 private fun ImageSetting.getIcon(context: ActivityContext) = when (this) {
     ImageSetting.APPLICATION -> currentActivityApplicationType.icon
@@ -10,31 +11,33 @@ private fun ImageSetting.getIcon(context: ActivityContext) = when (this) {
 
 class ActivityFactory(
     private val displayMode: ActivityDisplayMode,
-    private val details: String = "",
-    private val state: String = "",
-    private val largeImage: ImageSetting? = null,
-    private val largeImageText: String = "",
-    private val smallImage: ImageSetting? = null,
-    private val smallImageText: String = "",
-    private val timestampEnabled: Boolean = true,
+    private val details: String,
+    private val state: String,
+    private val largeImage: ImageSetting?,
+    private val largeImageText: String,
+    private val smallImage: ImageSetting?,
+    private val smallImageText: String,
+    private val timestampEnabled: Boolean,
 ) {
-    fun create(context: ActivityContext): Activity = Activity().also {
-        if (details.isNotBlank())
-            it.details = displayMode.format(details, context)
-        if (state.isNotBlank())
-            it.state = displayMode.format(state, context)
+    fun create(context: ActivityContext): Activity = activity {
+        details = this@ActivityFactory.details.ifEmpty { null }?.let { displayMode.format(it, context) }
+        state = this@ActivityFactory.state.ifEmpty { null }?.let { displayMode.format(it, context) }
 
-        if (largeImage != null && largeImageText.isNotBlank()) {
-            it.assets().largeImage = largeImage.getIcon(context)
-            it.assets().largeText = displayMode.format(largeImageText, context)
+        assets {
+            if (this@ActivityFactory.largeImage != null) {
+                largeImage = this@ActivityFactory.largeImage.getIcon(context)
+                largeText = displayMode.format(this@ActivityFactory.largeImageText, context)
+            }
+
+            if (this@ActivityFactory.smallImage != null) {
+                smallImage = this@ActivityFactory.smallImage.getIcon(context)
+                smallText = displayMode.format(this@ActivityFactory.smallImageText, context)
+            }
         }
 
-        if (smallImage != null && smallImageText.isNotBlank()) {
-            it.assets().smallImage = smallImage.getIcon(context)
-            it.assets().smallText = displayMode.format(smallImageText, context)
+        timestamps {
+            if (timestampEnabled)
+                start = context.start.toEpochMilli()
         }
-
-        if (timestampEnabled)
-            it.timestamps().start = context.start
     }
 }
