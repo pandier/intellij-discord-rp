@@ -15,6 +15,7 @@ import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.util.MergingRunner
 import io.github.vyfor.kpresence.RichClient
 import io.github.vyfor.kpresence.exception.NotConnectedException
+import io.github.vyfor.kpresence.exception.PipeNotFoundException
 import io.github.vyfor.kpresence.rpc.Activity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -66,7 +67,7 @@ class DiscordService(
     /**
      * A [MergingRunner] for the [reconnect] function.
      */
-    private val reconnectRunner = MergingRunner<Unit>(scope, Dispatchers.IO)
+    private val reconnectRunner = MergingRunner<Boolean>(scope, Dispatchers.IO)
 
     init {
         // Register focus change listener
@@ -76,10 +77,8 @@ class DiscordService(
 
         // Connect to Discord client
         scope.launch(Dispatchers.IO) {
-            try {
-                reconnect().await()
-            } catch (ex: Exception) {
-                DiscordRichPresencePlugin.logger.info("Failed to connect to Discord client", ex)
+            if (!reconnect().await()) {
+                DiscordRichPresencePlugin.logger.info("Could not find any Discord client instance")
             }
         }
     }
@@ -89,18 +88,23 @@ class DiscordService(
      * The reconnection process consists of closing the connection and starting a new one.
      * It's executed using [MergingRunner].
      */
-    suspend fun reconnect(): Deferred<Unit> = reconnectRunner.run {
+    suspend fun reconnect(): Deferred<Boolean> = reconnectRunner.run {
         mutex.withLock {
             connection?.shutdown()
             connection = null
         }
-        val newConnection = connect()
-        mutex.withLock {
-            connection = newConnection
-        }
-        update()
+        try {
+            val newConnection = connect()
+            mutex.withLock {
+                connection = newConnection
+                sendActivityInternal(activityContext?.createActivity())
+            }
 
-        DiscordRichPresencePlugin.logger.info("Connected to Discord client")
+            DiscordRichPresencePlugin.logger.info("Connected to Discord client")
+            true
+        } catch (ex: PipeNotFoundException) {
+            false
+        }
     }
 
     /**

@@ -30,14 +30,25 @@ class ReconnectAction : DumbAwareAction() {
                 val discordService = DiscordService.getInstance()
 
                 try {
-                    runBlocking {
+                    val result = runBlocking {
                         discordService.reconnect().await()
                     }
 
-                    NotificationGroupManager.getInstance()
-                        .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
-                        .createNotification("Reconnected with Discord client", "", NotificationType.INFORMATION)
-                        .notify(project)
+                    if (result) {
+                        NotificationGroupManager.getInstance()
+                            .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
+                            .createNotification("Reconnected with Discord client", "", NotificationType.INFORMATION)
+                            .notify(project)
+                    } else {
+                        NotificationGroupManager.getInstance()
+                            .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
+                            .createNotification(
+                                "Discord reconnect",
+                                "Could not find any Discord client instance",
+                                NotificationType.WARNING
+                            )
+                            .notify(project)
+                    }
                 } catch (ex: Exception) {
                     DiscordRichPresencePlugin.logger.warn("Failed to reconnect with Discord client", ex)
                     NotificationGroupManager.getInstance()
