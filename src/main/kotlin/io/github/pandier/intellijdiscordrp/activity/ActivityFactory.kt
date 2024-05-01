@@ -11,27 +11,25 @@ private fun ImageSetting.getIcon(context: ActivityContext) = when (this) {
 
 class ActivityFactory(
     private val displayMode: ActivityDisplayMode,
-    private val details: String = "",
-    private val state: String = "",
-    private val largeImage: ImageSetting? = null,
-    private val largeImageText: String = "",
-    private val smallImage: ImageSetting? = null,
-    private val smallImageText: String = "",
-    private val timestampEnabled: Boolean = true,
+    private val details: String,
+    private val state: String,
+    private val largeImage: ImageSetting?,
+    private val largeImageText: String,
+    private val smallImage: ImageSetting?,
+    private val smallImageText: String,
+    private val timestampEnabled: Boolean,
 ) {
     fun create(context: ActivityContext): Activity = activity {
-        if (this@ActivityFactory.details.isNotBlank())
-            details = displayMode.format(this@ActivityFactory.details, context)
-        if (this@ActivityFactory.state.isNotBlank())
-            state = displayMode.format(this@ActivityFactory.state, context)
+        details = this@ActivityFactory.details.ifEmpty { null }?.let { displayMode.format(it, context) }
+        state = this@ActivityFactory.state.ifEmpty { null }?.let { displayMode.format(it, context) }
 
         assets {
-            if (this@ActivityFactory.largeImage != null && this@ActivityFactory.largeImageText.isNotBlank()) {
+            if (this@ActivityFactory.largeImage != null) {
                 largeImage = this@ActivityFactory.largeImage.getIcon(context)
                 largeText = displayMode.format(this@ActivityFactory.largeImageText, context)
             }
 
-            if (this@ActivityFactory.smallImage != null && this@ActivityFactory.smallImageText.isNotBlank()) {
+            if (this@ActivityFactory.smallImage != null) {
                 smallImage = this@ActivityFactory.smallImage.getIcon(context)
                 smallText = displayMode.format(this@ActivityFactory.smallImageText, context)
             }

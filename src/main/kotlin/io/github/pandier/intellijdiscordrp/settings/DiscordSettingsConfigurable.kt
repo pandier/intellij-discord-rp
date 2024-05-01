@@ -29,12 +29,16 @@ private fun TabbedBuilder.displayModeTab(
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(details)
+                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
         row("State:") {
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(state)
+                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
 
@@ -52,7 +56,9 @@ private fun TabbedBuilder.displayModeTab(
                 label("Text:")
                 textField()
                     .bindText(largeImageText)
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(largeImageCheckBox.selected)
 
@@ -70,7 +76,9 @@ private fun TabbedBuilder.displayModeTab(
                 label("Text:")
                 textField()
                     .bindText(smallImageText)
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(smallImageCheckBox.selected)
 
