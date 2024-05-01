@@ -31,7 +31,7 @@ class ReconnectAction : DumbAwareAction() {
 
                 try {
                     val result = runBlocking {
-                        discordService.reconnect().await()
+                        discordService.reconnect(true).await()
                     }
 
                     if (result) {

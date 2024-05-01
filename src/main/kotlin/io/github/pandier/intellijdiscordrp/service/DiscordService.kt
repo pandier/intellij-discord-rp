@@ -78,24 +78,24 @@ class DiscordService(
         eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
 
         // Connect to Discord client
-        scope.launch(Dispatchers.IO) {
-            if (!reconnect().await()) {
-                DiscordRichPresencePlugin.logger.info("Could not find any Discord client instance")
-            }
-        }
+        @Suppress("DeferredResultUnused")
+        reconnect()
     }
 
     /**
      * Starts the reconnection process or merges into an existing one.
      * The reconnection process consists of closing the connection and starting a new one.
      * It's executed using [MergingRunner].
+     *
+     * When [silent] is true, only logs related to state change will be logged.
      */
-    suspend fun reconnect(): Deferred<Boolean> = reconnectRunner.run {
-        mutex.withLock {
-            connection?.shutdown()
-            connection = null
-        }
+    fun reconnect(silent: Boolean = false): Deferred<Boolean> = reconnectRunner.run {
         try {
+            mutex.withLock {
+                connection?.shutdown()
+                connection = null
+            }
+
             val newConnection = connect()
             mutex.withLock {
                 connection = newConnection
@@ -105,19 +105,13 @@ class DiscordService(
             DiscordRichPresencePlugin.logger.info("Connected to Discord client")
             true
         } catch (ex: PipeNotFoundException) {
+            if (!silent)
+                DiscordRichPresencePlugin.logger.info("Could not find any Discord client instance")
             false
-        }
-    }
-
-    /**
-     * Reconnects on the background silently in a coroutine with [Dispatchers.IO] context.
-     *
-     * @see reconnect
-     */
-    fun reconnectBackground() {
-        scope.launch(Dispatchers.IO) {
-            @Suppress("DeferredResultUnused")
-            reconnect()
+        } catch (ex: Exception) {
+            if (!silent)
+                DiscordRichPresencePlugin.logger.error("Failed to connect", ex)
+            throw ex
         }
     }
 
@@ -218,7 +212,7 @@ class DiscordService(
 
         if (!success && discordSettingsComponent.state.reconnectOnUpdate) {
             @Suppress("DeferredResultUnused")
-            reconnect()
+            reconnect(true)
         }
     }
 
