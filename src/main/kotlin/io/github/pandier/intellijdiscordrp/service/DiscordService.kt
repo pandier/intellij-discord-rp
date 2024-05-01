@@ -12,6 +12,7 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
+import io.github.pandier.intellijdiscordrp.util.KPresenceLoggerAdapter
 import io.github.pandier.intellijdiscordrp.util.MergingRunner
 import io.github.vyfor.kpresence.RichClient
 import io.github.vyfor.kpresence.exception.NotConnectedException
@@ -33,6 +34,7 @@ private fun connect(): RichClient {
     }
 
     return RichClient(applicationId).apply {
+        logger = KPresenceLoggerAdapter
         connect()
     }
 }
