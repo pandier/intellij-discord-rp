@@ -7,15 +7,15 @@ import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import de.jcm.discordgamesdk.Core
-import de.jcm.discordgamesdk.CreateParams
-import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.util.MergingRunner
+import io.github.vyfor.kpresence.RichClient
+import io.github.vyfor.kpresence.exception.NotConnectedException
+import io.github.vyfor.kpresence.rpc.Activity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-private fun connect(): Core {
+private fun connect(): RichClient {
     val settings = discordSettingsComponent.state
     val applicationId = if (settings.customApplicationIdEnabled) {
         settings.customApplicationId.toULong().toLong()
@@ -31,12 +31,9 @@ private fun connect(): Core {
         currentActivityApplicationType.discordApplicationId
     }
 
-    val internal = Core(CreateParams().apply {
-        clientID = applicationId
-        flags = CreateParams.getDefaultFlags()
-    })
-
-    return internal
+    return RichClient(applicationId).apply {
+        connect()
+    }
 }
 
 /**
@@ -59,7 +56,7 @@ class DiscordService(
     /**
      * A connection with the Discord client.
      */
-    private var connection: Core? = null
+    private var connection: RichClient? = null
 
     /**
      * The latest [ActivityContext] that was changed.
@@ -94,7 +91,7 @@ class DiscordService(
      */
     suspend fun reconnect(): Deferred<Unit> = reconnectRunner.run {
         mutex.withLock {
-            connection?.close()
+            connection?.shutdown()
             connection = null
         }
         val newConnection = connect()
@@ -241,16 +238,18 @@ class DiscordService(
 
     private fun sendActivityInternal(activity: Activity?): Boolean {
         return try {
-            connection?.activityManager()?.updateActivity(activity) != null
-        } catch (ex: RuntimeException) {
+            connection?.update(activity) != null
+        } catch (ex: NotConnectedException) {
+            connection = null
+            false
+        } catch (ex: Exception) {
             DiscordRichPresencePlugin.logger.info("An error ocurred while sending activity", ex)
-            connection?.close()
             connection = null
             false
         }
     }
 
     override fun dispose() {
-        connection?.close()
+        connection?.shutdown()
     }
 }

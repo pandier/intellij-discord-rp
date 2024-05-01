@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Show elapsed time" checkbox that toggles the timestamp for a display mode
 
+### Changed
+
+- KPresence is now used for back-end
+
 ## [1.1.1] - 2024-04-20
 
 ### Fixed

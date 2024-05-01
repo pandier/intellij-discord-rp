@@ -7,12 +7,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
-import de.jcm.discordgamesdk.activity.Activity
 import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
 import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettings
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
+import io.github.vyfor.kpresence.rpc.Activity
 import java.lang.ref.WeakReference
 import java.time.Instant
 
