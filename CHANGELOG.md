@@ -12,7 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved error handling
 - KPresence is now used for back-end
+
+### Fixed
+
+- Emojis are now working in Rich Presence
 
 ## [1.1.1] - 2024-04-20
 
