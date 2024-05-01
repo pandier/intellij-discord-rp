@@ -69,7 +69,7 @@ class DiscordService(
     /**
      * A [MergingRunner] for the [reconnect] function.
      */
-    private val reconnectRunner = MergingRunner<Boolean>(scope, Dispatchers.IO)
+    private val reconnectRunner = MergingRunner<Boolean>()
 
     init {
         // Register focus change listener
@@ -78,18 +78,17 @@ class DiscordService(
         eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
 
         // Connect to Discord client
-        @Suppress("DeferredResultUnused")
-        reconnect()
+        reconnectBackground()
     }
 
     /**
-     * Starts the reconnection process or merges into an existing one.
+     * Executes the reconnection process in the current coroutine or merges into an existing process.
      * The reconnection process consists of closing the connection and starting a new one.
      * It's executed using [MergingRunner].
      *
      * When [silent] is true, only logs related to state change will be logged.
      */
-    fun reconnect(silent: Boolean = false): Deferred<Boolean> = reconnectRunner.run {
+    suspend fun reconnect(silent: Boolean = false): Deferred<Boolean> = reconnectRunner.run {
         try {
             mutex.withLock {
                 connection?.shutdown()
@@ -112,6 +111,18 @@ class DiscordService(
             if (!silent)
                 DiscordRichPresencePlugin.logger.error("Failed to connect", ex)
             throw ex
+        }
+    }
+
+    /**
+     * Executes the reconnection process on the background or merges into an existing one.
+     *
+     * @see reconnect
+     */
+    fun reconnectBackground(silent: Boolean = false) {
+        scope.launch(Dispatchers.IO) {
+            @Suppress("DeferredResultUnused")
+            reconnect(silent)
         }
     }
 
@@ -211,8 +222,7 @@ class DiscordService(
         }
 
         if (!success && discordSettingsComponent.state.reconnectOnUpdate) {
-            @Suppress("DeferredResultUnused")
-            reconnect(true)
+            reconnectBackground(true)
         }
     }
 

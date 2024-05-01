@@ -188,8 +188,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
 
             // Reconnect if custom application id has been modified
             if (applicationIdBefore != applicationIdAfter) {
-                @Suppress("DeferredResultUnused")
-                discordService.reconnect()
+                discordService.reconnectBackground()
             } else {
                 discordService.updateBackground()
             }

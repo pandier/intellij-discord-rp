@@ -1,11 +1,8 @@
 package io.github.pandier.intellijdiscordrp.util
 
 import kotlinx.coroutines.*
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * A runner that allows only one task to be running at a time and merges any new tasks
@@ -15,12 +12,9 @@ import kotlin.coroutines.EmptyCoroutineContext
  *
  * @see [run]
  */
-class MergingRunner<T>(
-    private val scope: CoroutineScope,
-    private val context: CoroutineContext = EmptyCoroutineContext,
-) {
+class MergingRunner<T> {
     private lateinit var deferred: Deferred<T>
-    private val lock: Lock = ReentrantLock(true)
+    private val mutex: Mutex = Mutex()
 
     /**
      * Runs the [task] or merges with an already running task.
@@ -30,11 +24,11 @@ class MergingRunner<T>(
      * and the result will be returned. If the previous task didn't finish yet,
      * it will wait and return the result of that task.
      */
-    fun run(task: suspend () -> T): Deferred<T> {
-        return lock.withLock {
+    suspend fun run(task: suspend () -> T): Deferred<T> {
+        return mutex.withLock {
             if (!::deferred.isInitialized || deferred.isCompleted)
                 deferred = CompletableDeferred<T>().also {
-                    scope.launch(context) { it.completeWith(runCatching { task() }) }
+                    it.completeWith(runCatching { task() })
                 }
             deferred
         }
