@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.JnCrMx:discord-game-sdk4j:java-impl-SNAPSHOT")
+    implementation("io.github.vyfor:kpresence:0.5.3")
 }
 
 kotlin {

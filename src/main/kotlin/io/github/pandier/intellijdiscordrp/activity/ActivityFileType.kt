@@ -8,6 +8,7 @@ enum class ActivityFileType(
     val typeName: String? = null,
     val regex: Regex? = null,
     val extensions: Set<String> = hashSetOf(),
+    val replaceFileName: String? = null,
     iconFile: String = "fallback.png",
 ) {
     C(
@@ -51,6 +52,12 @@ enum class ActivityFileType(
         typeName = "dockerignore file",
         extensions = hashSetOf("dockerignore"),
         iconFile = "docker.png",
+    ),
+    GITDIFF(
+        friendlyName = "Gitdiff",
+        typeName = "diff",
+        replaceFileName = "diff",
+        iconFile = "git.png",
     ),
     GITIGNORE(
         friendlyName = "Gitignore",

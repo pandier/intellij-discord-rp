@@ -22,18 +22,23 @@ private fun TabbedBuilder.displayModeTab(
     smallImage: KMutableProperty0<ImageSetting>,
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
+    timestampEnabled: KMutableProperty0<Boolean>,
 ) {
     tab(displayMode.toString()) {
         row("Details:") {
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(details)
+                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
         row("State:") {
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(state)
+                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
 
@@ -51,7 +56,9 @@ private fun TabbedBuilder.displayModeTab(
                 label("Text:")
                 textField()
                     .bindText(largeImageText)
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(largeImageCheckBox.selected)
 
@@ -69,9 +76,16 @@ private fun TabbedBuilder.displayModeTab(
                 label("Text:")
                 textField()
                     .bindText(smallImageText)
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isBlank() }
+                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(smallImageCheckBox.selected)
+
+        row {
+            checkBox("Show elapsed time")
+                .bindSelected(timestampEnabled)
+        }
 
         row {
             val lines = displayMode.variables.map { variable -> "<code>$variable</code> - ${variable.description}" }
@@ -124,6 +138,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::applicationSmallImage,
                     smallImageEnabled = state::applicationSmallImageEnabled,
                     smallImageText = state::applicationSmallImageText,
+                    timestampEnabled = state::applicationTimestampEnabled,
                 )
 
                 displayModeTab(
@@ -137,6 +152,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::projectSmallImage,
                     smallImageEnabled = state::projectSmallImageEnabled,
                     smallImageText = state::projectSmallImageText,
+                    timestampEnabled = state::projectTimestampEnabled,
                 )
 
                 displayModeTab(
@@ -150,6 +166,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::fileSmallImage,
                     smallImageEnabled = state::fileSmallImageEnabled,
                     smallImageText = state::fileSmallImageText,
+                    timestampEnabled = state::fileTimestampEnabled,
                 )
             }
         }

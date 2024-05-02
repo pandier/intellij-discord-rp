@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- "Show elapsed time" checkbox that toggles the timestamp for a display mode
+- Text field length validation
+- File type for diff preview
+
+### Changed
+
+- Improved error handling
+- KPresence is now used for back-end
+
+### Fixed
+
+- Emojis are now working in Rich Presence
+
 ## [1.1.1] - 2024-04-20
 
 ### Fixed

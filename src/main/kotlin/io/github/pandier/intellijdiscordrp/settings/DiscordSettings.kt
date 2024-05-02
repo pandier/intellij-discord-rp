@@ -27,6 +27,7 @@ data class DiscordSettings(
     var applicationSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var applicationSmallImageEnabled: Boolean = false,
     var applicationSmallImageText: String = "",
+    var applicationTimestampEnabled: Boolean = true,
 
     var projectDetails: String = "In {project_name}",
     var projectState: String = "",
@@ -36,6 +37,7 @@ data class DiscordSettings(
     var projectSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
+    var projectTimestampEnabled: Boolean = true,
 
     var fileDetails: String = "In {project_name}",
     var fileState: String = "Editing {file_name}",
@@ -45,6 +47,7 @@ data class DiscordSettings(
     var fileSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
+    var fileTimestampEnabled: Boolean = true,
 ) {
     val applicationActivityFactory: ActivityFactory
         get() = ActivityFactory(
@@ -55,6 +58,7 @@ data class DiscordSettings(
             largeImageText = applicationLargeImageText,
             smallImage = if (applicationSmallImageEnabled) applicationSmallImage else null,
             smallImageText = applicationSmallImageText,
+            timestampEnabled = applicationTimestampEnabled,
         )
 
     val projectActivityFactory: ActivityFactory
@@ -66,6 +70,7 @@ data class DiscordSettings(
             largeImageText = projectLargeImageText,
             smallImage = if (projectSmallImageEnabled) projectSmallImage else null,
             smallImageText = projectSmallImageText,
+            timestampEnabled = projectTimestampEnabled,
         )
 
     val fileActivityFactory: ActivityFactory
@@ -77,6 +82,7 @@ data class DiscordSettings(
             largeImageText = fileLargeImageText,
             smallImage = if (fileSmallImageEnabled) fileSmallImage else null,
             smallImageText = fileSmallImageText,
+            timestampEnabled = fileTimestampEnabled,
         )
 
     fun getActivityFactory(mode: ActivityDisplayMode) = when (mode) {
