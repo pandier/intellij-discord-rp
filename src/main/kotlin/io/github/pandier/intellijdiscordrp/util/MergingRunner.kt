@@ -25,12 +25,15 @@ class MergingRunner<T> {
      * it will wait and return the result of that task.
      */
     suspend fun run(task: suspend () -> T): Deferred<T> {
-        return mutex.withLock {
-            if (!::deferred.isInitialized || deferred.isCompleted)
-                deferred = CompletableDeferred<T>().also {
-                    it.completeWith(runCatching { task() })
-                }
-            deferred
+        mutex.lock()
+        return if (!::deferred.isInitialized || deferred.isCompleted) {
+            CompletableDeferred<T>().also {
+                deferred = it
+                mutex.unlock()
+                it.completeWith(runCatching { task() })
+            }
+        } else {
+            deferred.also { mutex.unlock() }
         }
     }
 }
