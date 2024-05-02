@@ -71,7 +71,7 @@ Each display mode can be configured using the corresponding tab. Variables are u
 ## ❓ Requesting a new language
 
 Do you want support for a language that you like?
-Create a new **Language request** issue in the [issue tracker](https://github.com/pandier/intellij-discord-rp/issues/new/choose)!
+Create a new **Icon request** issue in the [issue tracker](https://github.com/pandier/intellij-discord-rp/issues/new/choose)!
 
 ## 📜 License
 
