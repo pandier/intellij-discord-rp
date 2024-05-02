@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Show elapsed time" checkbox that toggles the timestamp for a display mode
 - Text field length validation
+- File type for diff preview
 
 ### Changed
 

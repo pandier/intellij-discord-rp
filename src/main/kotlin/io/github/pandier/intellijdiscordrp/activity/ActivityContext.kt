@@ -55,8 +55,8 @@ class ActivityContext(
                     val relativePath = contentRoot?.let { i -> VfsUtil.getRelativePath(it, i) } ?: it.name
                     val activityFileType = it.activityFileType
                     ActivityFileContext(
-                        name = it.name,
-                        path = relativePath,
+                        name = activityFileType?.replaceFileName ?: it.name,
+                        path = activityFileType?.replaceFileName ?: relativePath,
                         directoryName = it.parent?.name ?: "",
                         type = activityFileType ?: ActivityFileType.OTHER,
                         typeName = activityFileType?.friendlyName ?: it.fileType.name,
