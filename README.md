@@ -23,6 +23,16 @@ A highly customizable IntelliJ plugin that adds stylish Rich Presence support to
 
 <img width="777px" alt="showcase" src="https://raw.githubusercontent.com/pandier/intellij-discord-rp/main/showcase/collage.png" />
 
+## ⭐ Star history
+
+<a href="https://star-history.com/#pandier/intellij-discord-rp&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
+ </picture>
+</a>
+
 ## 💭 The motivation
 
 But wait, aren't there a lot of Discord integration plugins already? So why create another one?
