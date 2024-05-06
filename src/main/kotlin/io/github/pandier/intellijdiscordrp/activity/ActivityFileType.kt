@@ -155,6 +155,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("ts"),
         iconFile = "typescript.png"
     ),
+    VUEJS(
+        friendlyName = "Vue.js",
+        typeName = "vuejs",
+        extensions = hashSetOf("vue"),
+        iconFile = "vuejs.png"
+    ),
     XML(
         friendlyName = "XML",
         typeName = "xml",
