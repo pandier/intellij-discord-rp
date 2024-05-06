@@ -104,7 +104,7 @@ enum class ActivityFileType(
     JAVASCRIPT(
         friendlyName = "JavaScript",
         typeName = "javascript",
-        extensions = hashSetOf("js", "jsx"),
+        extensions = hashSetOf("js", "jsx", "mjs"),
         iconFile = "javascript.png"
     ),
     JSON(
