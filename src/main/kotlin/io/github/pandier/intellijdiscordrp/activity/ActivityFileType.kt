@@ -125,6 +125,11 @@ enum class ActivityFileType(
         extensions = hashSetOf("md", "mdx"),
         iconFile = "markdown.png"
     ),
+    NPM_PACKAGE(
+        friendlyName = "NPM package",
+        regex = "^package(-lock)?\\.json$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "npm.png"
+    ),
     NUXT_CONFIG(
         friendlyName = "Nuxt config",
         regex = "^nuxt.config.ts\$".toRegex(RegexOption.IGNORE_CASE),

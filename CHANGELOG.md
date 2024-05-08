@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- File types for Nuxt config
+- File types for Nuxt config (`nuxt.config.ts`), NPM package (`package.json`, `package-lock.json`)
 
 ## [1.2.1] - 2024-05-08
 
