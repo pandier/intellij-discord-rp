@@ -165,6 +165,11 @@ enum class ActivityFileType(
         extensions = hashSetOf("ts"),
         iconFile = "typescript.png"
     ),
+    TYPESCRIPT_CONFIG(
+        friendlyName = "TypeScript config",
+        regex = "^tsconfig.json\$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "tsconfig.png"
+    ),
     VUEJS(
         friendlyName = "Vue.js",
         typeName = "vuejs",
