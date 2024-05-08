@@ -196,6 +196,6 @@ val VirtualFile.activityFileType: ActivityFileType?
         val name = name
         val typeName = fileType.name.lowercase()
         val extension = extension?.lowercase()
-        return ActivityFileType.values()
-            .find { it.typeName == typeName || it.extensions.contains(extension) || it.regex?.matches(name) == true }
+        return ActivityFileType.values().find { it.regex?.matches(name) == true }
+            ?: ActivityFileType.values().find { it.typeName == typeName || it.extensions.contains(extension) }
     }
