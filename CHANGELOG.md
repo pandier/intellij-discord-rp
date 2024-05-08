@@ -6,7 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
 - Add `mjs` extension support for JavaScript
+
+### Fixed
+
+- `ConnectionException` on Unix machines
 
 ## [1.2.0] - 2024-05-02
 
