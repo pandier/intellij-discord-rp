@@ -11,22 +11,22 @@ object KPresenceLoggerAdapter : ILogger {
     }
 
     override fun error(message: String) {
-        logger.debug(message)
+        logger.error(message)
     }
 
     override fun error(message: String, throwable: Throwable) {
-        logger.debug(message, throwable)
+        logger.error(message, throwable)
     }
 
     override fun info(message: String) {
-        logger.debug(message)
+        logger.info(message)
     }
 
     override fun trace(message: String) {
-        logger.debug(message)
+        logger.trace(message)
     }
 
     override fun warn(message: String) {
-        logger.debug(message)
+        logger.warn(message)
     }
 }
