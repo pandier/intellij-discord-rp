@@ -53,7 +53,7 @@ available under every commit through GitHub actions (these builds aren't signed)
 
 ## ⚙️ Settings
 
-The settings menu can be opened in **Settings -> Tools -> Discord Rich Presence**, where you can customize your Rich Presence.
+The settings menu can be opened in **File -> Settings -> Discord Rich Presence**, where you can customize your Rich Presence.
 Settings are split into three display modes: **Application**, **Project** and **File**. The File display mode is shown
 when the user is editing a file. Otherwise, the Project mode is displayed. The Application display mode is only shown
 if configured either as default display mode, or changed in a project using **Tools -> Discord Rich Presence -> Change Display Mode in Project**.

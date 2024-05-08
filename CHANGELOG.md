@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - File types for Nuxt config (`nuxt.config.ts`), NPM package (`package.json`, `package-lock.json`), TypeScript config (`tsconfig.json`)
 
+### Changed
+
+- Move Rich Presence configuration options to root
+
 ## [1.2.1] - 2024-05-08
 
 ### Added

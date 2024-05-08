@@ -31,7 +31,6 @@
 
         <applicationConfigurable
                 id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-                parentId="tools"
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 displayName="Discord Rich Presence"/>
 
