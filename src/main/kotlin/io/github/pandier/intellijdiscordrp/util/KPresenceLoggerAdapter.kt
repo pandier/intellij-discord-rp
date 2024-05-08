@@ -6,6 +6,10 @@ import io.github.vyfor.kpresence.logger.ILogger
 object KPresenceLoggerAdapter : ILogger {
     private val logger = logger<KPresenceLoggerAdapter>()
 
+    override fun debug(message: String) {
+        logger.debug(message)
+    }
+
     override fun error(message: String) {
         logger.debug(message)
     }
@@ -15,6 +19,10 @@ object KPresenceLoggerAdapter : ILogger {
     }
 
     override fun info(message: String) {
+        logger.debug(message)
+    }
+
+    override fun trace(message: String) {
         logger.debug(message)
     }
 
