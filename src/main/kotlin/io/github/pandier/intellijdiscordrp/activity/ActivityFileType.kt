@@ -125,6 +125,11 @@ enum class ActivityFileType(
         extensions = hashSetOf("md", "mdx"),
         iconFile = "markdown.png"
     ),
+    NUXT_CONFIG(
+        friendlyName = "Nuxt config",
+        regex = "^nuxt.config.ts\$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "nuxtjs.png"
+    ),
     PHP(
         friendlyName = "PHP",
         typeName = "php",
