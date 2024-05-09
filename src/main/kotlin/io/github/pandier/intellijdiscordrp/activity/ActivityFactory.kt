@@ -1,46 +1,47 @@
 package io.github.pandier.intellijdiscordrp.activity
 
-import de.jcm.discordgamesdk.activity.Activity
-import de.jcm.discordgamesdk.activity.ActivityButton
-import de.jcm.discordgamesdk.activity.ActivityButtonsMode
 import io.github.pandier.intellijdiscordrp.settings.ImageSetting
+import io.github.vyfor.kpresence.rpc.Activity
+import io.github.vyfor.kpresence.rpc.activity
 
-private fun ImageSetting.getIcon(info: ActivityContext) = when (this) {
+private fun ImageSetting.getIcon(context: ActivityContext) = when (this) {
     ImageSetting.APPLICATION -> currentActivityApplicationType.icon
-    ImageSetting.FILE -> info.file?.type?.icon
+    ImageSetting.FILE -> context.file?.type?.icon
 }
 
 class ActivityFactory(
     private val displayMode: ActivityDisplayMode,
-    private val details: String = "",
-    private val state: String = "",
-    private val largeImage: ImageSetting? = null,
-    private val largeImageText: String = "",
-    private val smallImage: ImageSetting? = null,
-    private val smallImageText: String = "",
+    private val details: String,
+    private val state: String,
+    private val largeImage: ImageSetting?,
+    private val largeImageText: String,
+    private val smallImage: ImageSetting?,
+    private val smallImageText: String,
+    private val timestampEnabled: Boolean,
 ) {
-    fun create(info: ActivityContext): Activity = Activity().also {
-        if (details.isNotEmpty())
-            it.details = info.format(displayMode, details)
-        if (state.isNotEmpty())
-            it.state = info.format(displayMode, state)
+    fun create(context: ActivityContext): Activity = activity {
+        details = this@ActivityFactory.details.ifEmpty { null }?.let { displayMode.format(it, context) }
+        state = this@ActivityFactory.state.ifEmpty { null }?.let { displayMode.format(it, context) }
 
-        if (largeImage != null && largeImageText.isNotEmpty()) {
-            it.assets().largeImage = largeImage.getIcon(info)
-            it.assets().largeText = info.format(displayMode, largeImageText)
+        assets {
+            if (this@ActivityFactory.largeImage != null) {
+                largeImage = this@ActivityFactory.largeImage.getIcon(context)
+                largeText = displayMode.format(this@ActivityFactory.largeImageText, context)
+            }
+
+            if (this@ActivityFactory.smallImage != null) {
+                smallImage = this@ActivityFactory.smallImage.getIcon(context)
+                smallText = displayMode.format(this@ActivityFactory.smallImageText, context)
+            }
         }
 
-        if (smallImage != null && smallImageText.isNotEmpty()) {
-            it.assets().smallImage = smallImage.getIcon(info)
-            it.assets().smallText = info.format(displayMode, smallImageText)
+        if (context.projectRepositoryUrl != null) {
+            button("Repository", context.projectRepositoryUrl)
         }
 
-        val projectRepositoryUrl = info.projectRepositoryUrl
-        if (projectRepositoryUrl != null) {
-            it.addButton(ActivityButton("Repository", projectRepositoryUrl))
-            it.activityButtonsMode = ActivityButtonsMode.BUTTONS
+        timestamps {
+            if (timestampEnabled)
+                start = context.start.toEpochMilli()
         }
-
-        it.timestamps().start = info.start
     }
 }

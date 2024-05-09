@@ -1,0 +1,15 @@
+name: "\U0001F48E Feature request"
+description: Make this project more awesome!
+labels: ["type: feature"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        **Thanks for suggesting a feature!** You are helping to make this project better.
+  - type: textarea
+    attributes:
+      label: What's missing?
+      description: >
+        Provide a clear overview of the functionality that's missing in this plugin.
+    validations:
+      required: true

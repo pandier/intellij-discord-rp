@@ -2,13 +2,10 @@ package io.github.pandier.intellijdiscordrp.action
 
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.application.EDT
 import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 abstract class DisplayModeAction(
     private val displayMode: ActivityDisplayMode,
@@ -22,20 +19,15 @@ abstract class DisplayModeAction(
         e.presentation.isEnabledAndVisible = e.project != null
     }
 
-    override fun isSelected(e: AnActionEvent): Boolean =
-        e.project?.discordProjectSettingsComponent?.state?.displayMode == displayMode
+    override fun isSelected(e: AnActionEvent): Boolean {
+        return e.project?.discordProjectSettingsComponent?.state?.displayMode == displayMode
+    }
 
     override fun setSelected(e: AnActionEvent, state: Boolean) {
-        e.project?.discordProjectSettingsComponent?.state?.displayMode = if (state) {
-            displayMode
-        } else {
-            null
-        }
+        e.project?.discordProjectSettingsComponent?.state?.displayMode = if (state) displayMode else null
 
         val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.EDT) {
-            discordService.updateActivity()
-        }
+        discordService.updateBackground()
     }
 }
 

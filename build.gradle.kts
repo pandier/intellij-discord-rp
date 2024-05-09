@@ -13,7 +13,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.JnCrMx:discord-game-sdk4j:java-impl-SNAPSHOT")
+    implementation("io.github.vyfor:kpresence:0.6.1") {
+        exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
+    }
 }
 
 kotlin {

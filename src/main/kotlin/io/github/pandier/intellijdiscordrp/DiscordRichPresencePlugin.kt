@@ -1,21 +1,7 @@
 package io.github.pandier.intellijdiscordrp
 
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.editor.EditorFactory
-import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
-import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
+import com.intellij.openapi.diagnostic.logger
 
 object DiscordRichPresencePlugin {
-    val logger = Logger.getInstance(DiscordRichPresencePlugin.javaClass)
-
-    private var editorListenersRegistered = false
-
-    fun registerEditorListeners() {
-        if (editorListenersRegistered)
-            return
-        val eventMulticaster = EditorFactory.getInstance().eventMulticaster
-        val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
-        eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, discordRichPresencePluginDisposable)
-        editorListenersRegistered = true
-    }
+    val logger = logger<DiscordRichPresencePlugin>()
 }

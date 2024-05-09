@@ -1,18 +1,18 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-import com.intellij.openapi.application.EDT
-import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
+import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
+import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
+import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import javax.swing.JComponent
 import kotlin.reflect.KMutableProperty0
 
-private fun displayModeSettings(
+private fun TabbedBuilder.displayModeTab(
+    displayMode: ActivityDisplayMode,
     imageSettings: List<ImageSetting>,
     details: KMutableProperty0<String>,
     state: KMutableProperty0<String>,
@@ -22,55 +22,81 @@ private fun displayModeSettings(
     smallImage: KMutableProperty0<ImageSetting>,
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
-): Panel.() -> Unit = {
-    row("Details:") {
-        textField()
-            .align(AlignX.FILL)
-            .bindText(details)
-    }
-    row("State:") {
-        textField()
-            .align(AlignX.FILL)
-            .bindText(state)
-    }
-
-    // Large image settings
-    lateinit var largeImageCheckBox: Cell<JBCheckBox>
-    row {
-        largeImageCheckBox = checkBox("Large image")
-            .bindSelected(largeImageEnabled)
-    }
-    indent {
-        row {
-            label("Image:")
-            comboBox(imageSettings)
-                .bindItem(largeImage.toNullableProperty())
-            label("Text:")
+    timestampEnabled: KMutableProperty0<Boolean>,
+) {
+    tab(displayMode.toString()) {
+        row("Details:") {
             textField()
-                .bindText(largeImageText)
+                .columns(COLUMNS_LARGE)
+                .bindText(details)
+                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .also { it.component.emptyText.text = "Optional" }
         }
-    }.enabledIf(largeImageCheckBox.selected)
-
-    // Small image settings
-    lateinit var smallImageCheckBox: Cell<JBCheckBox>
-    row {
-        smallImageCheckBox = checkBox("Small image")
-            .bindSelected(smallImageEnabled)
-    }
-    indent {
-        row {
-            label("Image:")
-            comboBox(imageSettings)
-                .bindItem(smallImage.toNullableProperty())
-            label("Text:")
+        row("State:") {
             textField()
-                .bindText(smallImageText)
+                .columns(COLUMNS_LARGE)
+                .bindText(state)
+                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .also { it.component.emptyText.text = "Optional" }
         }
-    }.enabledIf(smallImageCheckBox.selected)
+
+        // Large image settings
+        lateinit var largeImageCheckBox: Cell<JBCheckBox>
+        row {
+            largeImageCheckBox = checkBox("Large image")
+                .bindSelected(largeImageEnabled)
+        }
+        indent {
+            row {
+                label("Icon:")
+                comboBox(imageSettings)
+                    .bindItem(largeImage.toNullableProperty())
+                label("Text:")
+                textField()
+                    .bindText(largeImageText)
+                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
+            }
+        }.enabledIf(largeImageCheckBox.selected)
+
+        // Small image settings
+        lateinit var smallImageCheckBox: Cell<JBCheckBox>
+        row {
+            smallImageCheckBox = checkBox("Small image")
+                .bindSelected(smallImageEnabled)
+        }
+        indent {
+            row {
+                label("Icon:")
+                comboBox(imageSettings)
+                    .bindItem(smallImage.toNullableProperty())
+                label("Text:")
+                textField()
+                    .bindText(smallImageText)
+                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
+            }
+        }.enabledIf(smallImageCheckBox.selected)
+
+        row {
+            checkBox("Show elapsed time")
+                .bindSelected(timestampEnabled)
+        }
+
+        row {
+            val lines = displayMode.variables.map { variable -> "<code>$variable</code> - ${variable.description}" }
+            comment(lines.joinToString("<br/>"))
+        }
+    }
 }
 
-class DiscordSettingsConfigurable : Configurable {
-    private val panel = panel {
+class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
+
+    override fun createPanel(): DialogPanel = panel {
         val state = discordSettingsComponent.state
 
         row {
@@ -84,78 +110,88 @@ class DiscordSettingsConfigurable : Configurable {
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
+                .errorOnInput("Must be a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+                .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                .errorOnApply("Must be a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
         }
 
         row {
             label("Default display mode:")
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
+                .comment(
+                    "Applied to all projects that don't configure a specific display mode.<br/>" +
+                            "Use 'Change Display Mode in Project' action for changing the display mode in a project."
+                )
         }
 
         group("Display") {
             tabbed {
-                tab(
-                    "Application",
-                    displayModeSettings(
-                        imageSettings = listOf(ImageSetting.APPLICATION),
-                        details = state::applicationDetails,
-                        state = state::applicationState,
-                        largeImage = state::applicationLargeImage,
-                        largeImageEnabled = state::applicationLargeImageEnabled,
-                        largeImageText = state::applicationLargeImageText,
-                        smallImage = state::applicationSmallImage,
-                        smallImageEnabled = state::applicationSmallImageEnabled,
-                        smallImageText = state::applicationSmallImageText,
-                    )
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.APPLICATION,
+                    imageSettings = listOf(ImageSetting.APPLICATION),
+                    details = state::applicationDetails,
+                    state = state::applicationState,
+                    largeImage = state::applicationLargeImage,
+                    largeImageEnabled = state::applicationLargeImageEnabled,
+                    largeImageText = state::applicationLargeImageText,
+                    smallImage = state::applicationSmallImage,
+                    smallImageEnabled = state::applicationSmallImageEnabled,
+                    smallImageText = state::applicationSmallImageText,
+                    timestampEnabled = state::applicationTimestampEnabled,
                 )
 
-                tab(
-                    "Project",
-                    displayModeSettings(
-                        imageSettings = listOf(ImageSetting.APPLICATION),
-                        details = state::projectDetails,
-                        state = state::projectState,
-                        largeImage = state::projectLargeImage,
-                        largeImageEnabled = state::projectLargeImageEnabled,
-                        largeImageText = state::projectLargeImageText,
-                        smallImage = state::projectSmallImage,
-                        smallImageEnabled = state::projectSmallImageEnabled,
-                        smallImageText = state::projectSmallImageText,
-                    )
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.PROJECT,
+                    imageSettings = listOf(ImageSetting.APPLICATION),
+                    details = state::projectDetails,
+                    state = state::projectState,
+                    largeImage = state::projectLargeImage,
+                    largeImageEnabled = state::projectLargeImageEnabled,
+                    largeImageText = state::projectLargeImageText,
+                    smallImage = state::projectSmallImage,
+                    smallImageEnabled = state::projectSmallImageEnabled,
+                    smallImageText = state::projectSmallImageText,
+                    timestampEnabled = state::projectTimestampEnabled,
                 )
 
-                tab(
-                    "File",
-                    displayModeSettings(
-                        imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
-                        details = state::fileDetails,
-                        state = state::fileState,
-                        largeImage = state::fileLargeImage,
-                        largeImageEnabled = state::fileLargeImageEnabled,
-                        largeImageText = state::fileLargeImageText,
-                        smallImage = state::fileSmallImage,
-                        smallImageEnabled = state::fileSmallImageEnabled,
-                        smallImageText = state::fileSmallImageText,
-                    )
+                displayModeTab(
+                    displayMode = ActivityDisplayMode.FILE,
+                    imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
+                    details = state::fileDetails,
+                    state = state::fileState,
+                    largeImage = state::fileLargeImage,
+                    largeImageEnabled = state::fileLargeImageEnabled,
+                    largeImageText = state::fileLargeImageText,
+                    smallImage = state::fileSmallImage,
+                    smallImageEnabled = state::fileSmallImageEnabled,
+                    smallImageText = state::fileSmallImageText,
+                    timestampEnabled = state::fileTimestampEnabled,
                 )
             }
         }
     }
 
-    override fun getDisplayName(): String = "Discord Rich Presence"
-
-    override fun createComponent(): JComponent = panel
-
-    override fun isModified(): Boolean = panel.isModified()
-
     override fun apply() {
-        panel.apply()
+        val applicationIdBefore =
+            if (discordSettingsComponent.state.customApplicationIdEnabled)
+                discordSettingsComponent.state.customApplicationId
+            else null
 
-        val discordService = DiscordService.getInstance()
-        discordService.scope.launch(Dispatchers.EDT) {
-            discordService.reconnect()
+        if (validateAndApply()) {
+            val applicationIdAfter =
+                if (discordSettingsComponent.state.customApplicationIdEnabled)
+                    discordSettingsComponent.state.customApplicationId
+                else null
+
+            val discordService = DiscordService.getInstance()
+
+            // Reconnect if custom application id has been modified
+            if (applicationIdBefore != applicationIdAfter) {
+                discordService.reconnectBackground()
+            } else {
+                discordService.updateBackground()
+            }
         }
     }
-
-    override fun reset() = panel.reset()
 }

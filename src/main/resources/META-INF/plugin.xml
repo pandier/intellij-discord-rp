@@ -14,7 +14,7 @@
             <li>Customize with variables</li>
             <li>Change display mode per project (or hide the project)</li>
             <li>Support for more than 20 languages (with more to come)</li>
-            <li>Support for 7 JetBrains IDEs (IntelliJ Idea, PyCharm, PhpStorm, WebStorm, CLion, GoLand, Rider)</li>
+            <li>Support for all JetBrains IDEs</li>
             <li>Use custom Discord application id</li>
         </ul>
 
@@ -28,13 +28,17 @@
     <depends>Git4Idea</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
+
         <applicationConfigurable
-                parentId="tools"
-                instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
+                instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 displayName="Discord Rich Presence"/>
 
-        <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.RichPresenceProjectListener"/>
+        <notificationGroup id="io.github.pandier.intellijdiscordrp.notification.Reconnecting"
+                           displayType="BALLOON"
+                           bundle="messages.DiscordRichPresence"
+                           key="notification.group.reconnecting"/>
     </extensions>
 
     <actions>
