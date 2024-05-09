@@ -125,6 +125,16 @@ enum class ActivityFileType(
         extensions = hashSetOf("md", "mdx"),
         iconFile = "markdown.png"
     ),
+    NPM_PACKAGE(
+        friendlyName = "NPM package",
+        regex = "^package(-lock)?\\.json$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "npm.png"
+    ),
+    NUXT_CONFIG(
+        friendlyName = "Nuxt config",
+        regex = "^nuxt.config.ts\$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "nuxtjs.png"
+    ),
     PHP(
         friendlyName = "PHP",
         typeName = "php",
@@ -143,6 +153,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("rs"),
         iconFile = "rust.png"
     ),
+    SVELTE(
+        friendlyName = "Svelte",
+        typeName = "svelte",
+        extensions = hashSetOf("svelte"),
+        iconFile = "svelte.png"
+    ),
     TOML(
         friendlyName = "TOML",
         typeName = "toml",
@@ -154,6 +170,17 @@ enum class ActivityFileType(
         typeName = "typescript",
         extensions = hashSetOf("ts"),
         iconFile = "typescript.png"
+    ),
+    TYPESCRIPT_CONFIG(
+        friendlyName = "TypeScript config",
+        regex = "^tsconfig.json\$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "tsconfig.png"
+    ),
+    VUEJS(
+        friendlyName = "Vue.js",
+        typeName = "vuejs",
+        extensions = hashSetOf("vue"),
+        iconFile = "vuejs.png"
     ),
     XML(
         friendlyName = "XML",
@@ -180,6 +207,6 @@ val VirtualFile.activityFileType: ActivityFileType?
         val name = name
         val typeName = fileType.name.lowercase()
         val extension = extension?.lowercase()
-        return ActivityFileType.values()
-            .find { it.typeName == typeName || it.extensions.contains(extension) || it.regex?.matches(name) == true }
+        return ActivityFileType.values().find { it.regex?.matches(name) == true }
+            ?: ActivityFileType.values().find { it.typeName == typeName || it.extensions.contains(extension) }
     }
