@@ -153,6 +153,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("rs"),
         iconFile = "rust.png"
     ),
+    SVELTE(
+        friendlyName = "Svelte",
+        typeName = "svelte",
+        extensions = hashSetOf("svelte"),
+        iconFile = "svelte.png"
+    ),
     TOML(
         friendlyName = "TOML",
         typeName = "toml",
