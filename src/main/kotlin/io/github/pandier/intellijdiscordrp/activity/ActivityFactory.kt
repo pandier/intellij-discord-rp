@@ -36,7 +36,7 @@ class ActivityFactory(
         }
 
         if (context.projectRepositoryUrl != null) {
-            button("Repository", context.projectRepositoryUrl)
+            button("View Repository", context.projectRepositoryUrl)
         }
 
         timestamps {
