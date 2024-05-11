@@ -119,6 +119,11 @@ enum class ActivityFileType(
         extensions = hashSetOf("kt", "kts"),
         iconFile = "kotlin.png"
     ),
+    LICENSE(
+        friendlyName = "License",
+        regex = "^license(\\.(md|txt))?$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "license.png"
+    ),
     MARKDOWN(
         friendlyName = "Markdown",
         typeName = "markdown",
