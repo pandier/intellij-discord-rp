@@ -146,6 +146,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("php"),
         iconFile = "php.png"
     ),
+    PRISMA(
+        friendlyName = "Prisma",
+        typeName = "prisma",
+        extensions = hashSetOf("prisma"),
+        iconFile = "prisma.png"
+    ),
     PYTHON(
         friendlyName = "Python",
         typeName = "python",

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- File type for license files
+- File types for license files, Prisma schema
 
 ## [1.3.0] - 2024-05-09
 
