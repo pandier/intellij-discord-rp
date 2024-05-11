@@ -164,6 +164,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("rs"),
         iconFile = "rust.png"
     ),
+    SQL(
+        friendlyName = "SQL",
+        typeName = "sql",
+        extensions = hashSetOf("sql"),
+        iconFile = "sql.png"
+    ),
     SVELTE(
         friendlyName = "Svelte",
         typeName = "svelte",
