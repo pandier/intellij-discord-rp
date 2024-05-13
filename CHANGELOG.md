@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - File types for license files, Prisma schema, SQL
 
+### Changed
+
+- Updated KPresence to 0.6.2
+
 ## [1.3.0] - 2024-05-09
 
 ### Added
