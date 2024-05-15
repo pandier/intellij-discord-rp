@@ -20,18 +20,18 @@ class ActivityFactory(
     private val timestampEnabled: Boolean,
 ) {
     fun create(context: ActivityContext): Activity = activity {
-        details = this@ActivityFactory.details.ifEmpty { null }?.let { displayMode.format(it, context) }
-        state = this@ActivityFactory.state.ifEmpty { null }?.let { displayMode.format(it, context) }
+        details = this@ActivityFactory.details.ifEmpty { null }?.let { displayMode.format(it, context).padEnd(2) }
+        state = this@ActivityFactory.state.ifEmpty { null }?.let { displayMode.format(it, context).padEnd(2) }
 
         assets {
             if (this@ActivityFactory.largeImage != null) {
                 largeImage = this@ActivityFactory.largeImage.getIcon(context)
-                largeText = displayMode.format(this@ActivityFactory.largeImageText, context)
+                largeText = displayMode.format(this@ActivityFactory.largeImageText, context).padEnd(2)
             }
 
             if (this@ActivityFactory.smallImage != null) {
                 smallImage = this@ActivityFactory.smallImage.getIcon(context)
-                smallText = displayMode.format(this@ActivityFactory.smallImageText, context)
+                smallText = displayMode.format(this@ActivityFactory.smallImageText, context).padEnd(2)
             }
         }
 
