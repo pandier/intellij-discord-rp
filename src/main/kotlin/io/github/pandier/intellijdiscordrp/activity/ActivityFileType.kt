@@ -158,6 +158,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("py"),
         iconFile = "python.png"
     ),
+    RUBY(
+        friendlyName = "Ruby",
+        typeName = "ruby",
+        extensions = hashSetOf("rb"),
+        iconFile = "ruby.png"
+    ),
     RUST(
         friendlyName = "Rust",
         typeName = "rust",
