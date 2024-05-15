@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated KPresence to 0.6.2
 
+## [1.3.1] - 2024-05-15
+
+### Fixed
+
+- Rich Presence doesn't update when text field is formatted with a variable that has a value of length 1 character (fixes C files not displaying)
+
 ## [1.3.0] - 2024-05-09
 
 ### Added
