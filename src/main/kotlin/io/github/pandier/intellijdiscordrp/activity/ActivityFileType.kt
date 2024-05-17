@@ -205,6 +205,12 @@ enum class ActivityFileType(
         regex = "^tsconfig.json\$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "tsconfig.png"
     ),
+    VISUAL_BASIC(
+        friendlyName = "Visual Basic",
+        typeName = "visual basic",
+        extensions = hashSetOf("vb"),
+        iconFile = "visualbasic.png"
+    ),
     VUEJS(
         friendlyName = "Vue.js",
         typeName = "vuejs",
