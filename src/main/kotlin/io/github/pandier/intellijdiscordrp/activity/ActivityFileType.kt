@@ -89,6 +89,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("htm", "html", "xhtm", "xhtml"),
         iconFile = "html.png"
     ),
+    HTTP(
+        friendlyName = "HTTP requests",
+        typeName = "http requests",
+        extensions = hashSetOf("http", "rest"),
+        iconFile = "http.png"
+    ),
     IMAGE(
         friendlyName = "Image",
         typeName = "image",
