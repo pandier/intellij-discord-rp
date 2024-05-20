@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- File types for Ruby, SQL, Prisma schema, HTTP request files, license files
+- File types for Ruby, Shell scripts, SQL, Visual Basic, Prisma schema, HTTP request files, license files
 
 ### Changed
 

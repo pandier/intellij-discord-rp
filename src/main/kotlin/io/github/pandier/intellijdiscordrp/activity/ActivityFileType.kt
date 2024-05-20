@@ -176,6 +176,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("rs"),
         iconFile = "rust.png"
     ),
+    SHELL(
+        friendlyName = "Shell script",
+        typeName = "shell script",
+        extensions = hashSetOf("sh", "bash"),
+        iconFile = "shell.png"
+    ),
     SQL(
         friendlyName = "SQL",
         typeName = "sql",
@@ -204,6 +210,12 @@ enum class ActivityFileType(
         friendlyName = "TypeScript config",
         regex = "^tsconfig.json\$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "tsconfig.png"
+    ),
+    VISUAL_BASIC(
+        friendlyName = "Visual Basic",
+        typeName = "visual basic",
+        extensions = hashSetOf("vb"),
+        iconFile = "visualbasic.png"
     ),
     VUEJS(
         friendlyName = "Vue.js",
