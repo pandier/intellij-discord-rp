@@ -11,6 +11,12 @@ enum class ActivityFileType(
     val replaceFileName: String? = null,
     iconFile: String = "fallback.png",
 ) {
+    BATCH(
+        friendlyName = "Batch",
+        typeName = "batch",
+        extensions = hashSetOf("bat", "cmd"),
+        iconFile = "batch.png",
+    ),
     C(
         friendlyName = "C",
         typeName = "c",
