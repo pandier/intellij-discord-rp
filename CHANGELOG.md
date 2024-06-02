@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated KPresence to 0.6.2
 
+## [1.3.2] - 2024-05-21
+
+### Fixed
+
+- Compatibility for 242.* builds
+
 ## [1.3.1] - 2024-05-15
 
 ### Fixed
@@ -107,7 +113,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.1.1...v1.2.0
