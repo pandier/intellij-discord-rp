@@ -59,6 +59,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("dockerignore"),
         iconFile = "docker.png",
     ),
+    FSHARP(
+        friendlyName = "F#",
+        typeName = "f#",
+        extensions = hashSetOf("fs"),
+        iconFile = "fsharp.png"
+    ),
     GITDIFF(
         friendlyName = "Gitdiff",
         typeName = "diff",
