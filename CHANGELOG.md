@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Redesigned icons for Java, JSON, XML, SQL, Visual Basic, Image files 
 - Updated KPresence to 0.6.2
 
 ## [1.3.2] - 2024-05-21
