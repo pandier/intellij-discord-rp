@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.vyfor:kpresence:0.6.1") {
+    implementation("io.github.vyfor:kpresence:0.6.2") {
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
 }

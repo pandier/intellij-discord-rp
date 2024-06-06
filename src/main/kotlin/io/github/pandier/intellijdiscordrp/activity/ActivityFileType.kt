@@ -11,6 +11,12 @@ enum class ActivityFileType(
     val replaceFileName: String? = null,
     iconFile: String = "fallback.png",
 ) {
+    BATCH(
+        friendlyName = "Batch",
+        typeName = "batch",
+        extensions = hashSetOf("bat", "cmd"),
+        iconFile = "batch.png",
+    ),
     C(
         friendlyName = "C",
         typeName = "c",
@@ -53,6 +59,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("dockerignore"),
         iconFile = "docker.png",
     ),
+    FSHARP(
+        friendlyName = "F#",
+        typeName = "f#",
+        extensions = hashSetOf("fs"),
+        iconFile = "fsharp.png"
+    ),
     GITDIFF(
         friendlyName = "Gitdiff",
         typeName = "diff",
@@ -89,6 +101,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("htm", "html", "xhtm", "xhtml"),
         iconFile = "html.png"
     ),
+    HTTP(
+        friendlyName = "HTTP requests",
+        typeName = "http requests",
+        extensions = hashSetOf("http", "rest"),
+        iconFile = "http.png"
+    ),
     IMAGE(
         friendlyName = "Image",
         typeName = "image",
@@ -119,6 +137,11 @@ enum class ActivityFileType(
         extensions = hashSetOf("kt", "kts"),
         iconFile = "kotlin.png"
     ),
+    LICENSE(
+        friendlyName = "License",
+        regex = "^license(\\.(md|txt))?$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "license.png"
+    ),
     MARKDOWN(
         friendlyName = "Markdown",
         typeName = "markdown",
@@ -141,17 +164,41 @@ enum class ActivityFileType(
         extensions = hashSetOf("php"),
         iconFile = "php.png"
     ),
+    PRISMA(
+        friendlyName = "Prisma",
+        typeName = "prisma",
+        extensions = hashSetOf("prisma"),
+        iconFile = "prisma.png"
+    ),
     PYTHON(
         friendlyName = "Python",
         typeName = "python",
         extensions = hashSetOf("py"),
         iconFile = "python.png"
     ),
+    RUBY(
+        friendlyName = "Ruby",
+        typeName = "ruby",
+        extensions = hashSetOf("rb"),
+        iconFile = "ruby.png"
+    ),
     RUST(
         friendlyName = "Rust",
         typeName = "rust",
         extensions = hashSetOf("rs"),
         iconFile = "rust.png"
+    ),
+    SHELL(
+        friendlyName = "Shell script",
+        typeName = "shell script",
+        extensions = hashSetOf("sh", "bash"),
+        iconFile = "shell.png"
+    ),
+    SQL(
+        friendlyName = "SQL",
+        typeName = "sql",
+        extensions = hashSetOf("sql"),
+        iconFile = "sql.png"
     ),
     SVELTE(
         friendlyName = "Svelte",
@@ -175,6 +222,12 @@ enum class ActivityFileType(
         friendlyName = "TypeScript config",
         regex = "^tsconfig.json\$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "tsconfig.png"
+    ),
+    VISUAL_BASIC(
+        friendlyName = "Visual Basic",
+        typeName = "visual basic",
+        extensions = hashSetOf("vb"),
+        iconFile = "visualbasic.png"
     ),
     VUEJS(
         friendlyName = "Vue.js",
