@@ -170,6 +170,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("prisma"),
         iconFile = "prisma.png"
     ),
+    PROTOBUF(
+        friendlyName = "Protocol Buffer",
+        typeName = "protobuf",
+        extensions = hashSetOf("proto"),
+        iconFile = "protobuf.png"
+    ),
     PYTHON(
         friendlyName = "Python",
         typeName = "python",

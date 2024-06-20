@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- File types for Protocol Buffer
+
 ## [1.4.0] - 2024-06-06
 
 ### Added
