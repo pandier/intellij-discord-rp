@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `.ico` files are now included in the image file type
 - Enable compatibility for all newly released versions of IntelliJ
 
 ## [1.4.1] - 2024-06-22

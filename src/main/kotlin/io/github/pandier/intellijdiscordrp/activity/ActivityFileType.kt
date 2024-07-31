@@ -116,7 +116,7 @@ enum class ActivityFileType(
     IMAGE(
         friendlyName = "Image",
         typeName = "image",
-        extensions = hashSetOf("png", "gif", "jpg", "jpeg", "svg", "webp", "tif", "tiff"),
+        extensions = hashSetOf("png", "gif", "jpg", "jpeg", "svg", "webp", "tif", "tiff", "ico"),
         iconFile = "image.png"
     ),
     JAVA(
