@@ -200,6 +200,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("rs"),
         iconFile = "rust.png"
     ),
+    SASS(
+        friendlyName = "Sass",
+        typeName = "sass style sheet",
+        extensions = hashSetOf("sass", "scss"),
+        iconFile = "sass.png"
+    ),
     SHELL(
         friendlyName = "Shell script",
         typeName = "shell script",

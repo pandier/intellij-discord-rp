@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- File type for Cargo project files
+- File type for Sass, Cargo project files
 
 ### Changed
 
