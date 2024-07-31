@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- File type for Cargo project files
+
 ### Changed
 
 - Enable compatibility for all newly released versions of IntelliJ
