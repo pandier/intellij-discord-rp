@@ -23,6 +23,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("c"),
         iconFile = "c.png"
     ),
+    CARGO(
+        friendlyName = "Cargo",
+        typeName = "cargo",
+        regex = "^Cargo\\.(toml|lock)\$".toRegex(),
+        iconFile = "cargo.png",
+    ),
     CPP(
         friendlyName = "C++",
         typeName = "c++",
