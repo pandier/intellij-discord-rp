@@ -65,6 +65,11 @@ enum class ActivityFileType(
         extensions = hashSetOf("dockerignore"),
         iconFile = "docker.png",
     ),
+    ENV(
+        friendlyName = ".env",
+        regex = "^\\.env$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "env.png",
+    ),
     FSHARP(
         friendlyName = "F#",
         typeName = "f#",
