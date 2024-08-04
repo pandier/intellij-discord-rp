@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.2] - 2024-08-04
+
 ### Added
 
 - File type for Sass, Cargo project files, `.env` file
@@ -131,7 +133,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.2...HEAD
+[1.4.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.1...v1.4.2
 [1.4.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.2...v1.4.0
 [1.3.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.1...v1.3.2
