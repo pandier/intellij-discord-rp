@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
+import git4idea.GitUtil
 import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
 import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
@@ -31,6 +32,7 @@ class ActivityContext(
     val appVersion: String,
     val project: WeakReference<Project>,
     val projectName: String,
+    val projectRepositoryUrl: String?,
     val file: ActivityFileContext? = null,
 ) {
     companion object Factory {
@@ -41,13 +43,17 @@ class ActivityContext(
         ): ActivityContext {
             val appInfo = ApplicationInfo.getInstance()
             val appNames = ApplicationNamesInfo.getInstance()
+            val repositoryManager = GitUtil.getRepositoryManager(project)
+            val repository = file?.let { repositoryManager.getRepositoryForFileQuick(it) }
+                ?: repositoryManager.repositories.firstOrNull()
             return ActivityContext(
                 start = start,
                 appName = appNames.fullProductName,
                 appFullName = appNames.fullProductNameWithEdition,
                 appVersion = appInfo.fullVersion,
-                projectName = project.name,
                 project = WeakReference(project),
+                projectName = project.name,
+                projectRepositoryUrl = repository?.remotes?.let(GitUtil::getDefaultOrFirstRemote)?.firstUrl,
                 file = file?.let {
                     val contentRoot = ReadAction.compute<VirtualFile?, Exception> {
                         ProjectFileIndex.getInstance(project).getContentRootForFile(it)
