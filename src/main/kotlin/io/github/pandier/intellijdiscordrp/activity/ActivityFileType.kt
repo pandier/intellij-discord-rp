@@ -139,7 +139,7 @@ enum class ActivityFileType(
     JAVASCRIPT(
         friendlyName = "JavaScript",
         typeName = "javascript",
-        extensions = hashSetOf("js", "jsx", "mjs"),
+        extensions = hashSetOf("js", "mjs"),
         iconFile = "javascript.png"
     ),
     JSON(
@@ -147,6 +147,12 @@ enum class ActivityFileType(
         typeName = "json",
         extensions = hashSetOf("json", "jsonc"),
         iconFile = "json.png"
+    ),
+    JSX(
+        friendlyName = "JSX",
+        typeName = "jsx",
+        extensions = hashSetOf("jsx"),
+        iconFile = "jsx.png"
     ),
     KOTLIN(
         friendlyName = "Kotlin",
@@ -240,6 +246,12 @@ enum class ActivityFileType(
         typeName = "toml",
         extensions = hashSetOf("toml"),
         iconFile = "toml.png"
+    ),
+    TSX(
+        friendlyName = "TSX",
+        typeName = "tsx",
+        extensions = hashSetOf("tsx"),
+        iconFile = "tsx.png"
     ),
     TYPESCRIPT(
         friendlyName = "TypeScript",

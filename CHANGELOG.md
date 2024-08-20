@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- File type for Astro
+- File type for Astro, JSX, TSX
 
 ## [1.4.2] - 2024-08-04
 
