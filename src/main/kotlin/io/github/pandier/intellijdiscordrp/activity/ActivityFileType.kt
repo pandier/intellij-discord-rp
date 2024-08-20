@@ -11,6 +11,12 @@ enum class ActivityFileType(
     val replaceFileName: String? = null,
     iconFile: String = "fallback.png",
 ) {
+    ASTRO(
+        friendlyName = "Astro",
+        typeName = "astro",
+        extensions = hashSetOf("astro"),
+        iconFile = "astro.png",
+    ),
     BATCH(
         friendlyName = "Batch",
         typeName = "batch",
