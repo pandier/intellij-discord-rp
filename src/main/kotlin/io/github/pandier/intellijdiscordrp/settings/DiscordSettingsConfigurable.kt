@@ -116,6 +116,13 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         }
 
         row {
+            label("IDE logo style:")
+            comboBox(LogoStyleSetting.values().toList())
+                .bindItem(state::logoStyle.toNullableProperty())
+            contextHelp("Recently JetBrains has redesigned their IDE logos. You can switch between the old (classic) design and the new (modern) one.")
+        }
+
+        row {
             label("Default display mode:")
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
