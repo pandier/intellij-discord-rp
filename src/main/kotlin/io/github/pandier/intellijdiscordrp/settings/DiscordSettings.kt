@@ -3,16 +3,6 @@ package io.github.pandier.intellijdiscordrp.settings
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 
-enum class ImageSetting(
-    private val friendlyName: String
-) {
-    APPLICATION("Application"),
-    FILE("File");
-
-    override fun toString(): String =
-        friendlyName
-}
-
 data class DiscordSettings(
     var reconnectOnUpdate: Boolean = true,
     var customApplicationIdEnabled: Boolean = false,
