@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Setting ("IDE logo style") that switches between the old (classic) logo style and the new (modern) one
+
+### Changed
+
+- Updated IDE icons to the new modern look
+
 ## [1.4.3] - 2024-08-21
 
 ### Added
