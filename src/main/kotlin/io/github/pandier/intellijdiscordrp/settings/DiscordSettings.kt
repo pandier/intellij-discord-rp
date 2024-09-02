@@ -8,6 +8,7 @@ data class DiscordSettings(
     var customApplicationIdEnabled: Boolean = false,
     var customApplicationId: String = "",
     var defaultDisplayMode: ActivityDisplayMode = ActivityDisplayMode.FILE,
+    var logoStyle: LogoStyleSetting = LogoStyleSetting.MODERN,
 
     var applicationDetails: String = "",
     var applicationState: String = "",
@@ -42,6 +43,7 @@ data class DiscordSettings(
     val applicationActivityFactory: ActivityFactory
         get() = ActivityFactory(
             displayMode = ActivityDisplayMode.APPLICATION,
+            logoStyle = logoStyle,
             details = applicationDetails,
             state = applicationState,
             largeImage = if (applicationLargeImageEnabled) applicationLargeImage else null,
@@ -54,6 +56,7 @@ data class DiscordSettings(
     val projectActivityFactory: ActivityFactory
         get() = ActivityFactory(
             displayMode = ActivityDisplayMode.PROJECT,
+            logoStyle = logoStyle,
             details = projectDetails,
             state = projectState,
             largeImage = if (projectLargeImageEnabled) projectLargeImage else null,
@@ -66,6 +69,7 @@ data class DiscordSettings(
     val fileActivityFactory: ActivityFactory
         get() = ActivityFactory(
             displayMode = ActivityDisplayMode.FILE,
+            logoStyle = logoStyle,
             details = fileDetails,
             state = fileState,
             largeImage = if (fileLargeImageEnabled) fileLargeImage else null,
