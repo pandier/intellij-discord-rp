@@ -11,6 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
+import io.github.pandier.intellijdiscordrp.listener.RichPresenceDocumentListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.util.KPresenceLoggerAdapter
@@ -77,6 +78,7 @@ class DiscordService(
         val eventMulticaster = EditorFactory.getInstance().eventMulticaster
         val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
         eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
+        eventMulticasterEx?.addDocumentListener(RichPresenceDocumentListener, this)
 
         // Connect to Discord client
         reconnectBackground()
