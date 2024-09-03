@@ -3,7 +3,7 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.editor.Document
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import com.intellij.openapi.project.Project
@@ -11,6 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
+import io.github.pandier.intellijdiscordrp.listener.RichPresenceCaretListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceDocumentListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
@@ -79,6 +80,7 @@ class DiscordService(
         val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
         eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
         eventMulticasterEx?.addDocumentListener(RichPresenceDocumentListener, this)
+        eventMulticasterEx?.addCaretListener(RichPresenceCaretListener, this)
 
         // Connect to Discord client
         reconnectBackground()
@@ -177,20 +179,20 @@ class DiscordService(
      *
      * @see changeActivity
      */
-    fun changeActivityBackground(project: Project, file: VirtualFile?, document: Document?) {
+    fun changeActivityBackground(project: Project, file: VirtualFile?, editor: Editor?) {
         scope.launch(Dispatchers.Default) {
-            changeActivity(project, file, document)
+            changeActivity(project, file, editor)
         }
     }
 
     /**
      * Changes the activity to the given project and file.
-     * The [Document] object is used for stuff like line count and file size.
+     * The [Editor] object is used for stuff like line count and caret position.
      *
      * @see changeActivity
      */
-    suspend fun changeActivity(project: Project, file: VirtualFile?, document: Document?) {
-        val activityContext = ActivityContext.create(project, file, document)
+    suspend fun changeActivity(project: Project, file: VirtualFile?, editor: Editor?) {
+        val activityContext = ActivityContext.create(project, file, editor)
         changeActivity(activityContext)
     }
 

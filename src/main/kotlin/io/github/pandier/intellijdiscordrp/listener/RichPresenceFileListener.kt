@@ -10,7 +10,7 @@ class RichPresenceFileListener : FileEditorManagerListener {
     override fun selectionChanged(event: FileEditorManagerEvent) {
         val discordService = DiscordService.getInstance()
         val newFile = event.newFile
-        val document = (event.newEditor as? TextEditor?)?.editor?.document
-        discordService.changeActivityBackground(event.manager.project, newFile, document)
+        val editor = (event.newEditor as? TextEditor?)?.editor
+        discordService.changeActivityBackground(event.manager.project, newFile, editor)
     }
 }
