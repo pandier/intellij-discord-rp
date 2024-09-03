@@ -10,8 +10,7 @@ object RichPresenceFocusChangeListener : FocusChangeListener {
         val project = editor.project
         val discordService = DiscordService.getInstance()
         if (project != null) {
-            val file = editor.virtualFile
-            discordService.changeActivityBackground(project, file)
+            discordService.changeActivityBackground(project, editor.virtualFile, editor.document)
         }
     }
 }

@@ -72,7 +72,12 @@ enum class ActivityDisplayMode(
                 name = "file_dir_name",
                 description = "Name of the directory of the edited file",
                 getter = { file?.directoryName }
-            )
+            ),
+            ActivityVariable(
+                name = "file_line_count",
+                description = "Number of lines of the edited file",
+                getter = { file?.lineCount?.toString() ?: "-" }
+            ),
         ))
     );
 

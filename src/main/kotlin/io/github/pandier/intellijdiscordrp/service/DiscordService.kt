@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import com.intellij.openapi.project.Project
@@ -174,19 +175,20 @@ class DiscordService(
      *
      * @see changeActivity
      */
-    fun changeActivityBackground(project: Project, file: VirtualFile?) {
+    fun changeActivityBackground(project: Project, file: VirtualFile?, document: Document?) {
         scope.launch(Dispatchers.Default) {
-            changeActivity(project, file)
+            changeActivity(project, file, document)
         }
     }
 
     /**
      * Changes the activity to the given project and file.
+     * The [Document] object is used for stuff like line count and file size.
      *
      * @see changeActivity
      */
-    suspend fun changeActivity(project: Project, file: VirtualFile?) {
-        val activityContext = ActivityContext.create(project, file)
+    suspend fun changeActivity(project: Project, file: VirtualFile?, document: Document?) {
+        val activityContext = ActivityContext.create(project, file, document)
         changeActivity(activityContext)
     }
 

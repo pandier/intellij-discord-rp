@@ -60,16 +60,17 @@ if configured either as default display mode, or changed in a project using **To
 
 Each display mode can be configured using the corresponding tab. Variables are used for showing information in text fields, here's a list of them:
 
-| Variable          | File mode | Project mode | Application mode | Value                                       |
-|-------------------|-----------|--------------|------------------|---------------------------------------------|
-| `{app_name}`      | ✅         | ✅            | ✅                | Name of the IDE                             |
-| `{app_full_name}` | ✅         | ✅            | ✅                | Name and edition of the IDE                 |
-| `{app_version}`   | ✅         | ✅            | ✅                | Version of the IDE                          |
-| `{project_name}`  | ✅         | ✅            | ❌                | Name of the current project                 |
-| `{file_name}`     | ✅         | ❌            | ❌                | Name of the edited file                     |
-| `{file_path}`     | ✅         | ❌            | ❌                | Path to the edited file                     |
-| `{file_type}`     | ✅         | ❌            | ❌                | The determined type of the edited file      |
-| `{file_dir_name}` | ✅         | ❌            | ❌                | Name of the directory the edited file is in |
+| Variable            | File mode | Project mode | Application mode | Value                                       |
+|---------------------|-----------|--------------|------------------|---------------------------------------------|
+| `{app_name}`        | ✅         | ✅            | ✅                | Name of the IDE                             |
+| `{app_full_name}`   | ✅         | ✅            | ✅                | Name and edition of the IDE                 |
+| `{app_version}`     | ✅         | ✅            | ✅                | Version of the IDE                          |
+| `{project_name}`    | ✅         | ✅            | ❌                | Name of the current project                 |
+| `{file_name}`       | ✅         | ❌            | ❌                | Name of the edited file                     |
+| `{file_path}`       | ✅         | ❌            | ❌                | Path to the edited file                     |
+| `{file_type}`       | ✅         | ❌            | ❌                | The determined type of the edited file      |
+| `{file_dir_name}`   | ✅         | ❌            | ❌                | Name of the directory the edited file is in |
+| `{file_line_count}` | ✅         | ❌            | ❌                | Number of lines of the edited file          |
 
 ## ❓ Requesting a new language
 
