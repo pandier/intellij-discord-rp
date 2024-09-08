@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Icon for Database tool
 - Setting ("IDE logo style") that switches between the old (classic) logo style and the new (modern) one
 
 ### Changed
