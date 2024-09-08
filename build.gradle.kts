@@ -19,6 +19,8 @@ dependencies {
     intellijPlatform {
         intellijIdeaCommunity("2023.1.6")
 
+        pluginVerifier()
+        zipSigner()
         instrumentationTools()
     }
 
