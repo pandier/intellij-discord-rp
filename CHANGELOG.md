@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Variable `{file_line}` that shows the current line number
+- Variable `{file_line_count}` that shows the number of lines in a file
 - Setting ("IDE logo style") that switches between the old (classic) logo style and the new (modern) one
 
 ### Changed
