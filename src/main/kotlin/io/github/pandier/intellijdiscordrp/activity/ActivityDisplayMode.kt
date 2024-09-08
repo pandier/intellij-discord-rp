@@ -75,7 +75,7 @@ enum class ActivityDisplayMode(
             ),
             ActivityVariable(
                 name = "file_line",
-                description = "Line number of the editor caret in the edited file",
+                description = "Line number of the current line in the edited file",
                 getter = { file?.line?.toString() ?: "-" }
             ),
             ActivityVariable(

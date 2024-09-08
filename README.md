@@ -70,7 +70,7 @@ Each display mode can be configured using the corresponding tab. Variables are u
 | `{file_path}`       | ✅         | ❌            | ❌                | Path to the edited file                            |
 | `{file_type}`       | ✅         | ❌            | ❌                | The determined type of the edited file             |
 | `{file_dir_name}`   | ✅         | ❌            | ❌                | Name of the directory the edited file is in        |
-| `{file_line}`       | ✅         | ❌            | ❌                | Line number of the editor caret in the edited file |
+| `{file_line}`       | ✅         | ❌            | ❌                | Line number of the current line in the edited file |
 | `{file_line_count}` | ✅         | ❌            | ❌                | Number of lines of the edited file                 |
 
 ## ❓ Requesting a new language
