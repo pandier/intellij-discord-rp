@@ -3,38 +3,32 @@ import org.jetbrains.changelog.Changelog
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.23"
-    id("org.jetbrains.intellij") version "1.17.2"
+    id("org.jetbrains.intellij.platform") version "2.0.1"
     id("org.jetbrains.changelog") version "2.2.0"
 }
 
 repositories {
     mavenCentral()
-    maven("https://jitpack.io")
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity("2023.1.6")
+
+        instrumentationTools()
+    }
+
     implementation("io.github.vyfor:kpresence:0.6.2") {
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
 }
 
-kotlin {
-    jvmToolchain(17)
-}
-
-intellij {
-    version.set("2023.1.6")
-}
-
-changelog {
-    groups.empty()
-    repositoryUrl.set(providers.gradleProperty("repository"))
-}
-
-tasks {
-    patchPluginXml {
-        sinceBuild.set("231")
-
+intellijPlatform {
+    pluginConfiguration {
         changeNotes.set(provider {
             changelog.renderItem(
                 (changelog.getOrNull(project.version.toString()) ?: changelog.getUnreleased())
@@ -43,15 +37,28 @@ tasks {
                 Changelog.OutputType.HTML
             )
         })
+
+        ideaVersion {
+            untilBuild.set(provider { null })
+        }
     }
 
-    signPlugin {
+    signing {
         certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
         privateKey.set(System.getenv("PRIVATE_KEY"))
         password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
     }
 
-    publishPlugin {
+    publishing {
         token.set(System.getenv("PUBLISH_TOKEN"))
     }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+changelog {
+    groups.empty()
+    repositoryUrl.set(providers.gradleProperty("repository"))
 }

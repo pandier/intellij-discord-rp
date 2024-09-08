@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated IDE icons to the new modern look
 
+### Fixed
+
+- Plugin is now compatible for all versions since 2023.1.6
+
 ## [1.4.3] - 2024-08-21
 
 ### Added
