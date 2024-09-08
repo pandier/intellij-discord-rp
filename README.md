@@ -1,6 +1,10 @@
 <div align="center">
 
-<img alt="logo" width="96px" src="https://raw.githubusercontent.com/pandier/intellij-discord-rp/main/src/main/resources/META-INF/pluginIcon.svg" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/pandier/intellij-discord-rp/main/showcase/promotional_graphic_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/pandier/intellij-discord-rp/main/showcase/promotional_graphic_light.png">
+  <img alt="Promotional graphic with the plugin logo" src="https://raw.githubusercontent.com/pandier/intellij-discord-rp/main/showcase/promotional_graphic_light.png">
+</picture>
 
 # intellij-discord-rp
 
@@ -21,10 +25,6 @@ A highly customizable IntelliJ plugin that adds stylish Rich Presence support to
 - Support for more than 20 languages (with more to come)
 - Support for all JetBrains IDEs
 - Use custom Discord application id
-
-## 👀 Showcase
-
-<img width="777px" alt="showcase" src="https://raw.githubusercontent.com/pandier/intellij-discord-rp/main/showcase/collage.png" />
 
 ## ⭐ Star history
 
