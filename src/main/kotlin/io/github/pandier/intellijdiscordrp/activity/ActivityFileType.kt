@@ -11,6 +11,9 @@ enum class ActivityFileType(
     val replaceFileName: String? = null,
     iconFile: String = "fallback.png",
 ) {
+    /*
+     * Files (icons/file)
+     */
     ASTRO(
         friendlyName = "Astro",
         typeName = "astro",
@@ -288,6 +291,19 @@ enum class ActivityFileType(
         extensions = hashSetOf("yml", "yaml"),
         iconFile = "yaml.png"
     ),
+
+    /*
+     * Tools (icons/file/tool)
+     */
+    DATABASE_VIEWER(
+        friendlyName = "Database Viewer",
+        typeName = "database element",
+        iconFile = "tool/databaseviewer.png",
+    ),
+
+    /*
+     * Fallback
+     */
     OTHER(friendlyName = "File");
 
     val icon: String = "$FILE_ICON_REPOSITORY/$iconFile"
