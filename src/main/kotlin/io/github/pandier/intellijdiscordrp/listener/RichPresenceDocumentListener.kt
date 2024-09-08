@@ -7,10 +7,11 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 object RichPresenceDocumentListener : DocumentListener {
     override fun documentChanged(event: DocumentEvent) {
-        val lineCount = event.document.lineCount
+        val lineCount = event.document.lineCount.let { max(it, 1) }
         val discordService = DiscordService.getInstance()
         discordService.scope.launch(Dispatchers.Default) {
             discordService.modifyActivity { context ->

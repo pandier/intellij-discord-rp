@@ -16,6 +16,7 @@ import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettin
 import io.github.vyfor.kpresence.rpc.Activity
 import java.lang.ref.WeakReference
 import java.time.Instant
+import kotlin.math.max
 
 class ActivityFileContext(
     val name: String,
@@ -65,7 +66,7 @@ class ActivityContext(
                         type = activityFileType ?: ActivityFileType.OTHER,
                         typeName = activityFileType?.friendlyName ?: it.fileType.name,
                         line = editor?.caretModel?.logicalPosition?.line?.plus(1),
-                        lineCount = editor?.document?.lineCount,
+                        lineCount = editor?.document?.lineCount?.let { max(it, 1) },
                     )
                 }
             )
