@@ -12,6 +12,7 @@
 [![Rating](https://img.shields.io/jetbrains/plugin/r/rating/24027?style=flat-square)](https://plugins.jetbrains.com/plugin/24027-discord-rich-presence/reviews)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/24027?style=flat-square)](https://plugins.jetbrains.com/plugin/24027-discord-rich-presence)
 [![GitHub License](https://img.shields.io/github/license/pandier/intellij-discord-rp?style=flat-square)](https://github.com/re-ovo/discord-ij/blob/master/LICENSE)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-%23d9534f?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/pandier)
 
 </div>
 
