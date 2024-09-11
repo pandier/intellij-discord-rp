@@ -24,6 +24,8 @@ kotlin {
 
 intellij {
     version.set("2023.1.6")
+
+    plugins.set(listOf("Git4Idea"))
 }
 
 changelog {
