@@ -226,6 +226,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("sass", "scss"),
         iconFile = "sass.png"
     ),
+    SCALA(
+        friendlyName = "Scala",
+        typeName = "scala files",
+        extensions = hashSetOf("scala", "sc"),
+        iconFile = "scala.png"
+    ),
     SHELL(
         friendlyName = "Shell script",
         typeName = "shell script",
