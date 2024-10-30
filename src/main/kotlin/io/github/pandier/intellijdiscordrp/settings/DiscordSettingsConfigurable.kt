@@ -45,16 +45,16 @@ private fun TabbedBuilder.displayModeTab(
         // Large image settings
         lateinit var largeImageCheckBox: Cell<JBCheckBox>
         row {
-            largeImageCheckBox = checkBox("Large image")
+            largeImageCheckBox = checkBox("Show large image")
                 .bindSelected(largeImageEnabled)
         }
         indent {
             row {
-                label("Icon:")
                 comboBox(imageSettings)
+                    .label("Icon:")
                     .bindItem(largeImage.toNullableProperty())
-                label("Text:")
                 textField()
+                    .label("Text:")
                     .bindText(largeImageText)
                     .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
@@ -65,16 +65,16 @@ private fun TabbedBuilder.displayModeTab(
         // Small image settings
         lateinit var smallImageCheckBox: Cell<JBCheckBox>
         row {
-            smallImageCheckBox = checkBox("Small image")
+            smallImageCheckBox = checkBox("Show small image")
                 .bindSelected(smallImageEnabled)
         }
         indent {
             row {
-                label("Icon:")
                 comboBox(imageSettings)
+                    .label("Icon:")
                     .bindItem(smallImage.toNullableProperty())
-                label("Text:")
                 textField()
+                    .label("Text:")
                     .bindText(smallImageText)
                     .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
@@ -105,8 +105,9 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         }
 
         row {
-            val customApplicationIdCheckBox = checkBox("Custom application id:")
+            val customApplicationIdCheckBox = checkBox("Custom Discord application id:")
                 .bindSelected(state::customApplicationIdEnabled)
+                .gap(RightGap.SMALL)
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
@@ -117,13 +118,16 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
 
         row {
             label("IDE logo style:")
+                .gap(RightGap.SMALL)
             comboBox(LogoStyleSetting.values().toList())
                 .bindItem(state::logoStyle.toNullableProperty())
+                .gap(RightGap.SMALL)
             contextHelp("Recently JetBrains has redesigned their IDE logos. You can switch between the old (classic) design and the new (modern) one.")
         }
 
         row {
             label("Default display mode:")
+                .gap(RightGap.SMALL)
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
                 .comment(
