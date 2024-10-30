@@ -8,6 +8,8 @@ data class DiscordSettings(
     var customApplicationIdEnabled: Boolean = false,
     var customApplicationId: String = "",
     var defaultDisplayMode: ActivityDisplayMode = ActivityDisplayMode.FILE,
+    var focusTimeoutEnabled: Boolean = true,
+    var focusTimeoutMinutes: Int = 20,
     var logoStyle: LogoStyleSetting = LogoStyleSetting.MODERN,
 
     var applicationDetails: String = "",
