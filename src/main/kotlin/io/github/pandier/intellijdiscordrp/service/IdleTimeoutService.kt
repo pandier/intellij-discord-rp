@@ -21,7 +21,7 @@ class IdleTimeoutService(
 ) : Disposable {
     companion object {
         @JvmStatic
-        fun getInstance(): DiscordService = service()
+        fun getInstance(): IdleTimeoutService = service()
     }
 
     private var task: Job? = null
