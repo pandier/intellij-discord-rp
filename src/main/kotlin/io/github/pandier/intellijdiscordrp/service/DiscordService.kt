@@ -86,7 +86,7 @@ class DiscordService(
         reconnectBackground()
 
         // Initialize the idle timeout service
-        IdleTimeoutService.getInstance()
+        FocusTimeoutService.getInstance()
     }
 
     /**

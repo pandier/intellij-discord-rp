@@ -7,21 +7,22 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.wm.IdeFrame
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
+import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * A service that takes care of hiding the activity after the IDE loses focus for a certain amount of time.
+ * A service that takes care of hiding the activity after the IDE is out of focus for a certain amount of time.
  */
 @Service
-class IdleTimeoutService(
+class FocusTimeoutService(
     val scope: CoroutineScope
 ) : Disposable {
     companion object {
         @JvmStatic
-        fun getInstance(): IdleTimeoutService = service()
+        fun getInstance(): FocusTimeoutService = service()
     }
 
     private var task: Job? = null
@@ -41,14 +42,19 @@ class IdleTimeoutService(
     }
 
     /**
-     * Schedules a task to hide the activity after 10 seconds.
-     * This task can be cancelled using [cancelTimeout].
+     * Schedules a task to hide the activity after certain amount of time configured in the settings.
+     * The task can be cancelled using [cancelTimeout].
+     *
+     * This method does nothing if the idle timeout is disabled in the settings.
      */
     private fun scheduleTimeout() {
+        if (!discordSettingsComponent.state.focusTimeoutEnabled)
+            return
         task?.cancel()
         task = scope.launch {
-            delay(10000)
-            DiscordRichPresencePlugin.logger.warn("Application lost focus for 10 seconds, hiding activity")
+            val minutes = discordSettingsComponent.state.focusTimeoutMinutes
+            delay(minutes * 60000L)
+            DiscordRichPresencePlugin.logger.info("Application lost focus (idle) for $minutes minutes, hiding activity")
             DiscordService.getInstance().hide()
         }
     }
