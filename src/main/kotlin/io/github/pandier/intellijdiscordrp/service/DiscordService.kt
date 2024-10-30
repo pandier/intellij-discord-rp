@@ -84,6 +84,9 @@ class DiscordService(
 
         // Connect to Discord client
         reconnectBackground()
+
+        // Initialize the idle timeout service
+        IdleTimeoutService.getInstance()
     }
 
     /**
@@ -249,6 +252,18 @@ class DiscordService(
     suspend fun update() {
         mutex.withLock {
             sendActivityInternal(activityContext?.createActivity())
+        }
+    }
+
+    /**
+     * Temporarily hides the activity without modifying the current activity context.
+     * This is used for example when hiding the activity after IDE focus loss.
+     *
+     * The activity can be shown again by calling [update].
+     */
+    suspend fun hide() {
+        mutex.withLock {
+            sendActivityInternal(null)
         }
     }
 
