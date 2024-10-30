@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2024-10-30
+
 ### Added
 
 - Ability to hide Rich Presence when IDE is out of focus for a certain amount of time (can be configured in settings)
@@ -174,7 +176,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.3...v1.5.0
 [1.4.3]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.2...v1.4.3
