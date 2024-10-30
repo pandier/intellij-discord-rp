@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Ability to hide Rich Presence when IDE is out of focus for a certain amount of time (can be configured in settings)
+
 ### Changed
 
 - Updated settings to match UI guidelines
