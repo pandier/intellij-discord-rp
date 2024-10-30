@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated settings to match UI guidelines
 
+### Fixed
+
+- AsynchronousCloseException when closing the IDE
+
 ## [1.5.1] - 2024-10-05
 
 ### Added
