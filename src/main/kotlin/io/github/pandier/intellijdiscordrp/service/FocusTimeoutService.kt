@@ -53,7 +53,9 @@ class FocusTimeoutService(
         task?.cancel()
         task = scope.launch {
             val minutes = discordSettingsComponent.state.focusTimeoutMinutes
-            delay(minutes * 60000L)
+            if (minutes > 0) {
+                delay(minutes * 60000L)
+            }
             DiscordRichPresencePlugin.logger.info("Application lost focus (idle) for $minutes minutes, hiding activity")
             DiscordService.getInstance().hide()
         }

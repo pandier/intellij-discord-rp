@@ -120,7 +120,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             val idleTimeoutEnabled = checkBox("Hide Rich Presence when IDE is out of focus for")
                 .bindSelected(state::focusTimeoutEnabled)
                 .gap(RightGap.SMALL)
-            intTextField(1..Int.MAX_VALUE)
+            intTextField(0..Int.MAX_VALUE)
                 .bindIntText(state::focusTimeoutMinutes)
                 .columns(COLUMNS_TINY)
                 .gap(RightGap.SMALL)
