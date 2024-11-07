@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Connection errors on Linux occurring when the operating system is set to a non-English language
+
 ## [1.6.0] - 2024-10-30
 
 ### Added

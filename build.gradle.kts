@@ -24,7 +24,7 @@ dependencies {
         instrumentationTools()
     }
 
-    implementation("io.github.vyfor:kpresence:0.6.3") {
+    implementation("io.github.vyfor:kpresence:0.6.4") {
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
 }
