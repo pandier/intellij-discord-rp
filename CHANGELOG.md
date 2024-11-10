@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.1] - 2024-11-10
+
 ### Fixed
 
 - Connection errors on Linux occurring when the operating system is set to a non-English language
@@ -180,7 +182,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.3...v1.5.0
