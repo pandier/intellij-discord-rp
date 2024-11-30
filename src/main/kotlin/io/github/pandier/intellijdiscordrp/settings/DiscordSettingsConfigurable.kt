@@ -101,8 +101,10 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         val state = discordSettingsComponent.state
 
         row {
-            checkBox("Try reconnecting on activity update")
+            checkBox("Try reconnecting on every activity update if not connected")
                 .bindSelected(state::reconnectOnUpdate)
+                .gap(RightGap.SMALL)
+            contextHelp("Reconnection process runs in the background and in most cases shouldn't affect performance.")
         }
 
         row {
