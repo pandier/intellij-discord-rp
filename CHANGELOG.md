@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Option to show the full application name with the edition in Rich Presence title
+
 ## [1.6.1] - 2024-11-10
 
 ### Fixed

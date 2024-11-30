@@ -33,7 +33,11 @@ private fun connect(): RichClient {
     val applicationId = if (settings.customApplicationIdEnabled) {
         settings.customApplicationId.toULong().toLong()
     } else {
-        currentActivityApplicationType.discordApplicationId
+        if (settings.showFullApplicationName) {
+            currentActivityApplicationType.fullNameDiscordApplicationId ?: currentActivityApplicationType.discordApplicationId
+        } else {
+            currentActivityApplicationType.discordApplicationId
+        }
     }
 
     return RichClient(applicationId).apply {

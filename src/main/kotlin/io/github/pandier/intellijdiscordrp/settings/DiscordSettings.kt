@@ -11,6 +11,7 @@ data class DiscordSettings(
     var focusTimeoutEnabled: Boolean = true,
     var focusTimeoutMinutes: Int = 20,
     var logoStyle: LogoStyleSetting = LogoStyleSetting.MODERN,
+    var showFullApplicationName: Boolean = false,
 
     var applicationDetails: String = "",
     var applicationState: String = "",

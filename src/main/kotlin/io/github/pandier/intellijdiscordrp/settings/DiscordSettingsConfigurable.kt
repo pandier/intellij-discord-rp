@@ -4,6 +4,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
+import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
@@ -129,6 +130,17 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             label("minutes")
         }
 
+        // Show full application name option only when available
+        if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
+            row {
+                checkBox("Show full application name with edition in title")
+                    .bindSelected(state::showFullApplicationName)
+                    .gap(RightGap.SMALL)
+                contextHelp("Title is located in the Rich Presence at the top or in your Discord status. " +
+                        "Use a custom Discord application id if you want to fully adjust the title.")
+            }
+        }
+
         row {
             label("IDE logo style:")
                 .gap(RightGap.SMALL)
@@ -201,17 +213,20 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             if (discordSettingsComponent.state.customApplicationIdEnabled)
                 discordSettingsComponent.state.customApplicationId
             else null
+        val showFullApplicationNameBefore = discordSettingsComponent.state.showFullApplicationName
 
         if (validateAndApply()) {
             val applicationIdAfter =
                 if (discordSettingsComponent.state.customApplicationIdEnabled)
                     discordSettingsComponent.state.customApplicationId
                 else null
+            val showFullApplicationNameAfter = discordSettingsComponent.state.showFullApplicationName
 
             val discordService = DiscordService.getInstance()
 
-            // Reconnect if custom application id has been modified
-            if (applicationIdBefore != applicationIdAfter) {
+            // Reconnect if custom application id or show full application has been modified
+            // because these changes require it
+            if (applicationIdBefore != applicationIdAfter || showFullApplicationNameBefore != showFullApplicationNameAfter) {
                 discordService.reconnectBackground()
             } else {
                 discordService.updateBackground()
