@@ -1,5 +1,7 @@
 package io.github.pandier.intellijdiscordrp.activity
 
+import io.github.pandier.intellijdiscordrp.util.formatFileSize
+
 /**
  * Represents an activity display mode.
  */
@@ -82,6 +84,11 @@ enum class ActivityDisplayMode(
                 name = "file_line_count",
                 description = "Number of lines of the edited file",
                 getter = { file?.lineCount?.toString() ?: "-" }
+            ),
+            ActivityVariable(
+                name = "file_size",
+                description = "Size of the edited file",
+                getter = { file?.length?.let { formatFileSize(it) } ?: "-" }
             ),
         ))
     );
