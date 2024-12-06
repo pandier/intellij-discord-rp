@@ -26,6 +26,7 @@ class ActivityFileContext(
     val typeName: String,
     val line: Int?,
     val lineCount: Int?,
+    val length: Long?,
 )
 
 class ActivityContext(
@@ -67,6 +68,7 @@ class ActivityContext(
                         typeName = activityFileType?.friendlyName ?: it.fileType.name,
                         line = editor?.caretModel?.logicalPosition?.line?.plus(1),
                         lineCount = editor?.document?.lineCount?.let { max(it, 1) },
+                        length = it.length,
                     )
                 }
             )
