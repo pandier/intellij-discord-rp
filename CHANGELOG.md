@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `{file_size}` variable that shows the size of the edited file
+
 ## [1.6.2] - 2024-12-01
 
 ### Added

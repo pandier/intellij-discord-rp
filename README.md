@@ -73,6 +73,7 @@ Each display mode can be configured using the corresponding tab. Variables are u
 | `{file_dir_name}`   | ✅         | ❌            | ❌                | Name of the directory the edited file is in        |
 | `{file_line}`       | ✅         | ❌            | ❌                | Line number of the current line in the edited file |
 | `{file_line_count}` | ✅         | ❌            | ❌                | Number of lines of the edited file                 |
+| `{file_size}`       | ✅         | ❌            | ❌                | Size of the edited file                            |
 
 ## ❓ Requesting a new language
 
