@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `{file_size}` variable that shows the size of the edited file
 
+### Changed
+
+- Moved Rich Presence settings category to a new position between "Tools" and "Settings Sync"
+
 ## [1.6.2] - 2024-12-01
 
 ### Added

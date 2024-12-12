@@ -30,6 +30,8 @@
         <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
 
         <applicationConfigurable
+                groupWeight="5"
+                groupId="root"
                 id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 displayName="Discord Rich Presence"/>
