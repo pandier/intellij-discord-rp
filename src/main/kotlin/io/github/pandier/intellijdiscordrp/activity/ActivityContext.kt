@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.activity
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VfsUtil
@@ -16,6 +17,7 @@ import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettin
 import io.github.vyfor.kpresence.rpc.Activity
 import java.lang.ref.WeakReference
 import java.time.Instant
+import kotlin.math.max
 
 class ActivityFileContext(
     val name: String,
@@ -23,6 +25,9 @@ class ActivityFileContext(
     val directoryName: String,
     val type: ActivityFileType,
     val typeName: String,
+    val line: Int?,
+    val lineCount: Int?,
+    val length: Long?,
 )
 
 class ActivityContext(
@@ -39,6 +44,7 @@ class ActivityContext(
         fun create(
             project: Project,
             file: VirtualFile? = null,
+            editor: Editor? = null,
             start: Instant = TimeTrackingService.getInstance(project).start,
         ): ActivityContext {
             val appInfo = ApplicationInfo.getInstance()
@@ -66,6 +72,9 @@ class ActivityContext(
                         directoryName = it.parent?.name ?: "",
                         type = activityFileType ?: ActivityFileType.OTHER,
                         typeName = activityFileType?.friendlyName ?: it.fileType.name,
+                        line = editor?.caretModel?.logicalPosition?.line?.plus(1),
+                        lineCount = editor?.document?.lineCount?.let { max(it, 1) },
+                        length = it.length,
                     )
                 }
             )

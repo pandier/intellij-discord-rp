@@ -6,6 +6,109 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `{file_size}` variable that shows the size of the edited file
+
+## [1.6.2] - 2024-12-01
+
+### Added
+
+- Option to show the full application name with the edition in Rich Presence title
+
+### Changed
+
+- Clarified "try reconnecting" setting
+
+## [1.6.1] - 2024-11-10
+
+### Fixed
+
+- Connection errors on Linux occurring when the operating system is set to a non-English language
+
+## [1.6.0] - 2024-10-30
+
+### Added
+
+- Ability to hide Rich Presence when IDE is out of focus for a certain amount of time (can be configured in settings)
+
+### Changed
+
+- Updated settings to match UI guidelines
+
+### Fixed
+
+- AsynchronousCloseException when closing the IDE
+
+## [1.5.1] - 2024-10-05
+
+### Added
+
+- Icon for Scala
+
+## [1.5.0] - 2024-09-08
+
+### Added
+
+- Icon for Database tool
+- Variable `{file_line}` that shows the current line number
+- Variable `{file_line_count}` that shows the number of lines in a file
+- Setting ("IDE logo style") that switches between the old (classic) logo style and the new (modern) one
+
+### Changed
+
+- Updated IDE icons to the new modern look
+
+### Fixed
+
+- Plugin is now compatible for all versions since 2023.1.6
+
+## [1.4.3] - 2024-08-21
+
+### Added
+
+- File type for Astro, JSX, TSX
+
+## [1.4.2] - 2024-08-04
+
+### Added
+
+- File type for Sass, Cargo project files, `.env` file
+
+### Changed
+
+- `.ico` files are now included in the image file type
+- Enable compatibility for all newly released versions of IntelliJ
+
+## [1.4.1] - 2024-06-22
+
+### Added
+
+- File types for Protocol Buffer
+
+## [1.4.0] - 2024-06-06
+
+### Added
+
+- File types for Ruby, F#, Shell scripts, Batch scripts, SQL, Visual Basic, Prisma schema, HTTP request files, license files
+
+### Changed
+
+- Redesigned icons for Java, JSON, XML, SQL, Visual Basic, Image files 
+- Updated KPresence to 0.6.2
+
+## [1.3.2] - 2024-05-21
+
+### Fixed
+
+- Compatibility for 242.* builds
+
+## [1.3.1] - 2024-05-15
+
+### Fixed
+
+- Rich Presence doesn't update when text field is formatted with a variable that has a value of length 1 character (fixes C files not displaying)
+
 ## [1.3.0] - 2024-05-09
 
 ### Added
@@ -93,7 +196,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.2...HEAD
+[1.6.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.1...v1.6.2
+[1.6.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.0...v1.6.1
+[1.6.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.1...v1.6.0
+[1.5.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.0...v1.5.1
+[1.5.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.3...v1.5.0
+[1.4.3]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.2...v1.4.3
+[1.4.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.1...v1.4.2
+[1.4.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.4.0...v1.4.1
+[1.4.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.2...v1.4.0
+[1.3.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.1...v1.3.2
+[1.3.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.1.1...v1.2.0

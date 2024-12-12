@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.service
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import com.intellij.openapi.project.Project
@@ -10,6 +11,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
+import io.github.pandier.intellijdiscordrp.listener.RichPresenceCaretListener
+import io.github.pandier.intellijdiscordrp.listener.RichPresenceDocumentListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.util.KPresenceLoggerAdapter
@@ -30,7 +33,11 @@ private fun connect(): RichClient {
     val applicationId = if (settings.customApplicationIdEnabled) {
         settings.customApplicationId.toULong().toLong()
     } else {
-        currentActivityApplicationType.discordApplicationId
+        if (settings.showFullApplicationName) {
+            currentActivityApplicationType.fullNameDiscordApplicationId ?: currentActivityApplicationType.discordApplicationId
+        } else {
+            currentActivityApplicationType.discordApplicationId
+        }
     }
 
     return RichClient(applicationId).apply {
@@ -76,9 +83,14 @@ class DiscordService(
         val eventMulticaster = EditorFactory.getInstance().eventMulticaster
         val eventMulticasterEx = eventMulticaster as? EditorEventMulticasterEx
         eventMulticasterEx?.addFocusChangeListener(RichPresenceFocusChangeListener, this)
+        eventMulticasterEx?.addDocumentListener(RichPresenceDocumentListener, this)
+        eventMulticasterEx?.addCaretListener(RichPresenceCaretListener, this)
 
         // Connect to Discord client
         reconnectBackground()
+
+        // Initialize the idle timeout service
+        FocusTimeoutService.getInstance()
     }
 
     /**
@@ -174,19 +186,20 @@ class DiscordService(
      *
      * @see changeActivity
      */
-    fun changeActivityBackground(project: Project, file: VirtualFile?) {
+    fun changeActivityBackground(project: Project, file: VirtualFile?, editor: Editor?) {
         scope.launch(Dispatchers.Default) {
-            changeActivity(project, file)
+            changeActivity(project, file, editor)
         }
     }
 
     /**
      * Changes the activity to the given project and file.
+     * The [Editor] object is used for stuff like line count and caret position.
      *
      * @see changeActivity
      */
-    suspend fun changeActivity(project: Project, file: VirtualFile?) {
-        val activityContext = ActivityContext.create(project, file)
+    suspend fun changeActivity(project: Project, file: VirtualFile?, editor: Editor?) {
+        val activityContext = ActivityContext.create(project, file, editor)
         changeActivity(activityContext)
     }
 
@@ -243,6 +256,18 @@ class DiscordService(
     suspend fun update() {
         mutex.withLock {
             sendActivityInternal(activityContext?.createActivity())
+        }
+    }
+
+    /**
+     * Temporarily hides the activity without modifying the current activity context.
+     * This is used for example when hiding the activity after IDE focus loss.
+     *
+     * The activity can be shown again by calling [update].
+     */
+    suspend fun hide() {
+        mutex.withLock {
+            sendActivityInternal(null)
         }
     }
 

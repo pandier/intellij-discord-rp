@@ -4,6 +4,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
+import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
@@ -45,16 +46,16 @@ private fun TabbedBuilder.displayModeTab(
         // Large image settings
         lateinit var largeImageCheckBox: Cell<JBCheckBox>
         row {
-            largeImageCheckBox = checkBox("Large image")
+            largeImageCheckBox = checkBox("Show large image")
                 .bindSelected(largeImageEnabled)
         }
         indent {
             row {
-                label("Icon:")
                 comboBox(imageSettings)
+                    .label("Icon:")
                     .bindItem(largeImage.toNullableProperty())
-                label("Text:")
                 textField()
+                    .label("Text:")
                     .bindText(largeImageText)
                     .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
@@ -65,16 +66,16 @@ private fun TabbedBuilder.displayModeTab(
         // Small image settings
         lateinit var smallImageCheckBox: Cell<JBCheckBox>
         row {
-            smallImageCheckBox = checkBox("Small image")
+            smallImageCheckBox = checkBox("Show small image")
                 .bindSelected(smallImageEnabled)
         }
         indent {
             row {
-                label("Icon:")
                 comboBox(imageSettings)
+                    .label("Icon:")
                     .bindItem(smallImage.toNullableProperty())
-                label("Text:")
                 textField()
+                    .label("Text:")
                     .bindText(smallImageText)
                     .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
@@ -100,13 +101,16 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         val state = discordSettingsComponent.state
 
         row {
-            checkBox("Try reconnecting on activity update")
+            checkBox("Try reconnecting on every activity update if not connected")
                 .bindSelected(state::reconnectOnUpdate)
+                .gap(RightGap.SMALL)
+            contextHelp("Reconnection process runs in the background and in most cases shouldn't affect performance.")
         }
 
         row {
-            val customApplicationIdCheckBox = checkBox("Custom application id:")
+            val customApplicationIdCheckBox = checkBox("Custom Discord application id:")
                 .bindSelected(state::customApplicationIdEnabled)
+                .gap(RightGap.SMALL)
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
@@ -116,7 +120,41 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         }
 
         row {
+            val idleTimeoutEnabled = checkBox("Hide Rich Presence when IDE is out of focus for")
+                .bindSelected(state::focusTimeoutEnabled)
+                .gap(RightGap.SMALL)
+            intTextField(0..Int.MAX_VALUE)
+                .bindIntText(state::focusTimeoutMinutes)
+                .columns(COLUMNS_TINY)
+                .gap(RightGap.SMALL)
+                .enabledIf(idleTimeoutEnabled.selected)
+            @Suppress("DialogTitleCapitalization")
+            label("minutes")
+        }
+
+        // Show full application name option only when available
+        if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
+            row {
+                checkBox("Show full application name with edition in title")
+                    .bindSelected(state::showFullApplicationName)
+                    .gap(RightGap.SMALL)
+                contextHelp("Title is located in the Rich Presence at the top or in your Discord status. " +
+                        "Use a custom Discord application id if you want to fully adjust the title.")
+            }
+        }
+
+        row {
+            label("IDE logo style:")
+                .gap(RightGap.SMALL)
+            comboBox(LogoStyleSetting.values().toList())
+                .bindItem(state::logoStyle.toNullableProperty())
+                .gap(RightGap.SMALL)
+            contextHelp("Recently JetBrains has redesigned their IDE logos. You can switch between the old (classic) design and the new (modern) one.")
+        }
+
+        row {
             label("Default display mode:")
+                .gap(RightGap.SMALL)
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
                 .comment(
@@ -177,17 +215,20 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             if (discordSettingsComponent.state.customApplicationIdEnabled)
                 discordSettingsComponent.state.customApplicationId
             else null
+        val showFullApplicationNameBefore = discordSettingsComponent.state.showFullApplicationName
 
         if (validateAndApply()) {
             val applicationIdAfter =
                 if (discordSettingsComponent.state.customApplicationIdEnabled)
                     discordSettingsComponent.state.customApplicationId
                 else null
+            val showFullApplicationNameAfter = discordSettingsComponent.state.showFullApplicationName
 
             val discordService = DiscordService.getInstance()
 
-            // Reconnect if custom application id has been modified
-            if (applicationIdBefore != applicationIdAfter) {
+            // Reconnect if custom application id or show full application has been modified
+            // because these changes require it
+            if (applicationIdBefore != applicationIdAfter || showFullApplicationNameBefore != showFullApplicationNameAfter) {
                 discordService.reconnectBackground()
             } else {
                 discordService.updateBackground()

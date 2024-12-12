@@ -3,21 +3,15 @@ package io.github.pandier.intellijdiscordrp.settings
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 
-enum class ImageSetting(
-    private val friendlyName: String
-) {
-    APPLICATION("Application"),
-    FILE("File");
-
-    override fun toString(): String =
-        friendlyName
-}
-
 data class DiscordSettings(
     var reconnectOnUpdate: Boolean = true,
     var customApplicationIdEnabled: Boolean = false,
     var customApplicationId: String = "",
     var defaultDisplayMode: ActivityDisplayMode = ActivityDisplayMode.FILE,
+    var focusTimeoutEnabled: Boolean = true,
+    var focusTimeoutMinutes: Int = 20,
+    var logoStyle: LogoStyleSetting = LogoStyleSetting.MODERN,
+    var showFullApplicationName: Boolean = false,
 
     var applicationDetails: String = "",
     var applicationState: String = "",
@@ -52,6 +46,7 @@ data class DiscordSettings(
     val applicationActivityFactory: ActivityFactory
         get() = ActivityFactory(
             displayMode = ActivityDisplayMode.APPLICATION,
+            logoStyle = logoStyle,
             details = applicationDetails,
             state = applicationState,
             largeImage = if (applicationLargeImageEnabled) applicationLargeImage else null,
@@ -64,6 +59,7 @@ data class DiscordSettings(
     val projectActivityFactory: ActivityFactory
         get() = ActivityFactory(
             displayMode = ActivityDisplayMode.PROJECT,
+            logoStyle = logoStyle,
             details = projectDetails,
             state = projectState,
             largeImage = if (projectLargeImageEnabled) projectLargeImage else null,
@@ -76,6 +72,7 @@ data class DiscordSettings(
     val fileActivityFactory: ActivityFactory
         get() = ActivityFactory(
             displayMode = ActivityDisplayMode.FILE,
+            logoStyle = logoStyle,
             details = fileDetails,
             state = fileState,
             largeImage = if (fileLargeImageEnabled) fileLargeImage else null,
