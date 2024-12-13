@@ -40,6 +40,10 @@ class ActivityFactory(
             }
         }
 
+        if (context.projectRepositoryUrl != null) {
+            button("View Repository", context.projectRepositoryUrl)
+        }
+
         timestamps {
             if (timestampEnabled)
                 start = context.start.toEpochMilli()
