@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved Rich Presence settings category to a new position between "Tools" and "Settings Sync"
+- Removed minimum requirement of 2 characters for text fields (text is padded with spaces to fit the minimum length)
+
+### Fixed
+
+- Fixed Rich Presence not showing up when variables make the text too long
 
 ## [1.6.2] - 2024-12-01
 
