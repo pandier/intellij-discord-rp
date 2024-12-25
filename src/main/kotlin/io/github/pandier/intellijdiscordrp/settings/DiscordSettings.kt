@@ -31,6 +31,8 @@ data class DiscordSettings(
     var projectSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
+    var projectRepoButtonEnabled: Boolean = true,
+    var projectRepoButtonText: String = "View Repository",
     var projectTimestampEnabled: Boolean = true,
 
     var fileDetails: String = "In {project_name}",
@@ -41,6 +43,8 @@ data class DiscordSettings(
     var fileSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
+    var fileRepoButtonEnabled: Boolean = true,
+    var fileRepoButtonText: String = "View Repository",
     var fileTimestampEnabled: Boolean = true,
 ) {
     val applicationActivityFactory: ActivityFactory
@@ -53,6 +57,7 @@ data class DiscordSettings(
             largeImageText = applicationLargeImageText,
             smallImage = if (applicationSmallImageEnabled) applicationSmallImage else null,
             smallImageText = applicationSmallImageText,
+            repoButtonText = null,
             timestampEnabled = applicationTimestampEnabled,
         )
 
@@ -66,6 +71,7 @@ data class DiscordSettings(
             largeImageText = projectLargeImageText,
             smallImage = if (projectSmallImageEnabled) projectSmallImage else null,
             smallImageText = projectSmallImageText,
+            repoButtonText = if (projectRepoButtonEnabled) projectRepoButtonText else null,
             timestampEnabled = projectTimestampEnabled,
         )
 
@@ -79,6 +85,7 @@ data class DiscordSettings(
             largeImageText = fileLargeImageText,
             smallImage = if (fileSmallImageEnabled) fileSmallImage else null,
             smallImageText = fileSmallImageText,
+            repoButtonText = if (fileRepoButtonEnabled) fileRepoButtonText else null,
             timestampEnabled = fileTimestampEnabled,
         )
 

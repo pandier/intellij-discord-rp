@@ -25,6 +25,7 @@ class ActivityFactory(
     private val largeImageText: String,
     private val smallImage: ImageSetting?,
     private val smallImageText: String,
+    private val repoButtonText: String?,
     private val timestampEnabled: Boolean,
 ) {
     fun create(context: ActivityContext): Activity = activity {
@@ -43,8 +44,8 @@ class ActivityFactory(
             }
         }
 
-        if (context.projectRepositoryUrl != null) {
-            button("View Repository", context.projectRepositoryUrl)
+        if (repoButtonText != null && context.projectRepositoryUrl != null) {
+            button(displayMode.format(repoButtonText, context).fitToRange(2, 31), context.projectRepositoryUrl)
         }
 
         timestamps {
