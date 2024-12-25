@@ -30,16 +30,16 @@ private fun TabbedBuilder.displayModeTab(
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(details)
-                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
-                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
         row("State:") {
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(state)
-                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
-                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
 
@@ -57,9 +57,9 @@ private fun TabbedBuilder.displayModeTab(
                 textField()
                     .label("Text:")
                     .bindText(largeImageText)
-                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                    .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(largeImageCheckBox.selected)
 
@@ -77,9 +77,9 @@ private fun TabbedBuilder.displayModeTab(
                 textField()
                     .label("Text:")
                     .bindText(smallImageText)
-                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                    .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(smallImageCheckBox.selected)
 
