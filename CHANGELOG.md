@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- 'View Repository' button in Rich Presence that links to the project's Git repository
+
+  - Can be configured in settings
+  - Can be hidden per project using 'Show Repository Button in Project' action
+
+- `{project_repo_url}` variable that shows the URL of the project's Git repository
 - `{file_size}` variable that shows the size of the edited file
 
 ### Changed
