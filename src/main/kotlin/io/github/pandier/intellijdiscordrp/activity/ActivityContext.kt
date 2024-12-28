@@ -84,13 +84,13 @@ class ActivityContext(
     /**
      * Renders this activity context to an [Activity] using global plugin settings
      * and plugin settings of the project with respect to settings hiding the activity.
-     * Returns null if the reference to the projet was already dropped.
+     * Returns null if the reference to the project was already dropped.
      */
     fun createActivity(): Activity? {
-        return createActivity(
-            discordSettingsComponent.state,
-            project.get()?.discordProjectSettingsComponent?.state
-        )
+        val projectSettings = project.get()?.discordProjectSettingsComponent?.state
+        if (projectSettings == null)
+            return null
+        return createActivity(discordSettingsComponent.state, projectSettings)
     }
 
     /**
@@ -101,14 +101,14 @@ class ActivityContext(
      */
     fun createActivity(
         settings: DiscordSettings,
-        projectSettings: DiscordProjectSettings?,
+        projectSettings: DiscordProjectSettings,
     ): Activity? {
-        if (projectSettings == null || !projectSettings.showRichPresence)
+        if (!projectSettings.showRichPresence)
             return null
         val displayMode = ActivityDisplayMode.getSupportedFrom(
             projectSettings.displayMode ?: settings.defaultDisplayMode,
             this
         )
-        return settings.getActivityFactory(displayMode).create(this)
+        return settings.createActivityFactory(displayMode, projectSettings).create(this)
     }
 }
