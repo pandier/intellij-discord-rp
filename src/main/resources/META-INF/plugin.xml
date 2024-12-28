@@ -25,6 +25,7 @@
   ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>Git4Idea</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
@@ -72,6 +73,10 @@
             <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     text="Show Rich Presence in Project">
+            </action>
+            <action id="io.github.pandier.intellijdiscordrp.action.ShowRepositoryButtonAction"
+                    class="io.github.pandier.intellijdiscordrp.action.ShowRepositoryButtonAction"
+                    text="Show Repository Button in Project">
             </action>
         </group>
     </actions>

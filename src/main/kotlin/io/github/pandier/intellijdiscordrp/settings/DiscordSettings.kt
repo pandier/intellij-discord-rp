@@ -2,6 +2,7 @@ package io.github.pandier.intellijdiscordrp.settings
 
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
+import io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettings
 
 data class DiscordSettings(
     var reconnectOnUpdate: Boolean = true,
@@ -31,6 +32,8 @@ data class DiscordSettings(
     var projectSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
+    var projectRepoButtonEnabled: Boolean = true,
+    var projectRepoButtonText: String = "View Repository",
     var projectTimestampEnabled: Boolean = true,
 
     var fileDetails: String = "In {project_name}",
@@ -41,50 +44,52 @@ data class DiscordSettings(
     var fileSmallImage: ImageSetting = ImageSetting.APPLICATION,
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
+    var fileRepoButtonEnabled: Boolean = true,
+    var fileRepoButtonText: String = "View Repository",
     var fileTimestampEnabled: Boolean = true,
 ) {
-    val applicationActivityFactory: ActivityFactory
-        get() = ActivityFactory(
-            displayMode = ActivityDisplayMode.APPLICATION,
-            logoStyle = logoStyle,
-            details = applicationDetails,
-            state = applicationState,
-            largeImage = if (applicationLargeImageEnabled) applicationLargeImage else null,
-            largeImageText = applicationLargeImageText,
-            smallImage = if (applicationSmallImageEnabled) applicationSmallImage else null,
-            smallImageText = applicationSmallImageText,
-            timestampEnabled = applicationTimestampEnabled,
-        )
+    fun createApplicationActivityFactory(): ActivityFactory = ActivityFactory(
+        displayMode = ActivityDisplayMode.APPLICATION,
+        logoStyle = logoStyle,
+        details = applicationDetails,
+        state = applicationState,
+        largeImage = if (applicationLargeImageEnabled) applicationLargeImage else null,
+        largeImageText = applicationLargeImageText,
+        smallImage = if (applicationSmallImageEnabled) applicationSmallImage else null,
+        smallImageText = applicationSmallImageText,
+        repoButtonText = null,
+        timestampEnabled = applicationTimestampEnabled,
+    )
 
-    val projectActivityFactory: ActivityFactory
-        get() = ActivityFactory(
-            displayMode = ActivityDisplayMode.PROJECT,
-            logoStyle = logoStyle,
-            details = projectDetails,
-            state = projectState,
-            largeImage = if (projectLargeImageEnabled) projectLargeImage else null,
-            largeImageText = projectLargeImageText,
-            smallImage = if (projectSmallImageEnabled) projectSmallImage else null,
-            smallImageText = projectSmallImageText,
-            timestampEnabled = projectTimestampEnabled,
-        )
+    fun createProjectActivityFactory(projectSettings: DiscordProjectSettings?): ActivityFactory = ActivityFactory(
+        displayMode = ActivityDisplayMode.PROJECT,
+        logoStyle = logoStyle,
+        details = projectDetails,
+        state = projectState,
+        largeImage = if (projectLargeImageEnabled) projectLargeImage else null,
+        largeImageText = projectLargeImageText,
+        smallImage = if (projectSmallImageEnabled) projectSmallImage else null,
+        smallImageText = projectSmallImageText,
+        repoButtonText = if (projectRepoButtonEnabled && projectSettings?.showRepoButton != false) projectRepoButtonText else null,
+        timestampEnabled = projectTimestampEnabled,
+    )
 
-    val fileActivityFactory: ActivityFactory
-        get() = ActivityFactory(
-            displayMode = ActivityDisplayMode.FILE,
-            logoStyle = logoStyle,
-            details = fileDetails,
-            state = fileState,
-            largeImage = if (fileLargeImageEnabled) fileLargeImage else null,
-            largeImageText = fileLargeImageText,
-            smallImage = if (fileSmallImageEnabled) fileSmallImage else null,
-            smallImageText = fileSmallImageText,
-            timestampEnabled = fileTimestampEnabled,
-        )
+    fun createFileActivityFactory(projectSettings: DiscordProjectSettings?): ActivityFactory = ActivityFactory(
+        displayMode = ActivityDisplayMode.FILE,
+        logoStyle = logoStyle,
+        details = fileDetails,
+        state = fileState,
+        largeImage = if (fileLargeImageEnabled) fileLargeImage else null,
+        largeImageText = fileLargeImageText,
+        smallImage = if (fileSmallImageEnabled) fileSmallImage else null,
+        smallImageText = fileSmallImageText,
+        repoButtonText = if (fileRepoButtonEnabled && projectSettings?.showRepoButton != false) fileRepoButtonText else null,
+        timestampEnabled = fileTimestampEnabled,
+    )
 
-    fun getActivityFactory(mode: ActivityDisplayMode) = when (mode) {
-        ActivityDisplayMode.APPLICATION -> applicationActivityFactory
-        ActivityDisplayMode.PROJECT -> projectActivityFactory
-        ActivityDisplayMode.FILE -> fileActivityFactory
+    fun createActivityFactory(mode: ActivityDisplayMode, projectSettings: DiscordProjectSettings?) = when (mode) {
+        ActivityDisplayMode.APPLICATION -> createApplicationActivityFactory()
+        ActivityDisplayMode.PROJECT -> createProjectActivityFactory(projectSettings)
+        ActivityDisplayMode.FILE -> createFileActivityFactory(projectSettings)
     }
 }
