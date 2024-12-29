@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
+import git4idea.GitUtil
 import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
 import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
@@ -38,6 +39,7 @@ class ActivityContext(
     val appStart: Instant,
     val project: WeakReference<Project>,
     val projectName: String,
+    val projectRepositoryUrl: String?,
     val projectStart: Instant,
     val file: ActivityFileContext? = null,
 ) {
@@ -50,6 +52,9 @@ class ActivityContext(
             val timeTrackingService = TimeTrackingService.getInstance()
             val appInfo = ApplicationInfo.getInstance()
             val appNames = ApplicationNamesInfo.getInstance()
+            val repositoryManager = GitUtil.getRepositoryManager(project)
+            val repository = file?.let { repositoryManager.getRepositoryForFileQuick(it) }
+                ?: repositoryManager.repositories.firstOrNull()
             return ActivityContext(
                 appName = appNames.fullProductName,
                 appFullName = appNames.fullProductNameWithEdition,
@@ -57,6 +62,7 @@ class ActivityContext(
                 appStart = timeTrackingService.getOrInit(ApplicationManager.getApplication()),
                 project = WeakReference(project),
                 projectName = project.name,
+                projectRepositoryUrl = repository?.remotes?.let(GitUtil::getDefaultOrFirstRemote)?.firstUrl,
                 projectStart = timeTrackingService.getOrInit(project),
                 file = file?.let {
                     val contentRoot = ReadAction.compute<VirtualFile?, Exception> {
@@ -83,13 +89,13 @@ class ActivityContext(
     /**
      * Renders this activity context to an [Activity] using global plugin settings
      * and plugin settings of the project with respect to settings hiding the activity.
-     * Returns null if the reference to the projet was already dropped.
+     * Returns null if the reference to the project was already dropped.
      */
     fun createActivity(): Activity? {
-        return createActivity(
-            discordSettingsComponent.state,
-            project.get()?.discordProjectSettingsComponent?.state
-        )
+        val projectSettings = project.get()?.discordProjectSettingsComponent?.state
+        if (projectSettings == null)
+            return null
+        return createActivity(discordSettingsComponent.state, projectSettings)
     }
 
     /**
@@ -100,14 +106,14 @@ class ActivityContext(
      */
     fun createActivity(
         settings: DiscordSettings,
-        projectSettings: DiscordProjectSettings?,
+        projectSettings: DiscordProjectSettings,
     ): Activity? {
-        if (projectSettings == null || !projectSettings.showRichPresence)
+        if (!projectSettings.showRichPresence)
             return null
         val displayMode = ActivityDisplayMode.getSupportedFrom(
             projectSettings.displayMode ?: settings.defaultDisplayMode,
             this
         )
-        return settings.getActivityFactory(displayMode).create(this)
+        return settings.createActivityFactory(displayMode, projectSettings).create(this)
     }
 }

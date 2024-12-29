@@ -33,6 +33,7 @@ class ActivityFactory(
     private val largeImageText: String,
     private val smallImage: ImageSetting?,
     private val smallImageText: String,
+    private val repoButtonText: String?,
     private val timestampEnabled: Boolean,
     private val timestampTarget: TimestampTargetSetting,
 ) {
@@ -50,6 +51,10 @@ class ActivityFactory(
                 smallImage = this@ActivityFactory.smallImage.getIcon(context, logoStyle)
                 smallText = displayMode.format(this@ActivityFactory.smallImageText, context).fitToRange(2, 128)
             }
+        }
+
+        if (repoButtonText != null && context.projectRepositoryUrl != null) {
+            button(displayMode.format(repoButtonText, context).fitToRange(2, 31), context.projectRepositoryUrl)
         }
 
         timestamps {

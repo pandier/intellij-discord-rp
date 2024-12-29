@@ -45,6 +45,11 @@ enum class ActivityDisplayMode(
                 description = "Name of the current project",
                 getter = { projectName }
             ),
+            ActivityVariable(
+                name = "project_repo_url",
+                description = "URL of the current project's git repository",
+                getter = { projectRepositoryUrl ?: "-" }
+            )
         ))
     ),
 
