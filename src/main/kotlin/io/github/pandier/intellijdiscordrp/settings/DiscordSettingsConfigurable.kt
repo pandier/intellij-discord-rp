@@ -15,6 +15,7 @@ import kotlin.reflect.KMutableProperty0
 private fun TabbedBuilder.displayModeTab(
     displayMode: ActivityDisplayMode,
     imageSettings: List<ImageSetting>,
+    timestampTargetSettings: List<TimestampTargetSetting>,
     details: KMutableProperty0<String>,
     state: KMutableProperty0<String>,
     largeImage: KMutableProperty0<ImageSetting>,
@@ -24,6 +25,7 @@ private fun TabbedBuilder.displayModeTab(
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
     timestampEnabled: KMutableProperty0<Boolean>,
+    timestampTarget: KMutableProperty0<TimestampTargetSetting>?,
 ) {
     tab(displayMode.toString()) {
         row("Details:") {
@@ -84,8 +86,12 @@ private fun TabbedBuilder.displayModeTab(
         }.enabledIf(smallImageCheckBox.selected)
 
         row {
-            checkBox("Show elapsed time")
+            checkBox("Show elapsed time in")
                 .bindSelected(timestampEnabled)
+                .gap(RightGap.SMALL)
+            val timestampTargetComboBox = comboBox(timestampTargetSettings)
+            if (timestampTarget != null)
+                timestampTargetComboBox.bindItem(timestampTarget.toNullableProperty())
         }
 
         row {
@@ -168,6 +174,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 displayModeTab(
                     displayMode = ActivityDisplayMode.APPLICATION,
                     imageSettings = listOf(ImageSetting.APPLICATION),
+                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION),
                     details = state::applicationDetails,
                     state = state::applicationState,
                     largeImage = state::applicationLargeImage,
@@ -177,11 +184,13 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImageEnabled = state::applicationSmallImageEnabled,
                     smallImageText = state::applicationSmallImageText,
                     timestampEnabled = state::applicationTimestampEnabled,
+                    timestampTarget = null,
                 )
 
                 displayModeTab(
                     displayMode = ActivityDisplayMode.PROJECT,
                     imageSettings = listOf(ImageSetting.APPLICATION),
+                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT),
                     details = state::projectDetails,
                     state = state::projectState,
                     largeImage = state::projectLargeImage,
@@ -191,11 +200,13 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImageEnabled = state::projectSmallImageEnabled,
                     smallImageText = state::projectSmallImageText,
                     timestampEnabled = state::projectTimestampEnabled,
+                    timestampTarget = state::projectTimestampTarget,
                 )
 
                 displayModeTab(
                     displayMode = ActivityDisplayMode.FILE,
                     imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
+                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
                     details = state::fileDetails,
                     state = state::fileState,
                     largeImage = state::fileLargeImage,
@@ -205,6 +216,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImageEnabled = state::fileSmallImageEnabled,
                     smallImageText = state::fileSmallImageText,
                     timestampEnabled = state::fileTimestampEnabled,
+                    timestampTarget = state::fileTimestampTarget,
                 )
             }
         }

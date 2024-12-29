@@ -32,6 +32,7 @@ data class DiscordSettings(
     var projectSmallImageEnabled: Boolean = false,
     var projectSmallImageText: String = "",
     var projectTimestampEnabled: Boolean = true,
+    var projectTimestampTarget: TimestampTargetSetting = TimestampTargetSetting.PROJECT,
 
     var fileDetails: String = "In {project_name}",
     var fileState: String = "Editing {file_name}",
@@ -42,6 +43,7 @@ data class DiscordSettings(
     var fileSmallImageEnabled: Boolean = true,
     var fileSmallImageText: String = "{app_name}",
     var fileTimestampEnabled: Boolean = true,
+    var fileTimestampTarget: TimestampTargetSetting = TimestampTargetSetting.PROJECT,
 ) {
     val applicationActivityFactory: ActivityFactory
         get() = ActivityFactory(
@@ -54,6 +56,7 @@ data class DiscordSettings(
             smallImage = if (applicationSmallImageEnabled) applicationSmallImage else null,
             smallImageText = applicationSmallImageText,
             timestampEnabled = applicationTimestampEnabled,
+            timestampTarget = TimestampTargetSetting.APPLICATION,
         )
 
     val projectActivityFactory: ActivityFactory
@@ -67,6 +70,7 @@ data class DiscordSettings(
             smallImage = if (projectSmallImageEnabled) projectSmallImage else null,
             smallImageText = projectSmallImageText,
             timestampEnabled = projectTimestampEnabled,
+            timestampTarget = projectTimestampTarget,
         )
 
     val fileActivityFactory: ActivityFactory
@@ -80,6 +84,7 @@ data class DiscordSettings(
             smallImage = if (fileSmallImageEnabled) fileSmallImage else null,
             smallImageText = fileSmallImageText,
             timestampEnabled = fileTimestampEnabled,
+            timestampTarget = fileTimestampTarget,
         )
 
     fun getActivityFactory(mode: ActivityDisplayMode) = when (mode) {

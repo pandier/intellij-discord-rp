@@ -2,8 +2,10 @@ package io.github.pandier.intellijdiscordrp.activity
 
 import io.github.pandier.intellijdiscordrp.settings.ImageSetting
 import io.github.pandier.intellijdiscordrp.settings.LogoStyleSetting
+import io.github.pandier.intellijdiscordrp.settings.TimestampTargetSetting
 import io.github.vyfor.kpresence.rpc.Activity
 import io.github.vyfor.kpresence.rpc.activity
+import java.time.Instant
 
 private fun ImageSetting.getIcon(context: ActivityContext, logoStyle: LogoStyleSetting) = when (this) {
     ImageSetting.APPLICATION -> when (logoStyle) {
@@ -11,6 +13,12 @@ private fun ImageSetting.getIcon(context: ActivityContext, logoStyle: LogoStyleS
         LogoStyleSetting.CLASSIC -> currentActivityApplicationType.classicIcon
     }
     ImageSetting.FILE -> context.file?.type?.icon
+}
+
+private fun TimestampTargetSetting.getStart(context: ActivityContext): Instant = when (this) {
+    TimestampTargetSetting.APPLICATION -> context.appStart
+    TimestampTargetSetting.PROJECT -> context.projectStart
+    TimestampTargetSetting.FILE -> context.file?.start ?: context.projectStart
 }
 
 private fun String.fitToRange(min: Int, max: Int): String =
@@ -26,6 +34,7 @@ class ActivityFactory(
     private val smallImage: ImageSetting?,
     private val smallImageText: String,
     private val timestampEnabled: Boolean,
+    private val timestampTarget: TimestampTargetSetting,
 ) {
     fun create(context: ActivityContext): Activity = activity {
         details = this@ActivityFactory.details.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
@@ -44,8 +53,9 @@ class ActivityFactory(
         }
 
         timestamps {
-            if (timestampEnabled)
-                start = context.start.toEpochMilli()
+            if (timestampEnabled) {
+                start = timestampTarget.getStart(context).toEpochMilli()
+            }
         }
     }
 }

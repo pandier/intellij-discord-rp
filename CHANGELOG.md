@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Setting for specifying if elapsed time should be for the whole applcation, for each project or for each file
 - `{file_size}` variable that shows the size of the edited file
 
 ### Changed
