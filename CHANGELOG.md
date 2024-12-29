@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `{project_repo_url}` variable that shows the URL of the project's Git repository
 - `{file_size}` variable that shows the size of the edited file
+- Settings menu for configuring settings for each project
 
 ### Changed
 

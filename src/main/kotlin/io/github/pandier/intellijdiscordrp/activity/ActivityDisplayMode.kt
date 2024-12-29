@@ -101,6 +101,17 @@ enum class ActivityDisplayMode(
     companion object {
 
         /**
+         * Returns the display mode with the given [name].
+         */
+        fun byName(name: String): ActivityDisplayMode? {
+            return try {
+                valueOf(name.uppercase())
+            } catch (_: IllegalArgumentException) {
+                null
+            }
+        }
+
+        /**
          * Returns the highest display mode that isn't higher the given display mode
          * and supports the given [ActivityContext].
          *

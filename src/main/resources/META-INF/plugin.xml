@@ -37,6 +37,12 @@
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 displayName="Discord Rich Presence"/>
 
+        <projectConfigurable
+                parentId="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
+                id="io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettingsConfigurable"
+                instance="io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettingsConfigurable"
+                displayName="Project"/>
+
         <notificationGroup id="io.github.pandier.intellijdiscordrp.notification.Reconnecting"
                            displayType="BALLOON"
                            bundle="messages.DiscordRichPresence"
@@ -55,8 +61,12 @@
             </action>
             <separator />
             <group id="io.github.pandier.intellijdiscordrp.action.DiscordChangeDisplayModeActionGroup"
-                   text="Change Display Mode in Project"
+                   text="Project Display Mode"
                    popup="true">
+                <action id="io.github.pandier.intellijdiscordrp.action.DefaultDisplayModeAction"
+                        class="io.github.pandier.intellijdiscordrp.action.DefaultDisplayModeAction"
+                        text="Default">
+                </action>
                 <action id="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
                         class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
                         text="Application">

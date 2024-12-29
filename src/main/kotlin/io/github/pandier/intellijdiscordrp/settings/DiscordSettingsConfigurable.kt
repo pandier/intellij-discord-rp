@@ -181,10 +181,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 .gap(RightGap.SMALL)
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
-                .comment(
-                    "Applied to all projects that don't configure a specific display mode.<br/>" +
-                            "Use 'Change Display Mode in Project' action for changing the display mode in a project."
-                )
         }
 
         group("Display") {

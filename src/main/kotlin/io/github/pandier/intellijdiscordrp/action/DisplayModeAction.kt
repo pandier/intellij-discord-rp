@@ -8,7 +8,7 @@ import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
 abstract class DisplayModeAction(
-    private val displayMode: ActivityDisplayMode,
+    private val displayMode: ActivityDisplayMode?,
 ) : DumbAwareToggleAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread =
@@ -31,6 +31,7 @@ abstract class DisplayModeAction(
     }
 }
 
+class DefaultDisplayModeAction : DisplayModeAction(null)
 class ApplicationDisplayModeAction : DisplayModeAction(ActivityDisplayMode.APPLICATION)
 class ProjectDisplayModeAction : DisplayModeAction(ActivityDisplayMode.PROJECT)
 class FileDisplayModeAction : DisplayModeAction(ActivityDisplayMode.FILE)
