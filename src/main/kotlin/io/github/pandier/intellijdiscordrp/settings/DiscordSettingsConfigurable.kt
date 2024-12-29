@@ -131,6 +131,17 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             contextHelp("Reconnection process runs in the background and in most cases shouldn't affect performance.")
         }
 
+        // Show full application name option only when available
+        if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
+            row {
+                checkBox("Show full application name with edition in title")
+                    .bindSelected(state::showFullApplicationName)
+                    .gap(RightGap.SMALL)
+                contextHelp("Title is located in the Rich Presence at the top or in your Discord status. " +
+                        "Use a custom Discord application id if you want to fully adjust the title.")
+            }
+        }
+
         row {
             val customApplicationIdCheckBox = checkBox("Custom Discord application id:")
                 .bindSelected(state::customApplicationIdEnabled)
@@ -154,17 +165,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 .enabledIf(idleTimeoutEnabled.selected)
             @Suppress("DialogTitleCapitalization")
             label("minutes")
-        }
-
-        // Show full application name option only when available
-        if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
-            row {
-                checkBox("Show full application name with edition in title")
-                    .bindSelected(state::showFullApplicationName)
-                    .gap(RightGap.SMALL)
-                contextHelp("Title is located in the Rich Presence at the top or in your Discord status. " +
-                        "Use a custom Discord application id if you want to fully adjust the title.")
-            }
         }
 
         row {
