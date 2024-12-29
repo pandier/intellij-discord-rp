@@ -1,6 +1,7 @@
 package io.github.pandier.intellijdiscordrp.activity
 
 import com.intellij.openapi.application.ApplicationInfo
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.Editor
@@ -28,38 +29,41 @@ class ActivityFileContext(
     val line: Int?,
     val lineCount: Int?,
     val length: Long?,
+    val start: Instant,
 )
 
 class ActivityContext(
-    val start: Instant,
     val appName: String,
     val appFullName: String,
     val appVersion: String,
+    val appStart: Instant,
     val project: WeakReference<Project>,
     val projectName: String,
     val projectRepositoryUrl: String?,
+    val projectStart: Instant,
     val file: ActivityFileContext? = null,
 ) {
     companion object Factory {
         fun create(
             project: Project,
             file: VirtualFile? = null,
-            editor: Editor? = null,
-            start: Instant = TimeTrackingService.getInstance(project).start,
+            editor: Editor? = null
         ): ActivityContext {
+            val timeTrackingService = TimeTrackingService.getInstance()
             val appInfo = ApplicationInfo.getInstance()
             val appNames = ApplicationNamesInfo.getInstance()
             val repositoryManager = GitUtil.getRepositoryManager(project)
             val repository = file?.let { repositoryManager.getRepositoryForFileQuick(it) }
                 ?: repositoryManager.repositories.firstOrNull()
             return ActivityContext(
-                start = start,
                 appName = appNames.fullProductName,
                 appFullName = appNames.fullProductNameWithEdition,
                 appVersion = appInfo.fullVersion,
+                appStart = timeTrackingService.getOrInit(ApplicationManager.getApplication()),
                 project = WeakReference(project),
                 projectName = project.name,
                 projectRepositoryUrl = repository?.remotes?.let(GitUtil::getDefaultOrFirstRemote)?.firstUrl,
+                projectStart = timeTrackingService.getOrInit(project),
                 file = file?.let {
                     val contentRoot = ReadAction.compute<VirtualFile?, Exception> {
                         ProjectFileIndex.getInstance(project).getContentRootForFile(it)
@@ -75,6 +79,7 @@ class ActivityContext(
                         line = editor?.caretModel?.logicalPosition?.line?.plus(1),
                         lineCount = editor?.document?.lineCount?.let { max(it, 1) },
                         length = it.length,
+                        start = timeTrackingService.getOrInit(it),
                     )
                 }
             )

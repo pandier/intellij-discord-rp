@@ -35,6 +35,7 @@ data class DiscordSettings(
     var projectRepoButtonEnabled: Boolean = true,
     var projectRepoButtonText: String = "View Repository",
     var projectTimestampEnabled: Boolean = true,
+    var projectTimestampTarget: TimestampTargetSetting = TimestampTargetSetting.PROJECT,
 
     var fileDetails: String = "In {project_name}",
     var fileState: String = "Editing {file_name}",
@@ -47,6 +48,7 @@ data class DiscordSettings(
     var fileRepoButtonEnabled: Boolean = true,
     var fileRepoButtonText: String = "View Repository",
     var fileTimestampEnabled: Boolean = true,
+    var fileTimestampTarget: TimestampTargetSetting = TimestampTargetSetting.PROJECT,
 ) {
     fun createApplicationActivityFactory(): ActivityFactory = ActivityFactory(
         displayMode = ActivityDisplayMode.APPLICATION,
@@ -59,6 +61,7 @@ data class DiscordSettings(
         smallImageText = applicationSmallImageText,
         repoButtonText = null,
         timestampEnabled = applicationTimestampEnabled,
+        timestampTarget = TimestampTargetSetting.APPLICATION,
     )
 
     fun createProjectActivityFactory(projectSettings: DiscordProjectSettings?): ActivityFactory = ActivityFactory(
@@ -72,6 +75,7 @@ data class DiscordSettings(
         smallImageText = projectSmallImageText,
         repoButtonText = if (projectRepoButtonEnabled && projectSettings?.showRepoButton != false) projectRepoButtonText else null,
         timestampEnabled = projectTimestampEnabled,
+        timestampTarget = projectTimestampTarget,
     )
 
     fun createFileActivityFactory(projectSettings: DiscordProjectSettings?): ActivityFactory = ActivityFactory(
@@ -85,6 +89,7 @@ data class DiscordSettings(
         smallImageText = fileSmallImageText,
         repoButtonText = if (fileRepoButtonEnabled && projectSettings?.showRepoButton != false) fileRepoButtonText else null,
         timestampEnabled = fileTimestampEnabled,
+        timestampTarget = fileTimestampTarget,
     )
 
     fun createActivityFactory(mode: ActivityDisplayMode, projectSettings: DiscordProjectSettings?) = when (mode) {
