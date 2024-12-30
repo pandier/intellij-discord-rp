@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- 'View Repository' button in Rich Presence that links to the project's Git repository
+
+  - Can be configured in settings
+  - Can be hidden per project using 'Show Repository Button in Project' action
+
+- Setting for specifying if elapsed time should be for the whole applcation, for each project or for each file
+- `{project_repo_url}` variable that shows the URL of the project's Git repository
+- `{file_size}` variable that shows the size of the edited file
+- Settings menu for configuring settings for each project
+
+### Changed
+
+- Moved Rich Presence settings category to a new position between "Tools" and "Settings Sync"
+- Removed minimum requirement of 2 characters for text fields (text is padded with spaces to fit the minimum length)
+
+### Fixed
+
+- Fixed Rich Presence not showing up when variables make the text too long
+
 ## [1.6.2] - 2024-12-01
 
 ### Added

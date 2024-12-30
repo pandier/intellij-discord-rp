@@ -6,7 +6,7 @@ import com.intellij.openapi.project.DumbAwareToggleAction
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
 
-class ShowRichPresenceAction : DumbAwareToggleAction() {
+class ShowRepositoryButtonAction : DumbAwareToggleAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread =
         ActionUpdateThread.EDT
@@ -17,11 +17,11 @@ class ShowRichPresenceAction : DumbAwareToggleAction() {
     }
 
     override fun isSelected(e: AnActionEvent): Boolean {
-        return e.project?.discordProjectSettingsComponent?.state?.showRichPresence != false
+        return e.project?.discordProjectSettingsComponent?.state?.showRepoButton != false
     }
 
-    override fun setSelected(e: AnActionEvent, state: Boolean) {
-        e.project?.discordProjectSettingsComponent?.state?.showRichPresence = state
+    override fun setSelected(e: AnActionEvent, value: Boolean) {
+        e.project?.discordProjectSettingsComponent?.state?.showRepoButton = value
 
         val discordService = DiscordService.getInstance()
         discordService.updateBackground()

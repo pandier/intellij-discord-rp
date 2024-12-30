@@ -1,5 +1,7 @@
 package io.github.pandier.intellijdiscordrp.activity
 
+import io.github.pandier.intellijdiscordrp.util.formatFileSize
+
 /**
  * Represents an activity display mode.
  */
@@ -43,6 +45,11 @@ enum class ActivityDisplayMode(
                 description = "Name of the current project",
                 getter = { projectName }
             ),
+            ActivityVariable(
+                name = "project_repo_url",
+                description = "URL of the current project's git repository",
+                getter = { projectRepositoryUrl ?: "-" }
+            )
         ))
     ),
 
@@ -83,10 +90,26 @@ enum class ActivityDisplayMode(
                 description = "Number of lines of the edited file",
                 getter = { file?.lineCount?.toString() ?: "-" }
             ),
+            ActivityVariable(
+                name = "file_size",
+                description = "Size of the edited file",
+                getter = { file?.length?.let { formatFileSize(it) } ?: "-" }
+            ),
         ))
     );
 
     companion object {
+
+        /**
+         * Returns the display mode with the given [name].
+         */
+        fun byName(name: String): ActivityDisplayMode? {
+            return try {
+                valueOf(name.uppercase())
+            } catch (_: IllegalArgumentException) {
+                null
+            }
+        }
 
         /**
          * Returns the highest display mode that isn't higher the given display mode

@@ -15,6 +15,7 @@ import kotlin.reflect.KMutableProperty0
 private fun TabbedBuilder.displayModeTab(
     displayMode: ActivityDisplayMode,
     imageSettings: List<ImageSetting>,
+    timestampTargetSettings: List<TimestampTargetSetting>,
     details: KMutableProperty0<String>,
     state: KMutableProperty0<String>,
     largeImage: KMutableProperty0<ImageSetting>,
@@ -23,23 +24,26 @@ private fun TabbedBuilder.displayModeTab(
     smallImage: KMutableProperty0<ImageSetting>,
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
+    repoButtonEnabled: KMutableProperty0<Boolean>?,
+    repoButtonText: KMutableProperty0<String>?,
     timestampEnabled: KMutableProperty0<Boolean>,
+    timestampTarget: KMutableProperty0<TimestampTargetSetting>?,
 ) {
     tab(displayMode.toString()) {
         row("Details:") {
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(details)
-                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
-                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
         row("State:") {
             textField()
                 .columns(COLUMNS_LARGE)
                 .bindText(state)
-                .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
-                .errorOnApply("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
 
@@ -57,9 +61,9 @@ private fun TabbedBuilder.displayModeTab(
                 textField()
                     .label("Text:")
                     .bindText(largeImageText)
-                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                    .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(largeImageCheckBox.selected)
 
@@ -77,15 +81,41 @@ private fun TabbedBuilder.displayModeTab(
                 textField()
                     .label("Text:")
                     .bindText(smallImageText)
-                    .errorOnInput("Length must be between 2 and 128") { it.text.isNotEmpty() && it.text.length !in 2..128 }
+                    .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
+                    .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                    .errorOnApply("Length must be between 2 and 128") { it.isEnabled && it.text.length !in 2..128 }
             }
         }.enabledIf(smallImageCheckBox.selected)
 
+        if (repoButtonEnabled != null && repoButtonText != null) {
+            lateinit var repoButtonCheckBox: Cell<JBCheckBox>
+            row {
+                repoButtonCheckBox = checkBox("Show repository button")
+                    .bindSelected(repoButtonEnabled)
+                    .gap(RightGap.SMALL)
+                contextHelp("Adds a button to the Rich Presence that links to the project's Git repository. " +
+                        "<b>Due to a bug in the Discord client, the button is visible to everyone except you.</b>")
+            }
+            indent {
+                row {
+                    textField()
+                        .label("Text:")
+                        .bindText(repoButtonText)
+                        .columns(COLUMNS_LARGE)
+                        .errorOnInput("Text cannot be longer than 31 characters") { it.text.isNotEmpty() && it.text.length > 31 }
+                        .errorOnApply("Text cannot be longer than 31 characters") { it.isEnabled && it.text.length > 31 }
+                        .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                }
+            }.enabledIf(repoButtonCheckBox.selected)
+        }
+
         row {
-            checkBox("Show elapsed time")
+            checkBox("Show elapsed time in")
                 .bindSelected(timestampEnabled)
+                .gap(RightGap.SMALL)
+            val timestampTargetComboBox = comboBox(timestampTargetSettings)
+            if (timestampTarget != null)
+                timestampTargetComboBox.bindItem(timestampTarget.toNullableProperty())
         }
 
         row {
@@ -105,6 +135,17 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 .bindSelected(state::reconnectOnUpdate)
                 .gap(RightGap.SMALL)
             contextHelp("Reconnection process runs in the background and in most cases shouldn't affect performance.")
+        }
+
+        // Show full application name option only when available
+        if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
+            row {
+                checkBox("Show full application name with edition in title")
+                    .bindSelected(state::showFullApplicationName)
+                    .gap(RightGap.SMALL)
+                contextHelp("Title is located in the Rich Presence at the top or in your Discord status. " +
+                        "Use a custom Discord application id if you want to fully adjust the title.")
+            }
         }
 
         row {
@@ -132,17 +173,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             label("minutes")
         }
 
-        // Show full application name option only when available
-        if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
-            row {
-                checkBox("Show full application name with edition in title")
-                    .bindSelected(state::showFullApplicationName)
-                    .gap(RightGap.SMALL)
-                contextHelp("Title is located in the Rich Presence at the top or in your Discord status. " +
-                        "Use a custom Discord application id if you want to fully adjust the title.")
-            }
-        }
-
         row {
             label("IDE logo style:")
                 .gap(RightGap.SMALL)
@@ -157,10 +187,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 .gap(RightGap.SMALL)
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
-                .comment(
-                    "Applied to all projects that don't configure a specific display mode.<br/>" +
-                            "Use 'Change Display Mode in Project' action for changing the display mode in a project."
-                )
         }
 
         group("Display") {
@@ -168,6 +194,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 displayModeTab(
                     displayMode = ActivityDisplayMode.APPLICATION,
                     imageSettings = listOf(ImageSetting.APPLICATION),
+                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION),
                     details = state::applicationDetails,
                     state = state::applicationState,
                     largeImage = state::applicationLargeImage,
@@ -176,12 +203,16 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::applicationSmallImage,
                     smallImageEnabled = state::applicationSmallImageEnabled,
                     smallImageText = state::applicationSmallImageText,
+                    repoButtonEnabled = null,
+                    repoButtonText = null,
                     timestampEnabled = state::applicationTimestampEnabled,
+                    timestampTarget = null,
                 )
 
                 displayModeTab(
                     displayMode = ActivityDisplayMode.PROJECT,
                     imageSettings = listOf(ImageSetting.APPLICATION),
+                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT),
                     details = state::projectDetails,
                     state = state::projectState,
                     largeImage = state::projectLargeImage,
@@ -190,12 +221,16 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::projectSmallImage,
                     smallImageEnabled = state::projectSmallImageEnabled,
                     smallImageText = state::projectSmallImageText,
+                    repoButtonEnabled = state::projectRepoButtonEnabled,
+                    repoButtonText = state::projectRepoButtonText,
                     timestampEnabled = state::projectTimestampEnabled,
+                    timestampTarget = state::projectTimestampTarget,
                 )
 
                 displayModeTab(
                     displayMode = ActivityDisplayMode.FILE,
                     imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
+                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
                     details = state::fileDetails,
                     state = state::fileState,
                     largeImage = state::fileLargeImage,
@@ -204,7 +239,10 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::fileSmallImage,
                     smallImageEnabled = state::fileSmallImageEnabled,
                     smallImageText = state::fileSmallImageText,
+                    repoButtonEnabled = state::fileRepoButtonEnabled,
+                    repoButtonText = state::fileRepoButtonText,
                     timestampEnabled = state::fileTimestampEnabled,
+                    timestampTarget = state::fileTimestampTarget,
                 )
             }
         }
