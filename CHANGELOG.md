@@ -6,13 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2024-12-30
+
 ### Added
 
 - 'View Repository' button in Rich Presence that links to the project's Git repository
 
   - Can be configured in settings
   - Can be hidden per project using 'Show Repository Button in Project' action
-
 - Setting for specifying if elapsed time should be for the whole applcation, for each project or for each file
 - `{project_repo_url}` variable that shows the URL of the project's Git repository
 - `{file_size}` variable that shows the size of the edited file
@@ -213,7 +214,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.2...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.2...v1.7.0
 [1.6.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.5.1...v1.6.0
