@@ -31,7 +31,7 @@
         <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
 
         <applicationConfigurable
-                groupWeight="5"
+                groupWeight="8"
                 groupId="root"
                 id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"

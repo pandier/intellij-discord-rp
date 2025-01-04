@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Incorrect ordering of settings category on newer versions of IntelliJ
+
 ## [1.7.0] - 2024-12-30
 
 ### Added
