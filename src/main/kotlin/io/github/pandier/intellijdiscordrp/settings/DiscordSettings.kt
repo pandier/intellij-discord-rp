@@ -60,6 +60,8 @@ data class DiscordSettings(
         smallImage = if (applicationSmallImageEnabled) applicationSmallImage else null,
         smallImageText = applicationSmallImageText,
         repoButtonText = null,
+        buttonText = null,
+        buttonUrl = "",
         timestampEnabled = applicationTimestampEnabled,
         timestampTarget = TimestampTargetSetting.APPLICATION,
     )
@@ -74,6 +76,8 @@ data class DiscordSettings(
         smallImage = if (projectSmallImageEnabled) projectSmallImage else null,
         smallImageText = projectSmallImageText,
         repoButtonText = if (projectRepoButtonEnabled && projectSettings?.showRepoButton != false) projectRepoButtonText else null,
+        buttonText = if (projectSettings?.buttonEnabled == true) projectSettings.buttonText else null,
+        buttonUrl = projectSettings?.buttonUrl ?: "",
         timestampEnabled = projectTimestampEnabled,
         timestampTarget = projectTimestampTarget,
     )
@@ -88,6 +92,8 @@ data class DiscordSettings(
         smallImage = if (fileSmallImageEnabled) fileSmallImage else null,
         smallImageText = fileSmallImageText,
         repoButtonText = if (fileRepoButtonEnabled && projectSettings?.showRepoButton != false) fileRepoButtonText else null,
+        buttonText = if (projectSettings?.buttonEnabled == true) projectSettings.buttonText else null,
+        buttonUrl = projectSettings?.buttonUrl ?: "",
         timestampEnabled = fileTimestampEnabled,
         timestampTarget = fileTimestampTarget,
     )
