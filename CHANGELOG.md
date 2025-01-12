@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Previous repository button functionality has now been replaced with a new one that allows you to customize the button for each project
+
 ## [1.7.1] - 2025-01-05
 
 ### Fixed
