@@ -24,8 +24,6 @@ private fun TabbedBuilder.displayModeTab(
     smallImage: KMutableProperty0<ImageSetting>,
     smallImageEnabled: KMutableProperty0<Boolean>,
     smallImageText: KMutableProperty0<String>,
-    repoButtonEnabled: KMutableProperty0<Boolean>?,
-    repoButtonText: KMutableProperty0<String>?,
     timestampEnabled: KMutableProperty0<Boolean>,
     timestampTarget: KMutableProperty0<TimestampTargetSetting>?,
 ) {
@@ -86,28 +84,6 @@ private fun TabbedBuilder.displayModeTab(
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
             }
         }.enabledIf(smallImageCheckBox.selected)
-
-        if (repoButtonEnabled != null && repoButtonText != null) {
-            lateinit var repoButtonCheckBox: Cell<JBCheckBox>
-            row {
-                repoButtonCheckBox = checkBox("Show repository button")
-                    .bindSelected(repoButtonEnabled)
-                    .gap(RightGap.SMALL)
-                contextHelp("Adds a button to the Rich Presence that links to the project's Git repository. " +
-                        "<b>Due to a bug in the Discord client, the button is visible to everyone except you.</b>")
-            }
-            indent {
-                row {
-                    textField()
-                        .label("Text:")
-                        .bindText(repoButtonText)
-                        .columns(COLUMNS_LARGE)
-                        .errorOnInput("Text cannot be longer than 31 characters") { it.text.isNotEmpty() && it.text.length > 31 }
-                        .errorOnApply("Text cannot be longer than 31 characters") { it.isEnabled && it.text.length > 31 }
-                        .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                }
-            }.enabledIf(repoButtonCheckBox.selected)
-        }
 
         row {
             checkBox("Show elapsed time in")
@@ -203,8 +179,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::applicationSmallImage,
                     smallImageEnabled = state::applicationSmallImageEnabled,
                     smallImageText = state::applicationSmallImageText,
-                    repoButtonEnabled = null,
-                    repoButtonText = null,
                     timestampEnabled = state::applicationTimestampEnabled,
                     timestampTarget = null,
                 )
@@ -221,8 +195,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::projectSmallImage,
                     smallImageEnabled = state::projectSmallImageEnabled,
                     smallImageText = state::projectSmallImageText,
-                    repoButtonEnabled = state::projectRepoButtonEnabled,
-                    repoButtonText = state::projectRepoButtonText,
                     timestampEnabled = state::projectTimestampEnabled,
                     timestampTarget = state::projectTimestampTarget,
                 )
@@ -239,8 +211,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     smallImage = state::fileSmallImage,
                     smallImageEnabled = state::fileSmallImageEnabled,
                     smallImageText = state::fileSmallImageText,
-                    repoButtonEnabled = state::fileRepoButtonEnabled,
-                    repoButtonText = state::fileRepoButtonText,
                     timestampEnabled = state::fileTimestampEnabled,
                     timestampTarget = state::fileTimestampTarget,
                 )

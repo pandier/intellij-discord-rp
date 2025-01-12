@@ -31,7 +31,7 @@
         <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
 
         <applicationConfigurable
-                groupWeight="5"
+                groupWeight="8"
                 groupId="root"
                 id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
@@ -83,10 +83,6 @@
             <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     text="Show Rich Presence in Project">
-            </action>
-            <action id="io.github.pandier.intellijdiscordrp.action.ShowRepositoryButtonAction"
-                    class="io.github.pandier.intellijdiscordrp.action.ShowRepositoryButtonAction"
-                    text="Show Repository Button in Project">
             </action>
         </group>
     </actions>
