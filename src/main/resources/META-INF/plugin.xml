@@ -84,10 +84,6 @@
                     class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
                     text="Show Rich Presence in Project">
             </action>
-            <action id="io.github.pandier.intellijdiscordrp.action.ShowRepositoryButtonAction"
-                    class="io.github.pandier.intellijdiscordrp.action.ShowRepositoryButtonAction"
-                    text="Show Repository Button in Project">
-            </action>
         </group>
     </actions>
 

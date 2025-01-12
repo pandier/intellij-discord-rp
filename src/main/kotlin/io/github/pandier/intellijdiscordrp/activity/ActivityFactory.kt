@@ -3,6 +3,7 @@ package io.github.pandier.intellijdiscordrp.activity
 import io.github.pandier.intellijdiscordrp.settings.ImageSetting
 import io.github.pandier.intellijdiscordrp.settings.LogoStyleSetting
 import io.github.pandier.intellijdiscordrp.settings.TimestampTargetSetting
+import io.github.pandier.intellijdiscordrp.util.urlRegex
 import io.github.vyfor.kpresence.rpc.Activity
 import io.github.vyfor.kpresence.rpc.activity
 import java.time.Instant
@@ -33,7 +34,6 @@ class ActivityFactory(
     private val largeImageText: String,
     private val smallImage: ImageSetting?,
     private val smallImageText: String,
-    private val repoButtonText: String?,
     private val buttonText: String?,
     private val buttonUrl: String,
     private val timestampEnabled: Boolean,
@@ -55,12 +55,11 @@ class ActivityFactory(
             }
         }
 
-        if (repoButtonText != null && context.projectRepositoryUrl != null) {
-            button(displayMode.format(repoButtonText, context).fitToRange(2, 31), context.projectRepositoryUrl)
-        }
-
         if (buttonText != null) {
-            button(displayMode.format(buttonText, context).fitToRange(2, 31), buttonUrl)
+            val formattedButtonUrl = displayMode.format(buttonUrl, context)
+            if (urlRegex.matches(formattedButtonUrl)) {
+                button(displayMode.format(buttonText, context).fitToRange(2, 31), formattedButtonUrl)
+            }
         }
 
         timestamps {

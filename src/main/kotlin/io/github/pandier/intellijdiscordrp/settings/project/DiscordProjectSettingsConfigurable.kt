@@ -14,6 +14,7 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
+import io.github.pandier.intellijdiscordrp.util.urlRegex
 
 class DiscordProjectSettingsConfigurable(
     private val project: Project,
@@ -25,11 +26,6 @@ class DiscordProjectSettingsConfigurable(
         row {
             checkBox("Show rich presence in project")
                 .bindSelected(state::showRichPresence)
-        }
-
-        row {
-            checkBox("Show repository button in project")
-                .bindSelected(state::showRepoButton)
         }
 
         row {
@@ -56,6 +52,9 @@ class DiscordProjectSettingsConfigurable(
                     .label("URL:")
                     .bindText(state::buttonUrl)
                     .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .validationOnApply { if ((!it.text.contains('{') || !it.text.contains('}')) && !urlRegex.matches(it.text)) warning("Not a valid URL") else null }
+                    .gap(RightGap.SMALL)
+                contextHelp("You can use variables in the URL field!")
             }
         }.enabledIf(buttonCheckBox.selected)
     }

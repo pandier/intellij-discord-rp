@@ -40,7 +40,7 @@ abstract class DslConfigurable(
     }
 
     fun validateAndApply(): Boolean =
-        panel.value.validateAll().isEmpty().also { if (it) panel.value.apply() }
+        panel.value.validateAll().none { !it.warning }.also { if (it) panel.value.apply() }
 
     override fun apply() {
         validateAndApply()
