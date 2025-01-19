@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.2] - 2025-01-19
+
 ### Changed
 
 - Previous repository button functionality has now been replaced with a new one that allows you to customize the button for each project
@@ -224,7 +226,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.2...HEAD
+[1.7.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.2...v1.7.0
 [1.6.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.6.1...v1.6.2
