@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- IDE not detected properly when using Remote Development
+
 ## [1.7.2] - 2025-01-19
 
 ### Changed
