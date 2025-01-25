@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Make Git plugin optional - if not installed, variables related to Git will not be available
+
 ### Fixed
 
 - IDE not detected properly when using Remote Development

@@ -9,7 +9,14 @@ package io.github.pandier.intellijdiscordrp.activity
 class ActivityVariable(
     val name: String,
     val description: String,
-    private val getter: ActivityContext.() -> String?
+    private val getter: ActivityContext.() -> String?,
+    /**
+     * Returns an error message if the variable is not available in the current IDE environment (or null otherwise).
+     * This is primarily used in UI to indicate whether a variable is available and doesn't actually affect
+     * any functionality. The getter will still be called for the variable even when this check returns false.
+     * Defaults to null (available).
+     */
+    val availabilityCheck: () -> String? = { null },
 ) {
     /**
      * Returns the full name of the variable with the brackets.

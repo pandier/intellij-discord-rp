@@ -25,7 +25,7 @@
   ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
-    <depends>Git4Idea</depends>
+    <depends optional="true" config-file="io.github.pandier.intellijdiscordrp-git.xml">Git4Idea</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>

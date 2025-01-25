@@ -95,7 +95,14 @@ private fun TabbedBuilder.displayModeTab(
         }
 
         row {
-            val lines = displayMode.variables.map { variable -> "<code>$variable</code> - ${variable.description}" }
+            val lines = displayMode.variables.map { variable ->
+                val availabilityError = variable.availabilityCheck()
+                if (availabilityError == null) {
+                    "<code>$variable</code> - ${variable.description}"
+                } else {
+                    "<s><code>$variable</code> - ${variable.description}</s> ($availabilityError)"
+                }
+            }
             comment(lines.joinToString("<br/>"))
         }
     }

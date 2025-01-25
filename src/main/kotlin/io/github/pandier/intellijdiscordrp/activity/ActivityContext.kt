@@ -9,7 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
-import git4idea.GitUtil
+import io.github.pandier.intellijdiscordrp.util.git.git
 import io.github.pandier.intellijdiscordrp.service.TimeTrackingService
 import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
@@ -52,9 +52,6 @@ class ActivityContext(
             val timeTrackingService = TimeTrackingService.getInstance()
             val appInfo = ApplicationInfo.getInstance()
             val appNames = ApplicationNamesInfo.getInstance()
-            val repositoryManager = GitUtil.getRepositoryManager(project)
-            val repository = file?.let { repositoryManager.getRepositoryForFileQuick(it) }
-                ?: repositoryManager.repositories.firstOrNull()
             return ActivityContext(
                 appName = appNames.fullProductName,
                 appFullName = appNames.fullProductNameWithEdition,
@@ -62,7 +59,7 @@ class ActivityContext(
                 appStart = timeTrackingService.getOrInit(ApplicationManager.getApplication()),
                 project = WeakReference(project),
                 projectName = project.name,
-                projectRepositoryUrl = repository?.remotes?.let(GitUtil::getDefaultOrFirstRemote)?.firstUrl,
+                projectRepositoryUrl = git?.getRemote(project, file),
                 projectStart = timeTrackingService.getOrInit(project),
                 file = file?.let {
                     val contentRoot = ReadAction.compute<VirtualFile?, Exception> {

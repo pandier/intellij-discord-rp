@@ -1,5 +1,6 @@
 package io.github.pandier.intellijdiscordrp.activity
 
+import io.github.pandier.intellijdiscordrp.util.git.git
 import io.github.pandier.intellijdiscordrp.util.formatFileSize
 
 /**
@@ -48,6 +49,7 @@ enum class ActivityDisplayMode(
             ActivityVariable(
                 name = "project_repo_url",
                 description = "URL of the current project's git repository",
+                availabilityCheck = { if (git != null) null else "Git plugin not installed" },
                 getter = { projectRepositoryUrl ?: "-" }
             )
         ))
