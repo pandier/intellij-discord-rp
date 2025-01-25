@@ -27,16 +27,6 @@ A highly customizable IntelliJ plugin that adds stylish Rich Presence support to
 - Support for all JetBrains IDEs
 - Use custom Discord application id
 
-## ⭐ Star history
-
-<a href="https://star-history.com/#pandier/intellij-discord-rp&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
- </picture>
-</a>
-
 ## 💭 The motivation
 
 But wait, aren't there a lot of Discord integration plugins already? So why create another one?
@@ -78,6 +68,16 @@ Each display mode can be configured using the corresponding tab. Variables are u
 | `{file_size}`                     | ✅         | ❌            | ❌                | Size of the edited file                            |
 
 *1: Requires the [Git](https://plugins.jetbrains.com/plugin/13173-git) plugin to be installed*
+
+## ⭐ Star history
+
+<a href="https://star-history.com/#pandier/intellij-discord-rp&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
+ </picture>
+</a>
 
 ## ❓ Requesting a new language
 
