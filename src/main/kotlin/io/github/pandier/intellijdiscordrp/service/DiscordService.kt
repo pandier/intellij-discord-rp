@@ -42,6 +42,14 @@ private fun connect(): RichClient {
 
     return RichClient(applicationId).apply {
         logger = KPresenceLoggerAdapter
+        configurePaths {
+            if (!System.getProperty("os.name").lowercase().startsWith("windows")) {
+                // Add Vesktop Flatpak runtime path when on UN*X systems
+                System.getenv("XDG_RUNTIME_DIR")?.let {
+                    add("$it/.flatpak/dev.vencord.Vesktop/xdg-run")
+                }
+            }
+        }
         connect()
     }
 }
