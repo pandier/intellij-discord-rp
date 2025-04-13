@@ -28,6 +28,7 @@ class ActivityFileContext(
     val typeName: String,
     val line: Int?,
     val lineCount: Int?,
+    val column: Int?,
     val length: Long?,
     val start: Instant,
 )
@@ -75,6 +76,7 @@ class ActivityContext(
                         typeName = activityFileType?.friendlyName ?: it.fileType.name,
                         line = editor?.caretModel?.logicalPosition?.line?.plus(1),
                         lineCount = editor?.document?.lineCount?.let { max(it, 1) },
+                        column = editor?.caretModel?.logicalPosition?.column?.plus(1),
                         length = it.length,
                         start = timeTrackingService.getOrInit(it),
                     )

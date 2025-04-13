@@ -238,7 +238,10 @@ class DiscordService(
      */
     suspend fun modifyActivity(block: suspend (ActivityContext?) -> ActivityContext?) {
         val success = mutex.withLock {
-            activityContext = block(activityContext)
+            val newActivityContext = block(activityContext)
+            if (newActivityContext == activityContext)
+                return@withLock true
+            activityContext = newActivityContext
             sendActivityInternal(activityContext?.createActivity())
         }
 

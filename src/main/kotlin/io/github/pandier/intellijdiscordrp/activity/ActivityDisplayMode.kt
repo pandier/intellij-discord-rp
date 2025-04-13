@@ -84,13 +84,18 @@ enum class ActivityDisplayMode(
             ),
             ActivityVariable(
                 name = "file_line",
-                description = "Line number of the current line in the edited file",
+                description = "Line number of the caret in the edited file",
                 getter = { file?.line?.toString() ?: "-" }
             ),
             ActivityVariable(
                 name = "file_line_count",
                 description = "Number of lines of the edited file",
                 getter = { file?.lineCount?.toString() ?: "-" }
+            ),
+            ActivityVariable(
+                name = "file_column",
+                description = "Column number of the caret in the edited file",
+                getter = { file?.column?.toString() ?: "-" }
             ),
             ActivityVariable(
                 name = "file_size",

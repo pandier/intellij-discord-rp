@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `{file_column}` variable that shows the column number of the caret in the edited file
+
 ## [1.7.4] - 2025-03-10
 
 ### Fixed
