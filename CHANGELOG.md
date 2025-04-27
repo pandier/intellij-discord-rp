@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `{file_problems_errors}` variable that shows the number of errors in the edited file
 - `{file_problems_warnings}` variable that shows the number of warnings in the edited file
 - `{file_column}` variable that shows the column number of the caret in the edited file
+- Icons for Writerside related file types (Topic, Instance, List)
 
 ## [1.7.4] - 2025-03-10
 
