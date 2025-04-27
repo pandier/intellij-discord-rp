@@ -15,6 +15,7 @@ import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettings
 import io.github.pandier.intellijdiscordrp.settings.project.discordProjectSettingsComponent
+import io.github.pandier.intellijdiscordrp.util.ProblemCount
 import io.github.vyfor.kpresence.rpc.Activity
 import java.lang.ref.WeakReference
 import java.time.Instant
@@ -29,6 +30,7 @@ class ActivityFileContext(
     val line: Int?,
     val lineCount: Int?,
     val column: Int?,
+    val problemCount: ProblemCount,
     val length: Long?,
     val start: Instant,
 )
@@ -45,7 +47,7 @@ class ActivityContext(
     val file: ActivityFileContext? = null,
 ) {
     companion object Factory {
-        fun create(
+        suspend fun create(
             project: Project,
             file: VirtualFile? = null,
             editor: Editor? = null
@@ -63,6 +65,7 @@ class ActivityContext(
                 projectRepositoryUrl = git?.getRemote(project, file),
                 projectStart = timeTrackingService.getOrInit(project),
                 file = file?.let {
+                    val problemCount = editor?.let { ProblemCount.get(it, project) } ?: ProblemCount()
                     val contentRoot = ReadAction.compute<VirtualFile?, Exception> {
                         ProjectFileIndex.getInstance(project).getContentRootForFile(it)
                     }
@@ -77,6 +80,7 @@ class ActivityContext(
                         line = editor?.caretModel?.logicalPosition?.line?.plus(1),
                         lineCount = editor?.document?.lineCount?.let { max(it, 1) },
                         column = editor?.caretModel?.logicalPosition?.column?.plus(1),
+                        problemCount = problemCount,
                         length = it.length,
                         start = timeTrackingService.getOrInit(it),
                     )

@@ -52,21 +52,24 @@ or the **Settings -> Discord Rich Presence -> Project** settings menu.
 
 Each display mode can be configured using the corresponding tab. Variables are used for showing information in text fields, here's a list of them:
 
-| Variable                          | File mode | Project mode | Application mode | Value                                         |
-|-----------------------------------|-----------|--------------|------------------|-----------------------------------------------|
-| `{app_name}`                      | ✅         | ✅            | ✅                | Name of the IDE                               |
-| `{app_full_name}`                 | ✅         | ✅            | ✅                | Name and edition of the IDE                   |
-| `{app_version}`                   | ✅         | ✅            | ✅                | Version of the IDE                            |
-| `{project_name}`                  | ✅         | ✅            | ❌                | Name of the current project                   |
-| `{project_repo_url}` <sup>1</sup> | ✅         | ✅            | ❌                | URL of the current project's git repository   |
-| `{file_name}`                     | ✅         | ❌            | ❌                | Name of the edited file                       |
-| `{file_path}`                     | ✅         | ❌            | ❌                | Path to the edited file                       |
-| `{file_type}`                     | ✅         | ❌            | ❌                | The determined type of the edited file        |
-| `{file_dir_name}`                 | ✅         | ❌            | ❌                | Name of the directory the edited file is in   |
-| `{file_line}`                     | ✅         | ❌            | ❌                | Line number of the caret in the edited file   |
-| `{file_line_count}`               | ✅         | ❌            | ❌                | Number of lines of the edited file            |
-| `{file_column}`                   | ✅         | ❌            | ❌                | Column number of the caret in the edited file |
-| `{file_size}`                     | ✅         | ❌            | ❌                | Size of the edited file                       |
+| Variable                          | File mode | Project mode | Application mode | Value                                                             |
+|-----------------------------------|-----------|--------------|------------------|-------------------------------------------------------------------|
+| `{app_name}`                      | ✅         | ✅            | ✅                | Name of the IDE                                                   |
+| `{app_full_name}`                 | ✅         | ✅            | ✅                | Name and edition of the IDE                                       |
+| `{app_version}`                   | ✅         | ✅            | ✅                | Version of the IDE                                                |
+| `{project_name}`                  | ✅         | ✅            | ❌                | Name of the current project                                       |
+| `{project_repo_url}` <sup>1</sup> | ✅         | ✅            | ❌                | URL of the current project's git repository                       |
+| `{file_name}`                     | ✅         | ❌            | ❌                | Name of the edited file                                           |
+| `{file_path}`                     | ✅         | ❌            | ❌                | Path to the edited file                                           |
+| `{file_type}`                     | ✅         | ❌            | ❌                | The determined type of the edited file                            |
+| `{file_dir_name}`                 | ✅         | ❌            | ❌                | Name of the directory the edited file is in                       |
+| `{file_line}`                     | ✅         | ❌            | ❌                | Line number of the caret in the edited file                       |
+| `{file_line_count}`               | ✅         | ❌            | ❌                | Number of lines of the edited file                                |
+| `{file_column}`                   | ✅         | ❌            | ❌                | Column number of the caret in the edited file                     |
+| `{file_problems_total}`           | ✅         | ❌            | ❌                | Total number of problems (warnings and errors) in the edited file |
+| `{file_problems_errors}`          | ✅         | ❌            | ❌                | Number of errors in the edited file                               |
+| `{file_problems_warnings}`        | ✅         | ❌            | ❌                | Number of warnings in the edited file                             |
+| `{file_size}`                     | ✅         | ❌            | ❌                | Size of the edited file                                           |
 
 *1: Requires the [Git](https://plugins.jetbrains.com/plugin/13173-git) plugin to be installed*
 

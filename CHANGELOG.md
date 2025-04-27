@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `{file_problems_total}` variable that shows the total number of problems (warnings and errors) in the edited file
+- `{file_problems_errors}` variable that shows the number of errors in the edited file
+- `{file_problems_warnings}` variable that shows the number of warnings in the edited file
 - `{file_column}` variable that shows the column number of the caret in the edited file
 
 ## [1.7.4] - 2025-03-10

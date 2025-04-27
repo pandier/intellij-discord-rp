@@ -98,6 +98,21 @@ enum class ActivityDisplayMode(
                 getter = { file?.column?.toString() ?: "-" }
             ),
             ActivityVariable(
+                name = "file_problems_total",
+                description = "Total number of problems (warnings and errors) in the edited file",
+                getter = { file?.problemCount?.total?.toString() }
+            ),
+            ActivityVariable(
+                name = "file_problems_errors",
+                description = "Number of errors in the edited file",
+                getter = { file?.problemCount?.errors?.toString() }
+            ),
+            ActivityVariable(
+                name = "file_problems_warnings",
+                description = "Number of warnings in the edited file",
+                getter = { file?.problemCount?.warnings?.toString() }
+            ),
+            ActivityVariable(
                 name = "file_size",
                 description = "Size of the edited file",
                 getter = { file?.length?.let { formatFileSize(it) } ?: "-" }
