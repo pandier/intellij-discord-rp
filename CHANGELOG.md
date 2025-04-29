@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2025-04-29
+
 ### Added
 
 - `{file_problems_total}` variable that shows the total number of problems (warnings and errors) in the edited file
@@ -250,7 +252,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.4...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.4...v1.8.0
 [1.7.4]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.3...v1.7.4
 [1.7.3]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.2...v1.7.3
 [1.7.2]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.1...v1.7.2
