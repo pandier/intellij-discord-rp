@@ -1,6 +1,8 @@
 package io.github.pandier.intellijdiscordrp.settings
 
 import com.intellij.openapi.ui.DialogPanel
+import com.intellij.openapi.ui.Messages
+import com.intellij.ui.components.ActionLink
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
@@ -112,6 +114,21 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
 
     override fun createPanel(): DialogPanel = panel {
         val state = discordSettingsComponent.state
+
+        row {
+            cell(ActionLink("Reset to defaults") {
+                val result = Messages.showYesNoDialog(
+                    "Are you sure you want to reset all settings to their default values?",
+                    "Reset Settings",
+                    Messages.getQuestionIcon()
+                )
+                if (result != Messages.YES) return@ActionLink
+                discordSettingsComponent.loadState(DiscordSettings())
+                reset()
+            }.apply {
+                toolTipText = "Reset all settings to their default values"
+            }).align(AlignX.RIGHT)
+        }
 
         row {
             checkBox("Try reconnecting on every activity update if not connected")
