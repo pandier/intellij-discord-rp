@@ -1,8 +1,9 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-enum class TimestampTargetSetting(
-    val friendlyName: String
+enum class IconSetting(
+    val friendlyName: String,
 ) {
+    HIDDEN("Hidden"),
     APPLICATION("Application"),
     PROJECT("Project"),
     FILE("File");
