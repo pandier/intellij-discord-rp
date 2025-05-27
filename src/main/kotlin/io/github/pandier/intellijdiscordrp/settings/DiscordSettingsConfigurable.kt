@@ -12,6 +12,7 @@ import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
 import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
+import io.github.pandier.intellijdiscordrp.settings.ui.map
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
 import org.jetbrains.annotations.Nls
 import kotlin.reflect.KMutableProperty0
@@ -22,10 +23,10 @@ import kotlin.reflect.KMutableProperty0
 private fun Panel.iconRow(
     @Nls label: String,
     icons: List<IconSetting>,
-    icon: KMutableProperty0<IconSetting>,
-    text: KMutableProperty0<String>,
-    altIcon: KMutableProperty0<IconSetting>,
-    altText: KMutableProperty0<String>,
+    icon: MutableProperty<IconSetting>,
+    text: MutableProperty<String>,
+    altIcon: MutableProperty<IconSetting>,
+    altText: MutableProperty<String>,
 ) {
     lateinit var iconProperty: AtomicProperty<IconSetting>
 
@@ -77,7 +78,7 @@ private fun Panel.iconRow(
 }
 
 private fun TabbedBuilder.displayModeTab(
-    mode: DiscordSettings.Mode,
+    mode: KMutableProperty0<DiscordSettings.Mode>,
     displayMode: ActivityDisplayMode,
     icons: List<IconSetting>,
     timestampTargets: List<TimestampTargetSetting>,
@@ -86,7 +87,7 @@ private fun TabbedBuilder.displayModeTab(
         row("Details:") {
             textField()
                 .columns(COLUMNS_LARGE)
-                .bindText(mode::details)
+                .bindText(mode.map { it::details })
                 .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .also { it.component.emptyText.text = "Optional" }
@@ -94,21 +95,30 @@ private fun TabbedBuilder.displayModeTab(
         row("State:") {
             textField()
                 .columns(COLUMNS_LARGE)
-                .bindText(mode::state)
+                .bindText(mode.map { it::state })
                 .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
                 .also { it.component.emptyText.text = "Optional" }
         }
 
-        iconRow("Large icon:", icons, mode::largeIcon, mode::largeIconTooltip, mode::largeIconAlt, mode::largeIconAltTooltip)
-        iconRow("Small icon:", icons, mode::smallIcon, mode::smallIconTooltip, mode::smallIconAlt, mode::smallIconAltTooltip)
+        iconRow(
+            "Large icon:", icons,
+            mode.map { it::largeIcon }, mode.map { it::largeIconTooltip },
+            mode.map { it::largeIconAlt }, mode.map { it::largeIconAltTooltip }
+        )
+
+        iconRow(
+            "Small icon:", icons,
+            mode.map { it::smallIcon }, mode.map { it::smallIconTooltip },
+            mode.map { it::smallIconAlt }, mode.map { it::smallIconAltTooltip }
+        )
 
         row {
             checkBox("Show elapsed time in")
-                .bindSelected(mode::timestampEnabled)
+                .bindSelected(mode.map { it::timestampEnabled })
                 .gap(RightGap.SMALL)
             comboBox(timestampTargets)
-                .bindItem(mode::timestampTarget.toNullableProperty())
+                .bindItem(mode.map { it::timestampTarget }.toNullableProperty())
         }
 
         row {
@@ -128,7 +138,7 @@ private fun TabbedBuilder.displayModeTab(
 class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
 
     override fun createPanel(): DialogPanel = panel {
-        val state = discordSettingsComponent.state
+        val state = discordSettingsComponent.settings
 
         row {
             cell(ActionLink("Reset to defaults") {
@@ -138,7 +148,7 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     Messages.getQuestionIcon()
                 )
                 if (result != Messages.YES) return@ActionLink
-                discordSettingsComponent.loadState(DiscordSettings())
+                discordSettingsComponent.setSettings(DiscordSettings())
                 reset()
             }.apply {
                 toolTipText = "Reset all settings to their default values"
@@ -207,21 +217,21 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         group("Display") {
             tabbed {
                 displayModeTab(
-                    mode = state.applicationMode,
+                    mode = state::applicationMode,
                     displayMode = ActivityDisplayMode.APPLICATION,
                     icons = listOf(IconSetting.APPLICATION),
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION),
                 )
 
                 displayModeTab(
-                    mode = state.projectMode,
+                    mode = state::projectMode,
                     displayMode = ActivityDisplayMode.PROJECT,
                     icons = listOf(IconSetting.APPLICATION, IconSetting.PROJECT),
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT),
                 )
 
                 displayModeTab(
-                    mode = state.fileMode,
+                    mode = state::fileMode,
                     displayMode = ActivityDisplayMode.FILE,
                     icons = listOf(IconSetting.APPLICATION, IconSetting.PROJECT, IconSetting.FILE),
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
@@ -232,17 +242,17 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
 
     override fun apply() {
         val applicationIdBefore =
-            if (discordSettingsComponent.state.customApplicationIdEnabled)
-                discordSettingsComponent.state.customApplicationId
+            if (discordSettingsComponent.settings.customApplicationIdEnabled)
+                discordSettingsComponent.settings.customApplicationId
             else null
-        val showFullApplicationNameBefore = discordSettingsComponent.state.showFullApplicationName
+        val showFullApplicationNameBefore = discordSettingsComponent.settings.showFullApplicationName
 
         if (validateAndApply()) {
             val applicationIdAfter =
-                if (discordSettingsComponent.state.customApplicationIdEnabled)
-                    discordSettingsComponent.state.customApplicationId
+                if (discordSettingsComponent.settings.customApplicationIdEnabled)
+                    discordSettingsComponent.settings.customApplicationId
                 else null
-            val showFullApplicationNameAfter = discordSettingsComponent.state.showFullApplicationName
+            val showFullApplicationNameAfter = discordSettingsComponent.settings.showFullApplicationName
 
             val discordService = DiscordService.getInstance()
 

@@ -2,6 +2,8 @@ package io.github.pandier.intellijdiscordrp.settings
 
 import com.intellij.openapi.components.*
 import com.intellij.util.xmlb.XmlSerializerUtil
+import io.github.pandier.intellijdiscordrp.settings.migrate.SettingsMigration
+import org.jdom.Element
 
 val discordSettingsComponent: DiscordSettingsComponent
     get() = service()
@@ -11,11 +13,17 @@ val discordSettingsComponent: DiscordSettingsComponent
     name = "io.github.pandier.intellijdiscordrp.settings.DiscordSettingsComponent",
     storages = [Storage("discordrp.xml")]
 )
-class DiscordSettingsComponent : PersistentStateComponent<DiscordSettings> {
-    private val state = DiscordSettings()
+class DiscordSettingsComponent : PersistentStateComponent<Element> {
+    val settings = DiscordSettings()
 
-    override fun getState(): DiscordSettings = state
+    fun setSettings(state: DiscordSettings) {
+        XmlSerializerUtil.copyBean(state, this.settings)
+    }
 
-    override fun loadState(state: DiscordSettings) =
-        XmlSerializerUtil.copyBean(state, this.state)
+    override fun getState(): Element? =
+        SettingsMigration.serialize(this.settings)
+
+    override fun loadState(state: Element) {
+        setSettings(SettingsMigration.deserialize(state))
+    }
 }

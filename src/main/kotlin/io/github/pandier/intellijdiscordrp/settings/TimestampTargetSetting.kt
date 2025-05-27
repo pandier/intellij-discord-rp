@@ -1,9 +1,12 @@
 package io.github.pandier.intellijdiscordrp.settings
 
 enum class TimestampTargetSetting(
-    val friendlyName: String
+    private val friendlyName: String
 ) {
     APPLICATION("Application"),
     PROJECT("Project"),
     FILE("File");
+
+    override fun toString(): String =
+        friendlyName
 }

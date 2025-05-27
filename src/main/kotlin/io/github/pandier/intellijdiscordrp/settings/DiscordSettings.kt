@@ -59,6 +59,7 @@ data class DiscordSettings(
     data class Mode(
         var details: String = "",
         var state: String = "",
+        // TODO: This is a repeating pattern, could be refactored
         var largeIcon: IconSetting = IconSetting.APPLICATION,
         var largeIconTooltip: String = "{app_name}",
         var largeIconAlt: IconSetting = IconSetting.APPLICATION,
