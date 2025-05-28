@@ -15,8 +15,10 @@ import com.intellij.ui.dsl.builder.selected
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
-import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
-import io.github.pandier.intellijdiscordrp.util.urlRegex
+import io.github.pandier.intellijdiscordrp.settings.ui.maxLength
+import io.github.pandier.intellijdiscordrp.settings.ui.optional
+import io.github.pandier.intellijdiscordrp.settings.ui.required
+import io.github.pandier.intellijdiscordrp.settings.ui.validateUrlWithVariables
 
 class DiscordProjectSettingsConfigurable(
     private val project: Project,
@@ -31,20 +33,19 @@ class DiscordProjectSettingsConfigurable(
         }
 
         row {
-            label("Display mode in project:")
-                .gap(RightGap.SMALL)
             comboBox(listOf("Default", "Application", "Project", "File"))
+                .label("Display mode in project:")
                 .bindItem({ state.displayMode?.toString() ?: "Default" }, { state.displayMode = it?.let(ActivityDisplayMode::byName) })
         }
 
         row {
-            label("Icon:")
-                .gap(RightGap.SMALL)
-            // TODO: Check if text is too long/short
             textField()
+                .label("Icon:")
                 .bindText(state::icon)
                 .columns(COLUMNS_LARGE)
-                .also { it.component.emptyText.text = "Optional" }
+                .validateUrlWithVariables()
+                .maxLength(256)
+                .optional()
             // TODO: Add context help
         }
 
@@ -58,15 +59,14 @@ class DiscordProjectSettingsConfigurable(
                 textField()
                     .label("Text:")
                     .bindText(state::buttonText)
-                    .errorOnInput("Text cannot be longer than 31 characters") { it.text.isNotEmpty() && it.text.length > 31 }
-                    .errorOnApply("Text cannot be longer than 31 characters") { it.isEnabled && it.text.length > 31 }
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+                    .maxLength(31)
+                    .required()
                 textField()
                     .label("Link:")
                     .bindText(state::buttonUrl)
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                    .validationOnApply { if ((!it.text.contains('{') || !it.text.contains('}')) && !urlRegex.matches(it.text)) warning("Not a valid URL") else null }
                     .gap(RightGap.SMALL)
+                    .validateUrlWithVariables()
+                    .required()
                 contextHelp("You can use variables in the URL field!")
             }
         }.enabledIf(buttonCheckBox.selected)
