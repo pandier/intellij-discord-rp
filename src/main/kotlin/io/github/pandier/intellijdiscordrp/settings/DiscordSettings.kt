@@ -21,13 +21,36 @@ data class DiscordSettings(
     var fileMode: Mode = Mode(
         details = "In {project_name}",
         state = "Editing {file_name}",
-        largeIcon = IconSetting.FILE,
-        largeIconTooltip = "{file_type}",
-        smallIcon = IconSetting.APPLICATION,
-        smallIconTooltip = "{app_name}",
+        largeIcon = Icon(
+            type = IconType.FILE,
+            tooltip = "{file_type}",
+        ),
+        smallIcon = Icon(
+            type = IconType.APPLICATION,
+            tooltip = "{app_name}",
+        ),
         timestampTarget = TimestampTargetSetting.FILE,
     ),
 ) {
+    data class Mode(
+        var details: String = "",
+        var state: String = "",
+        var largeIcon: Icon = Icon(
+            type = IconType.APPLICATION,
+            tooltip = "{app_name}",
+        ),
+        var smallIcon: Icon = Icon(),
+        var timestampEnabled: Boolean = true,
+        var timestampTarget: TimestampTargetSetting = TimestampTargetSetting.APPLICATION,
+    )
+
+    data class Icon(
+        var type: IconType = IconType.HIDDEN,
+        var tooltip: String = "",
+        var altType: IconType = IconType.HIDDEN,
+        var altTooltip: String = "",
+    )
+
     fun createActivityFactory(mode: ActivityDisplayMode, projectSettings: DiscordProjectSettings?): ActivityFactory {
         val projectSettings = projectSettings.takeIf { mode != ActivityDisplayMode.APPLICATION }
         val modeSettings = when (mode) {
@@ -37,38 +60,11 @@ data class DiscordSettings(
         }
         return ActivityFactory(
             displayMode = mode,
+            modeSettings = modeSettings,
             logoStyle = logoStyle,
             projectIcon = projectSettings?.icon,
-            details = modeSettings.details,
-            state = modeSettings.state,
-            largeIcon = modeSettings.largeIcon,
-            largeIconTooltip = modeSettings.largeIconTooltip,
-            largeIconAlt = modeSettings.largeIconAlt,
-            largeIconAltTooltip = modeSettings.largeIconAltTooltip,
-            smallIcon = modeSettings.smallIcon,
-            smallIconTooltip = modeSettings.smallIconTooltip,
-            smallIconAlt = modeSettings.smallIconAlt,
-            smallIconAltTooltip = modeSettings.smallIconAltTooltip,
             buttonText = if (projectSettings?.buttonEnabled == true) projectSettings.buttonText else null,
             buttonUrl = projectSettings?.buttonUrl ?: "",
-            timestampEnabled = modeSettings.timestampEnabled,
-            timestampTarget = modeSettings.timestampTarget,
         )
     }
-
-    data class Mode(
-        var details: String = "",
-        var state: String = "",
-        // TODO: This is a repeating pattern, could be refactored
-        var largeIcon: IconSetting = IconSetting.APPLICATION,
-        var largeIconTooltip: String = "{app_name}",
-        var largeIconAlt: IconSetting = IconSetting.APPLICATION,
-        var largeIconAltTooltip: String = "{app_name}",
-        var smallIcon: IconSetting = IconSetting.HIDDEN,
-        var smallIconTooltip: String = "",
-        var smallIconAlt: IconSetting = IconSetting.APPLICATION,
-        var smallIconAltTooltip: String = "{app_name}",
-        var timestampEnabled: Boolean = true,
-        var timestampTarget: TimestampTargetSetting = TimestampTargetSetting.APPLICATION,
-    )
 }

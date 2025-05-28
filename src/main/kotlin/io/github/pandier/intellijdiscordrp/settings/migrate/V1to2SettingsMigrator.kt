@@ -2,7 +2,7 @@ package io.github.pandier.intellijdiscordrp.settings.migrate
 
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
-import io.github.pandier.intellijdiscordrp.settings.IconSetting
+import io.github.pandier.intellijdiscordrp.settings.IconType
 import io.github.pandier.intellijdiscordrp.settings.LogoStyleSetting
 import io.github.pandier.intellijdiscordrp.settings.TimestampTargetSetting
 
@@ -24,41 +24,53 @@ object V1to2SettingsMigrator : SettingsMigrator<V1to2SettingsMigrator.V1Model, D
             applicationMode = DiscordSettings.Mode(
                 details = previous.applicationDetails,
                 state = previous.applicationState,
-                largeIcon = migrateIcon(previous.applicationLargeImageEnabled, previous.applicationLargeImage) ?: defaults.applicationMode.largeIcon,
-                largeIconTooltip = previous.applicationLargeImageText,
-                smallIcon = migrateIcon(previous.applicationSmallImageEnabled, previous.applicationSmallImage) ?: defaults.applicationMode.smallIcon,
-                smallIconTooltip = previous.applicationSmallImageText,
+                largeIcon = DiscordSettings.Icon(
+                    type = migrateIconType(previous.applicationLargeImageEnabled, previous.applicationLargeImage) ?: defaults.applicationMode.largeIcon.type,
+                    tooltip = previous.applicationLargeImageText,
+                ),
+                smallIcon = DiscordSettings.Icon(
+                    type = migrateIconType(previous.applicationSmallImageEnabled, previous.applicationSmallImage) ?: defaults.applicationMode.smallIcon.type,
+                    tooltip = previous.applicationSmallImageText,
+                ),
                 timestampEnabled = previous.applicationTimestampEnabled,
                 timestampTarget = TimestampTargetSetting.APPLICATION,
             ),
             projectMode = DiscordSettings.Mode(
                 details = previous.projectDetails,
                 state = previous.projectState,
-                largeIcon = migrateIcon(previous.projectLargeImageEnabled, previous.projectLargeImage) ?: defaults.projectMode.largeIcon,
-                largeIconTooltip = previous.projectLargeImageText,
-                smallIcon = migrateIcon(previous.projectSmallImageEnabled, previous.projectSmallImage) ?: defaults.projectMode.smallIcon,
-                smallIconTooltip = previous.projectSmallImageText,
+                largeIcon = DiscordSettings.Icon(
+                    type = migrateIconType(previous.projectLargeImageEnabled, previous.projectLargeImage) ?: defaults.projectMode.largeIcon.type,
+                    tooltip = previous.projectLargeImageText,
+                ),
+                smallIcon = DiscordSettings.Icon(
+                    type = migrateIconType(previous.projectSmallImageEnabled, previous.projectSmallImage) ?: defaults.projectMode.smallIcon.type,
+                    tooltip = previous.projectSmallImageText,
+                ),
                 timestampEnabled = previous.projectTimestampEnabled,
                 timestampTarget = migrateTimestampTarget(previous.projectTimestampTarget) ?: defaults.projectMode.timestampTarget,
             ),
             fileMode = DiscordSettings.Mode(
                 details = previous.fileDetails,
                 state = previous.fileState,
-                largeIcon = migrateIcon(previous.fileLargeImageEnabled, previous.fileLargeImage) ?: defaults.fileMode.largeIcon,
-                largeIconTooltip = previous.fileLargeImageText,
-                smallIcon = migrateIcon(previous.fileSmallImageEnabled, previous.fileSmallImage) ?: defaults.fileMode.smallIcon,
-                smallIconTooltip = previous.fileSmallImageText,
+                largeIcon = DiscordSettings.Icon(
+                    type = migrateIconType(previous.fileLargeImageEnabled, previous.fileLargeImage) ?: defaults.fileMode.largeIcon.type,
+                    tooltip = previous.fileLargeImageText,
+                ),
+                smallIcon = DiscordSettings.Icon(
+                    type = migrateIconType(previous.fileSmallImageEnabled, previous.fileSmallImage) ?: defaults.fileMode.smallIcon.type,
+                    tooltip = previous.fileSmallImageText,
+                ),
                 timestampEnabled = previous.fileTimestampEnabled,
                 timestampTarget = migrateTimestampTarget(previous.fileTimestampTarget) ?: defaults.fileMode.timestampTarget,
             ),
         )
     }
 
-    private fun migrateIcon(enabled: Boolean, value: String): IconSetting? {
-        if (!enabled) return IconSetting.HIDDEN
+    private fun migrateIconType(enabled: Boolean, value: String): IconType? {
+        if (!enabled) return IconType.HIDDEN
         return when (value.lowercase()) {
-            "application" -> IconSetting.APPLICATION
-            "file" -> IconSetting.FILE
+            "application" -> IconType.APPLICATION
+            "file" -> IconType.FILE
             else -> null
         }
     }

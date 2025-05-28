@@ -1,6 +1,6 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-enum class IconSetting(
+enum class IconType(
     private val friendlyName: String,
 ) {
     HIDDEN("Hidden"),

@@ -13,6 +13,9 @@ import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
 import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
 import io.github.pandier.intellijdiscordrp.settings.ui.map
+import io.github.pandier.intellijdiscordrp.settings.ui.maxLength
+import io.github.pandier.intellijdiscordrp.settings.ui.optional
+import io.github.pandier.intellijdiscordrp.settings.ui.required
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
 import org.jetbrains.annotations.Nls
 import kotlin.reflect.KMutableProperty0
@@ -22,44 +25,40 @@ import kotlin.reflect.KMutableProperty0
  */
 private fun Panel.iconRow(
     @Nls label: String,
-    icons: List<IconSetting>,
-    icon: MutableProperty<IconSetting>,
-    text: MutableProperty<String>,
-    altIcon: MutableProperty<IconSetting>,
-    altText: MutableProperty<String>,
+    icons: List<IconType>,
+    icon: MutableProperty<DiscordSettings.Icon>,
 ) {
-    lateinit var iconProperty: AtomicProperty<IconSetting>
+    lateinit var iconProperty: AtomicProperty<IconType>
 
     val icons = icons.toMutableList()
-    icons.add(0, IconSetting.HIDDEN)
+    icons.add(0, IconType.HIDDEN)
 
     row(label) {
         comboBox(icons)
-            .bindItem(icon.toNullableProperty())
+            .bindItem(icon.map { it::type }.toNullableProperty())
             .onChanged { iconProperty.set(it.item) }
             .apply { iconProperty = AtomicProperty(component.item) }
 
         textField()
             .label("Tooltip:")
-            .bindText(text)
-            .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-            .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
-            .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-            .enabledIf(iconProperty.transform { it != IconSetting.HIDDEN })
+            .bindText(icon.map { it::tooltip })
+            .maxLength(128)
+            .required()
+            .enabledIf(iconProperty.transform { it != IconType.HIDDEN })
     }
 
-    if (!icons.contains(IconSetting.PROJECT))
+    if (!icons.contains(IconType.PROJECT))
         return
 
     indent {
         row {
-            lateinit var altIconProperty: AtomicProperty<IconSetting>
+            lateinit var altIconProperty: AtomicProperty<IconType>
             val configurations = icons.toMutableList()
-            configurations.remove(IconSetting.PROJECT)
+            configurations.remove(IconType.PROJECT)
 
             comboBox(configurations)
                 .label("Alternative:")
-                .bindItem(altIcon.toNullableProperty())
+                .bindItem(icon.map { it::altType }.toNullableProperty())
                 .gap(RightGap.SMALL)
                 .onChanged { altIconProperty.set(it.item); }
                 .apply { altIconProperty = AtomicProperty(component.item) }
@@ -68,50 +67,38 @@ private fun Panel.iconRow(
 
             textField()
                 .label("Tooltip:")
-                .bindText(altText)
-                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
-                .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                .enabledIf(altIconProperty.transform { it != IconSetting.HIDDEN })
+                .bindText(icon.map { it::altTooltip })
+                .maxLength(128)
+                .required()
+                .enabledIf(altIconProperty.transform { it != IconType.HIDDEN })
         }
-    }.visibleIf(iconProperty.transform { it == IconSetting.PROJECT })
+    }.visibleIf(iconProperty.transform { it == IconType.PROJECT })
 }
 
 private fun TabbedBuilder.displayModeTab(
     mode: KMutableProperty0<DiscordSettings.Mode>,
     displayMode: ActivityDisplayMode,
-    icons: List<IconSetting>,
+    icons: List<IconType>,
     timestampTargets: List<TimestampTargetSetting>,
 ) {
     tab(displayMode.toString()) {
         row("Details:") {
             textField()
-                .columns(COLUMNS_LARGE)
                 .bindText(mode.map { it::details })
-                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .also { it.component.emptyText.text = "Optional" }
+                .columns(COLUMNS_LARGE)
+                .maxLength(128)
+                .optional()
         }
         row("State:") {
             textField()
-                .columns(COLUMNS_LARGE)
                 .bindText(mode.map { it::state })
-                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .also { it.component.emptyText.text = "Optional" }
+                .columns(COLUMNS_LARGE)
+                .maxLength(128)
+                .optional()
         }
 
-        iconRow(
-            "Large icon:", icons,
-            mode.map { it::largeIcon }, mode.map { it::largeIconTooltip },
-            mode.map { it::largeIconAlt }, mode.map { it::largeIconAltTooltip }
-        )
-
-        iconRow(
-            "Small icon:", icons,
-            mode.map { it::smallIcon }, mode.map { it::smallIconTooltip },
-            mode.map { it::smallIconAlt }, mode.map { it::smallIconAltTooltip }
-        )
+        iconRow("Large icon:", icons, mode.map { it::largeIcon })
+        iconRow("Small icon:", icons, mode.map { it::smallIcon })
 
         row {
             checkBox("Show elapsed time in")
@@ -180,9 +167,9 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
-                .errorOnInput("Must be a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
-                .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                .errorOnApply("Must be a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
+                .errorOnInput("Not a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+                .errorOnApply("Not a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
+                .required()
         }
 
         row {
@@ -219,21 +206,21 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 displayModeTab(
                     mode = state::applicationMode,
                     displayMode = ActivityDisplayMode.APPLICATION,
-                    icons = listOf(IconSetting.APPLICATION),
+                    icons = listOf(IconType.APPLICATION),
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION),
                 )
 
                 displayModeTab(
                     mode = state::projectMode,
                     displayMode = ActivityDisplayMode.PROJECT,
-                    icons = listOf(IconSetting.APPLICATION, IconSetting.PROJECT),
+                    icons = listOf(IconType.APPLICATION, IconType.PROJECT),
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT),
                 )
 
                 displayModeTab(
                     mode = state::fileMode,
                     displayMode = ActivityDisplayMode.FILE,
-                    icons = listOf(IconSetting.APPLICATION, IconSetting.PROJECT, IconSetting.FILE),
+                    icons = listOf(IconType.APPLICATION, IconType.PROJECT, IconType.FILE),
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
                 )
             }
