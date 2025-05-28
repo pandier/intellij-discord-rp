@@ -14,7 +14,8 @@ object SettingsMigration {
     fun serialize(settings: DiscordSettings): Element? {
         try {
             val element = XmlSerializer.serialize(settings, serializationFilter)
-            element.setAttribute("version", CURRENT_VERSION.toString())
+            if (!element.isEmpty)
+                element.setAttribute("version", CURRENT_VERSION.toString())
             return element
         } catch (ex: Exception) {
             DiscordRichPresencePlugin.logger.error("Something went wrong during serialization of settings", ex)
@@ -24,6 +25,8 @@ object SettingsMigration {
 
     fun deserialize(element: Element): DiscordSettings {
         try {
+            if (element.isEmpty)
+                return DiscordSettings()
             var version = element.getAttribute("version")?.value?.toIntOrNull() ?: 1
             if (version >= CURRENT_VERSION) {
                 if (version > CURRENT_VERSION)
