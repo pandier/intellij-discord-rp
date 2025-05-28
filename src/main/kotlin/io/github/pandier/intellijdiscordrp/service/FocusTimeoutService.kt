@@ -48,11 +48,11 @@ class FocusTimeoutService(
      * This method does nothing if the idle timeout is disabled in the settings.
      */
     private fun scheduleTimeout() {
-        if (!discordSettingsComponent.state.focusTimeoutEnabled)
+        if (!discordSettingsComponent.settings.focusTimeoutEnabled)
             return
         task?.cancel()
         task = scope.launch {
-            val minutes = discordSettingsComponent.state.focusTimeoutMinutes
+            val minutes = discordSettingsComponent.settings.focusTimeoutMinutes
             if (minutes > 0) {
                 delay(minutes * 60000L)
             }

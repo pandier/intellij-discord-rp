@@ -98,7 +98,7 @@ class ActivityContext(
         val projectSettings = project.get()?.discordProjectSettingsComponent?.state
         if (projectSettings == null)
             return null
-        return createActivity(discordSettingsComponent.state, projectSettings)
+        return createActivity(discordSettingsComponent.settings, projectSettings)
     }
 
     /**
