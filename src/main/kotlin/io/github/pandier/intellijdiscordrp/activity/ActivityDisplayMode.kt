@@ -48,10 +48,16 @@ enum class ActivityDisplayMode(
             ),
             ActivityVariable(
                 name = "project_repo_url",
-                description = "URL of the current project's git repository",
+                description = "URL of the current project's Git repository remote",
                 availabilityCheck = { if (git != null) null else "Git plugin not installed" },
                 getter = { projectRepositoryUrl ?: "-" }
-            )
+            ),
+            ActivityVariable(
+                name = "project_repo_branch",
+                description = "Name of the current project's Git repository branch",
+                availabilityCheck = { if (git != null) null else "Git plugin not installed" },
+                getter = { projectRepositoryBranch ?: "-" }
+            ),
         ))
     ),
 
