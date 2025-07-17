@@ -27,24 +27,24 @@ object SettingsMigration {
         try {
             if (element.isEmpty)
                 return DiscordSettings()
-            var version = element.getAttribute("version")?.value?.toIntOrNull() ?: 1
+            val version = element.getAttribute("version")?.value?.toIntOrNull() ?: 1
             if (version >= CURRENT_VERSION) {
                 if (version > CURRENT_VERSION)
                     DiscordRichPresencePlugin.logger.warn("Settings version is higher than current version, trying to deserialize normally")
                 return XmlSerializer.deserialize(element, DiscordSettings::class.java)
             }
-            return migrate(version, CURRENT_VERSION - 1, lastMigrator, element)
+            return migrate(version, lastMigrator, element)
         } catch (ex: Exception) {
             DiscordRichPresencePlugin.logger.warn("Something went wrong during deserialization of settings, resseting to defaults", ex)
             return DiscordSettings()
         }
     }
 
-    private fun <P, T> migrate(version: Int, migratorVersion: Int, migrator: SettingsMigrator<P, T>, element: Element): T {
-        if (version != migratorVersion) {
+    private fun <P, T> migrate(version: Int, migrator: SettingsMigrator<P, T>, element: Element): T {
+        if (version != migrator.version) {
             val previousMigrator = migrator.previousMigrator
-                ?: error("Migration from version $version to $CURRENT_VERSION is not supported (missing migrator for version ${migratorVersion - 1})")
-            val previous = migrate(version, migratorVersion - 1, previousMigrator, element)
+                ?: error("Migration from version $version to $CURRENT_VERSION is not supported (missing migrator for version ${migrator.version - 1})")
+            val previous = migrate(version, previousMigrator, element)
             return migrator.migrate(previous)
         }
         return migrateWithElement(element, migrator)

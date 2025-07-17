@@ -7,6 +7,7 @@ import io.github.pandier.intellijdiscordrp.settings.LogoStyleSetting
 import io.github.pandier.intellijdiscordrp.settings.TimestampTargetSetting
 
 object V1to2SettingsMigrator : SettingsMigrator<V1to2SettingsMigrator.V1Model, DiscordSettings> {
+    override val version: Int = 1
     override val previousClass: Class<V1Model> = V1Model::class.java
     override val previousMigrator: SettingsMigrator<*, V1Model>? = null
 
