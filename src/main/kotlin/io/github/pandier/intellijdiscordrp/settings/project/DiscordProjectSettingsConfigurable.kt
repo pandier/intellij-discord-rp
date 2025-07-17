@@ -46,7 +46,8 @@ class DiscordProjectSettingsConfigurable(
                 .validateUrlWithVariables()
                 .maxLength(256)
                 .optional()
-            // TODO: Add context help
+                .gap(RightGap.SMALL)
+            contextHelp("URL that points to the project's icon. To show the icon inside the Rich Presence, use the 'Project' icon type.")
         }
 
         lateinit var buttonCheckBox: Cell<JBCheckBox>
