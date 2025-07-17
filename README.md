@@ -74,15 +74,10 @@ Each display mode can be configured using the corresponding tab. Variables are u
 
 *1: Requires the [Git](https://plugins.jetbrains.com/plugin/13173-git) plugin to be installed*
 
-## ⭐ Star history
+## ❓ Can't see buttons in Rich Presence
 
-<a href="https://star-history.com/#pandier/intellij-discord-rp&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pandier/intellij-discord-rp&type=Date" />
- </picture>
-</a>
+There is a client-sided bug in the Discord app that makes buttons in **your own** Rich Presence invisible.
+The only way you can tell is either by joining a voice channel and hovering over the channel name, or asking a friend.
 
 ## ❓ Requesting a new language
 
