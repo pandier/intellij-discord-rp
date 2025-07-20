@@ -128,21 +128,6 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         val state = discordSettingsComponent.settings
 
         row {
-            cell(ActionLink("Reset to defaults") {
-                val result = Messages.showYesNoDialog(
-                    "Are you sure you want to reset all settings to their default values?",
-                    "Reset Settings",
-                    Messages.getQuestionIcon()
-                )
-                if (result != Messages.YES) return@ActionLink
-                discordSettingsComponent.setSettings(DiscordSettings())
-                reset()
-            }.apply {
-                toolTipText = "Reset all settings to their default values"
-            }).align(AlignX.RIGHT)
-        }
-
-        row {
             checkBox("Try reconnecting on every activity update if not connected")
                 .bindSelected(state::reconnectOnUpdate)
                 .gap(RightGap.SMALL)
@@ -224,6 +209,21 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
                 )
             }
+        }
+
+        row {
+            cell(ActionLink("Reset to defaults") {
+                val result = Messages.showYesNoDialog(
+                    "Are you sure you want to reset all settings to their default values?",
+                    "Reset Settings",
+                    Messages.getQuestionIcon()
+                )
+                if (result != Messages.YES) return@ActionLink
+                discordSettingsComponent.setSettings(DiscordSettings())
+                reset()
+            }.apply {
+                toolTipText = "Reset all settings to their default values"
+            })
         }
     }
 
