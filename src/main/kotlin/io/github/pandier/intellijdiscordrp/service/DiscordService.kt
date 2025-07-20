@@ -29,7 +29,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 private fun connect(): RichClient {
-    val settings = discordSettingsComponent.state
+    val settings = discordSettingsComponent.settings
     val applicationId = if (settings.customApplicationIdEnabled) {
         settings.customApplicationId.toULong().toLong()
     } else {
@@ -245,7 +245,7 @@ class DiscordService(
             sendActivityInternal(activityContext?.createActivity())
         }
 
-        if (!success && discordSettingsComponent.state.reconnectOnUpdate) {
+        if (!success && discordSettingsComponent.settings.reconnectOnUpdate) {
             reconnectBackground(true)
         }
     }

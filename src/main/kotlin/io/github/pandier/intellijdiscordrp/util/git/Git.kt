@@ -7,7 +7,12 @@ import com.intellij.openapi.vfs.VirtualFile
  * A facade for accessing Git functionality.
  */
 interface Git {
-    fun getRemote(project: Project, file: VirtualFile?): String?
+    fun getRepo(project: Project, file: VirtualFile?): GitRepo?
+}
+
+interface GitRepo {
+    val remoteUrl: String?
+    val branch: String?
 }
 
 /**

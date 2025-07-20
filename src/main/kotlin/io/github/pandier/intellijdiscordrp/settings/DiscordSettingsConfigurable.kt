@@ -1,7 +1,10 @@
 package io.github.pandier.intellijdiscordrp.settings
 
+import com.intellij.openapi.observable.properties.AtomicProperty
+import com.intellij.openapi.observable.util.transform
 import com.intellij.openapi.ui.DialogPanel
-import com.intellij.ui.components.JBCheckBox
+import com.intellij.openapi.ui.Messages
+import com.intellij.ui.components.ActionLink
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
@@ -9,89 +12,100 @@ import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
 import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
+import io.github.pandier.intellijdiscordrp.settings.ui.map
+import io.github.pandier.intellijdiscordrp.settings.ui.maxLength
+import io.github.pandier.intellijdiscordrp.settings.ui.optional
+import io.github.pandier.intellijdiscordrp.settings.ui.required
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
+import org.jetbrains.annotations.Nls
 import kotlin.reflect.KMutableProperty0
 
+/**
+ * Creates a row where the user can configure a specific icon for the activity.
+ */
+private fun Panel.iconRow(
+    @Nls label: String,
+    icons: List<IconType>,
+    icon: MutableProperty<DiscordSettings.Icon>,
+) {
+    lateinit var iconProperty: AtomicProperty<IconType>
+
+    val icons = icons.toMutableList()
+    icons.add(0, IconType.HIDDEN)
+
+    row(label) {
+        comboBox(icons)
+            .bindItem(icon.map { it::type }.toNullableProperty())
+            .onChanged { iconProperty.set(it.item) }
+            .apply { iconProperty = AtomicProperty(component.item) }
+
+        textField()
+            .label("Tooltip:")
+            .bindText(icon.map { it::tooltip })
+            .maxLength(128)
+            .required()
+            .enabledIf(iconProperty.transform { it != IconType.HIDDEN })
+    }
+
+    if (!icons.contains(IconType.PROJECT))
+        return
+
+    indent {
+        row {
+            lateinit var altIconProperty: AtomicProperty<IconType>
+            val configurations = icons.toMutableList()
+            configurations.remove(IconType.PROJECT)
+
+            comboBox(configurations)
+                .label("Alternative:")
+                .bindItem(icon.map { it::altType }.toNullableProperty())
+                .gap(RightGap.SMALL)
+                .onChanged { altIconProperty.set(it.item); }
+                .apply { altIconProperty = AtomicProperty(component.item) }
+
+            contextHelp("This icon will be shown when the project icon is not available.")
+
+            textField()
+                .label("Tooltip:")
+                .bindText(icon.map { it::altTooltip })
+                .maxLength(128)
+                .required()
+                .enabledIf(altIconProperty.transform { it != IconType.HIDDEN })
+        }
+    }.visibleIf(iconProperty.transform { it == IconType.PROJECT })
+}
+
 private fun TabbedBuilder.displayModeTab(
+    mode: KMutableProperty0<DiscordSettings.Mode>,
     displayMode: ActivityDisplayMode,
-    imageSettings: List<ImageSetting>,
-    timestampTargetSettings: List<TimestampTargetSetting>,
-    details: KMutableProperty0<String>,
-    state: KMutableProperty0<String>,
-    largeImage: KMutableProperty0<ImageSetting>,
-    largeImageEnabled: KMutableProperty0<Boolean>,
-    largeImageText: KMutableProperty0<String>,
-    smallImage: KMutableProperty0<ImageSetting>,
-    smallImageEnabled: KMutableProperty0<Boolean>,
-    smallImageText: KMutableProperty0<String>,
-    timestampEnabled: KMutableProperty0<Boolean>,
-    timestampTarget: KMutableProperty0<TimestampTargetSetting>?,
+    icons: List<IconType>,
+    timestampTargets: List<TimestampTargetSetting>,
 ) {
     tab(displayMode.toString()) {
         row("Details:") {
             textField()
+                .bindText(mode.map { it::details })
                 .columns(COLUMNS_LARGE)
-                .bindText(details)
-                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .also { it.component.emptyText.text = "Optional" }
+                .maxLength(128)
+                .optional()
         }
         row("State:") {
             textField()
+                .bindText(mode.map { it::state })
                 .columns(COLUMNS_LARGE)
-                .bindText(state)
-                .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .errorOnApply("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                .also { it.component.emptyText.text = "Optional" }
+                .maxLength(128)
+                .optional()
         }
 
-        // Large image settings
-        lateinit var largeImageCheckBox: Cell<JBCheckBox>
-        row {
-            largeImageCheckBox = checkBox("Show large image")
-                .bindSelected(largeImageEnabled)
-        }
-        indent {
-            row {
-                comboBox(imageSettings)
-                    .label("Icon:")
-                    .bindItem(largeImage.toNullableProperty())
-                textField()
-                    .label("Text:")
-                    .bindText(largeImageText)
-                    .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                    .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-            }
-        }.enabledIf(largeImageCheckBox.selected)
-
-        // Small image settings
-        lateinit var smallImageCheckBox: Cell<JBCheckBox>
-        row {
-            smallImageCheckBox = checkBox("Show small image")
-                .bindSelected(smallImageEnabled)
-        }
-        indent {
-            row {
-                comboBox(imageSettings)
-                    .label("Icon:")
-                    .bindItem(smallImage.toNullableProperty())
-                textField()
-                    .label("Text:")
-                    .bindText(smallImageText)
-                    .errorOnInput("Text cannot be longer than 128 characters") { it.text.isNotEmpty() && it.text.length > 128 }
-                    .errorOnApply("Text cannot be longer than 128 characters") { it.isEnabled && it.text.length > 128 }
-                    .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-            }
-        }.enabledIf(smallImageCheckBox.selected)
+        iconRow("Large icon:", icons, mode.map { it::largeIcon })
+        iconRow("Small icon:", icons, mode.map { it::smallIcon })
 
         row {
             checkBox("Show elapsed time in")
-                .bindSelected(timestampEnabled)
+                .bindSelected(mode.map { it::timestampEnabled })
                 .gap(RightGap.SMALL)
-            val timestampTargetComboBox = comboBox(timestampTargetSettings)
-            if (timestampTarget != null)
-                timestampTargetComboBox.bindItem(timestampTarget.toNullableProperty())
+            comboBox(timestampTargets)
+                .bindItem(mode.map { it::timestampTarget }.toNullableProperty())
         }
 
         row {
@@ -111,7 +125,7 @@ private fun TabbedBuilder.displayModeTab(
 class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
 
     override fun createPanel(): DialogPanel = panel {
-        val state = discordSettingsComponent.state
+        val state = discordSettingsComponent.settings
 
         row {
             checkBox("Try reconnecting on every activity update if not connected")
@@ -138,9 +152,9 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
-                .errorOnInput("Must be a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
-                .errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
-                .errorOnApply("Must be a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
+                .errorOnInput("Not a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+                .errorOnApply("Not a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
+                .required()
         }
 
         row {
@@ -175,69 +189,57 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         group("Display") {
             tabbed {
                 displayModeTab(
+                    mode = state::applicationMode,
                     displayMode = ActivityDisplayMode.APPLICATION,
-                    imageSettings = listOf(ImageSetting.APPLICATION),
-                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION),
-                    details = state::applicationDetails,
-                    state = state::applicationState,
-                    largeImage = state::applicationLargeImage,
-                    largeImageEnabled = state::applicationLargeImageEnabled,
-                    largeImageText = state::applicationLargeImageText,
-                    smallImage = state::applicationSmallImage,
-                    smallImageEnabled = state::applicationSmallImageEnabled,
-                    smallImageText = state::applicationSmallImageText,
-                    timestampEnabled = state::applicationTimestampEnabled,
-                    timestampTarget = null,
+                    icons = listOf(IconType.APPLICATION),
+                    timestampTargets = listOf(TimestampTargetSetting.APPLICATION),
                 )
 
                 displayModeTab(
+                    mode = state::projectMode,
                     displayMode = ActivityDisplayMode.PROJECT,
-                    imageSettings = listOf(ImageSetting.APPLICATION),
-                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT),
-                    details = state::projectDetails,
-                    state = state::projectState,
-                    largeImage = state::projectLargeImage,
-                    largeImageEnabled = state::projectLargeImageEnabled,
-                    largeImageText = state::projectLargeImageText,
-                    smallImage = state::projectSmallImage,
-                    smallImageEnabled = state::projectSmallImageEnabled,
-                    smallImageText = state::projectSmallImageText,
-                    timestampEnabled = state::projectTimestampEnabled,
-                    timestampTarget = state::projectTimestampTarget,
+                    icons = listOf(IconType.APPLICATION, IconType.PROJECT),
+                    timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT),
                 )
 
                 displayModeTab(
+                    mode = state::fileMode,
                     displayMode = ActivityDisplayMode.FILE,
-                    imageSettings = listOf(ImageSetting.APPLICATION, ImageSetting.FILE),
-                    timestampTargetSettings = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
-                    details = state::fileDetails,
-                    state = state::fileState,
-                    largeImage = state::fileLargeImage,
-                    largeImageEnabled = state::fileLargeImageEnabled,
-                    largeImageText = state::fileLargeImageText,
-                    smallImage = state::fileSmallImage,
-                    smallImageEnabled = state::fileSmallImageEnabled,
-                    smallImageText = state::fileSmallImageText,
-                    timestampEnabled = state::fileTimestampEnabled,
-                    timestampTarget = state::fileTimestampTarget,
+                    icons = listOf(IconType.APPLICATION, IconType.PROJECT, IconType.FILE),
+                    timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
                 )
             }
+        }
+
+        row {
+            cell(ActionLink("Reset to defaults") {
+                val result = Messages.showYesNoDialog(
+                    "Are you sure you want to reset all settings to their default values?",
+                    "Reset Settings",
+                    Messages.getQuestionIcon()
+                )
+                if (result != Messages.YES) return@ActionLink
+                discordSettingsComponent.setSettings(DiscordSettings())
+                reset()
+            }.apply {
+                toolTipText = "Reset all settings to their default values"
+            })
         }
     }
 
     override fun apply() {
         val applicationIdBefore =
-            if (discordSettingsComponent.state.customApplicationIdEnabled)
-                discordSettingsComponent.state.customApplicationId
+            if (discordSettingsComponent.settings.customApplicationIdEnabled)
+                discordSettingsComponent.settings.customApplicationId
             else null
-        val showFullApplicationNameBefore = discordSettingsComponent.state.showFullApplicationName
+        val showFullApplicationNameBefore = discordSettingsComponent.settings.showFullApplicationName
 
         if (validateAndApply()) {
             val applicationIdAfter =
-                if (discordSettingsComponent.state.customApplicationIdEnabled)
-                    discordSettingsComponent.state.customApplicationId
+                if (discordSettingsComponent.settings.customApplicationIdEnabled)
+                    discordSettingsComponent.settings.customApplicationId
                 else null
-            val showFullApplicationNameAfter = discordSettingsComponent.state.showFullApplicationName
+            val showFullApplicationNameAfter = discordSettingsComponent.settings.showFullApplicationName
 
             val discordService = DiscordService.getInstance()
 

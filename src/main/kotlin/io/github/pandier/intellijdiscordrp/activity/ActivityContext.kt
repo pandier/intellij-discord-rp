@@ -43,6 +43,7 @@ class ActivityContext(
     val project: WeakReference<Project>,
     val projectName: String,
     val projectRepositoryUrl: String?,
+    val projectRepositoryBranch: String?,
     val projectStart: Instant,
     val file: ActivityFileContext? = null,
 ) {
@@ -55,6 +56,7 @@ class ActivityContext(
             val timeTrackingService = TimeTrackingService.getInstance()
             val appInfo = ApplicationInfo.getInstance()
             val appNames = ApplicationNamesInfo.getInstance()
+            val gitRepo = git?.getRepo(project, file)
             return ActivityContext(
                 appName = appNames.fullProductName,
                 appFullName = appNames.fullProductNameWithEdition,
@@ -62,7 +64,8 @@ class ActivityContext(
                 appStart = timeTrackingService.getOrInit(ApplicationManager.getApplication()),
                 project = WeakReference(project),
                 projectName = project.name,
-                projectRepositoryUrl = git?.getRemote(project, file),
+                projectRepositoryUrl = gitRepo?.remoteUrl,
+                projectRepositoryBranch = gitRepo?.branch,
                 projectStart = timeTrackingService.getOrInit(project),
                 file = file?.let {
                     val problemCount = editor?.let { ProblemCount.get(it, project) } ?: ProblemCount()
@@ -98,7 +101,7 @@ class ActivityContext(
         val projectSettings = project.get()?.discordProjectSettingsComponent?.state
         if (projectSettings == null)
             return null
-        return createActivity(discordSettingsComponent.state, projectSettings)
+        return createActivity(discordSettingsComponent.settings, projectSettings)
     }
 
     /**

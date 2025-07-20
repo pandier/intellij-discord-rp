@@ -1,9 +1,11 @@
 package io.github.pandier.intellijdiscordrp.settings
 
-enum class ImageSetting(
-    private val friendlyName: String
+enum class IconType(
+    private val friendlyName: String,
 ) {
+    HIDDEN("Hidden"),
     APPLICATION("Application"),
+    PROJECT("Project"),
     FILE("File");
 
     override fun toString(): String =

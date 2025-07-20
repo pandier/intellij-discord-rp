@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Ability to set custom project icons (and an alternative if the project icon is not available)
+
+  - The icon for each project can be configured inside the "Discord Rich Presence" -> "Project" settings menu 
+
+- `{project_repo_branch}` variable that shows the name of the project's branch
+- "Reset settings to defaults" button
+
+### Changed
+
+- New settings storage format (now version 2)
+
+  - Settings are migrated automatically to the new version
+
 ## [1.8.0] - 2025-04-29
 
 ### Added
