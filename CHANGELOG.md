@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `{project_repo_branch}` variable that shows the name of the project's branch
+- "Reset settings to defaults" button
+
 ## [1.8.0] - 2025-04-29
 
 ### Added

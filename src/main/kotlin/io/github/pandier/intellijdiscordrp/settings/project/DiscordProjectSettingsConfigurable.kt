@@ -54,6 +54,9 @@ class DiscordProjectSettingsConfigurable(
         row {
             buttonCheckBox = checkBox("Show custom button in project")
                 .bindSelected(state::buttonEnabled)
+                .gap(RightGap.SMALL)
+            contextHelp("There is a client-sided bug in the Discord app that makes buttons in <b>your own</b> Rich Presence invisible. " +
+                    "The only way you can tell is either by joining a voice channel and hovering over the channel name, or asking a friend.")
         }
         indent {
             row {
