@@ -32,3 +32,10 @@ body:
       placeholder: "ex: IntelliJ IDEA Community 2024.1"
     validations:
       required: true
+  - type: input
+    attributes:
+      label: What operating system are you using?
+      description: This does not need to be incredibly specific, just enough to give a general idea.
+      placeholder: "ex: Windows 11"
+    validations:
+      required: true
