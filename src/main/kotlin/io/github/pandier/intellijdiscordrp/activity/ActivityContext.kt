@@ -67,25 +67,25 @@ class ActivityContext(
                 projectRepositoryUrl = gitRepo?.remoteUrl,
                 projectRepositoryBranch = gitRepo?.branch,
                 projectStart = timeTrackingService.getOrInit(project),
-                file = file?.let {
+                file = file?.let { file ->
                     val problemCount = editor?.let { ProblemCount.get(it, project) } ?: ProblemCount()
                     val contentRoot = ReadAction.compute<VirtualFile?, Exception> {
-                        ProjectFileIndex.getInstance(project).getContentRootForFile(it)
+                        ProjectFileIndex.getInstance(project).getContentRootForFile(file)
                     }
-                    val relativePath = contentRoot?.let { i -> VfsUtil.getRelativePath(it, i) } ?: it.name
-                    val activityFileType = it.activityFileType
+                    val relativePath = contentRoot?.let { i -> VfsUtil.getRelativePath(file, i) } ?: file.name
+                    val activityFileType = file.activityFileType
                     ActivityFileContext(
-                        name = activityFileType?.replaceFileName ?: it.name,
+                        name = activityFileType?.replaceFileName ?: file.name,
                         path = activityFileType?.replaceFileName ?: relativePath,
-                        directoryName = it.parent?.name ?: "",
+                        directoryName = file.parent?.name ?: "",
                         type = activityFileType ?: ActivityFileType.OTHER,
-                        typeName = activityFileType?.friendlyName ?: it.fileType.name,
+                        typeName = activityFileType?.friendlyName ?: file.fileType.name,
                         line = editor?.caretModel?.logicalPosition?.line?.plus(1),
                         lineCount = editor?.document?.lineCount?.let { max(it, 1) },
                         column = editor?.caretModel?.logicalPosition?.column?.plus(1),
                         problemCount = problemCount,
-                        length = it.length,
-                        start = timeTrackingService.getOrInit(it),
+                        length = file.length,
+                        start = timeTrackingService.getOrInit(file),
                     )
                 }
             )
@@ -98,9 +98,7 @@ class ActivityContext(
      * Returns null if the reference to the project was already dropped.
      */
     fun createActivity(): Activity? {
-        val projectSettings = project.get()?.discordProjectSettingsComponent?.state
-        if (projectSettings == null)
-            return null
+        val projectSettings = project.get()?.discordProjectSettingsComponent?.state ?: return null
         return createActivity(discordSettingsComponent.settings, projectSettings)
     }
 
