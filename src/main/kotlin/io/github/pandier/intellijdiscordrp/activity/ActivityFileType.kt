@@ -35,7 +35,7 @@ enum class ActivityFileType(
     CARGO(
         friendlyName = "Cargo",
         typeNames = listOf("cargo"),
-        regex = "^Cargo\\.(toml|lock)\$".toRegex(),
+        regex = "^Cargo\\.(toml|lock)$".toRegex(),
         iconFile = "cargo.png",
     ),
     CPP(
@@ -65,7 +65,7 @@ enum class ActivityFileType(
     DOCKERFILE(
         friendlyName = "Dockerfile",
         typeNames = listOf("dockerfile"),
-        regex = "^(.*\\.)?dockerfile\$".toRegex(RegexOption.IGNORE_CASE),
+        regex = "^(.*\\.)?dockerfile$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "docker.png"
     ),
     DOCKERIGNORE(
@@ -181,7 +181,7 @@ enum class ActivityFileType(
     ),
     NUXT_CONFIG(
         friendlyName = "Nuxt config",
-        regex = "^nuxt.config.ts\$".toRegex(RegexOption.IGNORE_CASE),
+        regex = "^nuxt.config.ts$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "nuxtjs.png"
     ),
     PHP(
@@ -276,7 +276,7 @@ enum class ActivityFileType(
     ),
     TYPESCRIPT_CONFIG(
         friendlyName = "TypeScript config",
-        regex = "^tsconfig.json\$".toRegex(RegexOption.IGNORE_CASE),
+        regex = "^tsconfig.json$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "tsconfig.png"
     ),
     VISUAL_BASIC(
