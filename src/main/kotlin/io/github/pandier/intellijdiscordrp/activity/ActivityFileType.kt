@@ -232,6 +232,12 @@ enum class ActivityFileType(
         extensions = hashSetOf("scala", "sc"),
         iconFile = "scala.png"
     ),
+    SHADER(
+        friendlyName = "Shader",
+        typeNames = hashSetOf("glsl", "usf", "ush", "shaderlab"),
+        extensions = hashSetOf("glsl", "usf", "ush", "shader", "slsl", "vert", "frag", "geom", "comp", "tesc", "tese", "hlsl", "fx"),
+        iconFile = "shader.png"
+    ),
     SHELL(
         friendlyName = "Shell script",
         typeNames = hashSetOf("shell script"),
