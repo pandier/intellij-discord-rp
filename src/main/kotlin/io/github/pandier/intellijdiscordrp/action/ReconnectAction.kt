@@ -8,6 +8,7 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.DumbAwareAction
+import io.github.pandier.intellijdiscordrp.DiscordRichPresenceBundle
 import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import kotlinx.coroutines.runBlocking
@@ -25,7 +26,7 @@ class ReconnectAction : DumbAwareAction() {
         if (!mutex.tryLock())
             return
 
-        ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Reconnecting Discord client", false) {
+        ProgressManager.getInstance().run(object : Task.Backgroundable(project, DiscordRichPresenceBundle.message("progress.title.reconnecting"), false) {
             override fun run(indicator: ProgressIndicator) {
                 val discordService = DiscordService.getInstance()
 
@@ -37,14 +38,18 @@ class ReconnectAction : DumbAwareAction() {
                     if (result) {
                         NotificationGroupManager.getInstance()
                             .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
-                            .createNotification("Reconnected with Discord client", "", NotificationType.INFORMATION)
+                            .createNotification(
+                                DiscordRichPresenceBundle.message("notification.title.reconnect"),
+                                DiscordRichPresenceBundle.message("notification.content.reconnect.success"),
+                                NotificationType.INFORMATION
+                            )
                             .notify(project)
                     } else {
                         NotificationGroupManager.getInstance()
                             .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
                             .createNotification(
-                                "Discord reconnect",
-                                "Could not find any Discord client instance",
+                                DiscordRichPresenceBundle.message("notification.title.reconnect"),
+                                DiscordRichPresenceBundle.message("notification.content.reconnect.missingClient"),
                                 NotificationType.WARNING
                             )
                             .notify(project)
@@ -54,8 +59,9 @@ class ReconnectAction : DumbAwareAction() {
                     NotificationGroupManager.getInstance()
                         .getNotificationGroup("io.github.pandier.intellijdiscordrp.notification.Reconnecting")
                         .createNotification(
-                            "Failed to reconnect with Discord client",
-                            ex.message ?: "",
+                            DiscordRichPresenceBundle.message("notification.title.reconnect"),
+                            ex.message?.let { DiscordRichPresenceBundle.message("notification.content.reconnect.failedError", it) }
+                                ?: DiscordRichPresenceBundle.message("notification.content.reconnect.failed"),
                             NotificationType.ERROR
                         )
                         .notify(project)

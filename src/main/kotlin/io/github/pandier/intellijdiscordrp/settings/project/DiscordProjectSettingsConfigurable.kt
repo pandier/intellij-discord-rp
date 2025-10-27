@@ -12,6 +12,7 @@ import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.columns
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.builder.selected
+import io.github.pandier.intellijdiscordrp.DiscordRichPresenceBundle
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
@@ -22,56 +23,55 @@ import io.github.pandier.intellijdiscordrp.settings.ui.validateUrlWithVariables
 
 class DiscordProjectSettingsConfigurable(
     private val project: Project,
-) : DslConfigurable("Project") {
+) : DslConfigurable(DiscordRichPresenceBundle.message("configurable.name.project")) {
 
     override fun createPanel(): DialogPanel = panel {
         val state = project.discordProjectSettingsComponent.state
 
         row {
-            checkBox("Show rich presence in project")
+            checkBox(DiscordRichPresenceBundle.message("settings.project.showRichPresence"))
                 .bindSelected(state::showRichPresence)
         }
 
         row {
             comboBox(listOf("Default", "Application", "Project", "File"))
-                .label("Display mode in project:")
+                .label(DiscordRichPresenceBundle.message("settings.project.displayMode"))
                 .bindItem({ state.displayMode?.toString() ?: "Default" }, { state.displayMode = it?.let(ActivityDisplayMode::byName) })
         }
 
         row {
             textField()
-                .label("Icon:")
+                .label(DiscordRichPresenceBundle.message("settings.project.icon"))
                 .bindText(state::icon)
                 .columns(COLUMNS_LARGE)
                 .validateUrlWithVariables()
                 .maxLength(256)
                 .optional()
                 .gap(RightGap.SMALL)
-            contextHelp("URL that points to the project's icon. To show the icon inside the Rich Presence, use the 'Project' icon type.")
+            contextHelp(DiscordRichPresenceBundle.message("settings.project.icon.context"))
         }
 
         lateinit var buttonCheckBox: Cell<JBCheckBox>
         row {
-            buttonCheckBox = checkBox("Show custom button in project")
+            buttonCheckBox = checkBox(DiscordRichPresenceBundle.message("settings.project.button"))
                 .bindSelected(state::buttonEnabled)
                 .gap(RightGap.SMALL)
-            contextHelp("There is a client-sided bug in the Discord app that makes buttons in <b>your own</b> Rich Presence invisible. " +
-                    "The only way you can tell is either by joining a voice channel and hovering over the channel name, or asking a friend.")
+            contextHelp(DiscordRichPresenceBundle.message("settings.project.button.context"))
         }
         indent {
             row {
                 textField()
-                    .label("Text:")
+                    .label(DiscordRichPresenceBundle.message("settings.project.button.text"))
                     .bindText(state::buttonText)
                     .maxLength(31)
                     .required()
                 textField()
-                    .label("Link:")
+                    .label(DiscordRichPresenceBundle.message("settings.project.button.url"))
                     .bindText(state::buttonUrl)
                     .gap(RightGap.SMALL)
                     .validateUrlWithVariables()
                     .required()
-                contextHelp("You can use variables in the URL field!")
+                contextHelp(DiscordRichPresenceBundle.message("settings.project.button.url.context"))
             }
         }.enabledIf(buttonCheckBox.selected)
     }

@@ -4,6 +4,7 @@ import com.intellij.openapi.util.NlsContexts
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.dsl.builder.Cell
 import com.intellij.ui.dsl.builder.MutableProperty
+import io.github.pandier.intellijdiscordrp.DiscordRichPresenceBundle
 import io.github.pandier.intellijdiscordrp.util.urlRegex
 import javax.swing.JComponent
 import javax.swing.JTextField
@@ -22,17 +23,17 @@ fun <T : JComponent> Cell<T>.errorOnInput(
     validationOnInput { if (condition(it)) error(message) else null }
 
 fun <T : JTextField> Cell<T>.maxLength(max: Int): Cell<T> = this
-    .errorOnInput("Cannot be longer than $max characters") { it.text.isNotEmpty() && it.text.length > max }
-    .errorOnApply("Cannot be longer than $max characters") { it.text.isNotEmpty() && it.text.length > max }
+    .errorOnInput(DiscordRichPresenceBundle.message("dialog.validation.maxLength", max)) { it.text.isNotEmpty() && it.text.length > max }
+    .errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.maxLength", max)) { it.text.isNotEmpty() && it.text.length > max }
 
 fun <T : JTextField> Cell<T>.required(): Cell<T> =
-    errorOnApply("This field is required") { it.isEnabled && it.text.isEmpty() }
+    errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.required")) { it.isEnabled && it.text.isEmpty() }
 
 fun <T : JBTextField> Cell<T>.optional(): Cell<T> =
     also { it.component.emptyText.text = "Optional" }
 
 fun <T : JTextField> Cell<T>.validateUrlWithVariables(): Cell<T> =
-    warnOnApply("Not a valid URL") { it.text.isNotEmpty() && (!it.text.contains('{') || !it.text.contains('}')) && !urlRegex.matches(it.text) }
+    warnOnApply(DiscordRichPresenceBundle.message("dialog.validation.invalidUrl")) { it.text.isNotEmpty() && (!it.text.contains('{') || !it.text.contains('}')) && !urlRegex.matches(it.text) }
 
 fun <T, V> KMutableProperty0<T>.map(mapper: (T) -> KMutableProperty0<V>): MutableProperty<V> =
     MutableProperty({ mapper(get()).get() }, { mapper(get()).set(it) })

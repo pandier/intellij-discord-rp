@@ -27,6 +27,8 @@
     <depends>com.intellij.modules.platform</depends>
     <depends optional="true" config-file="io.github.pandier.intellijdiscordrp-git.xml">Git4Idea</depends>
 
+    <resource-bundle>messages.DiscordRichPresenceBundle</resource-bundle>
+
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="io.github.pandier.intellijdiscordrp.listener.activity.RichPresenceProjectListenerActivity"/>
 
@@ -35,54 +37,45 @@
                 groupId="root"
                 id="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 instance="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
-                displayName="Discord Rich Presence"/>
+                key="configurable.name.discordRichPresence"/>
 
         <projectConfigurable
                 parentId="io.github.pandier.intellijdiscordrp.settings.DiscordSettingsConfigurable"
                 id="io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettingsConfigurable"
                 instance="io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettingsConfigurable"
-                displayName="Project"/>
+                key="configurable.name.project"/>
 
         <notificationGroup id="io.github.pandier.intellijdiscordrp.notification.Reconnecting"
                            displayType="BALLOON"
-                           bundle="messages.DiscordRichPresence"
                            key="notification.group.reconnecting"/>
     </extensions>
 
     <actions>
         <group id="io.github.pandier.intellijdiscordrp.action.DiscordActionGroup"
-               text="Discord Rich Presence"
                icon="/icons/pluginActionGroup.svg"
                popup="true">
             <add-to-group group-id="ToolsMenu"/>
             <action id="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
-                    class="io.github.pandier.intellijdiscordrp.action.ReconnectAction"
-                    text="Reconnect Discord Client">
+                    class="io.github.pandier.intellijdiscordrp.action.ReconnectAction">
             </action>
             <separator />
             <group id="io.github.pandier.intellijdiscordrp.action.DiscordChangeDisplayModeActionGroup"
-                   text="Project Display Mode"
                    popup="true">
                 <action id="io.github.pandier.intellijdiscordrp.action.DefaultDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.DefaultDisplayModeAction"
-                        text="Default">
+                        class="io.github.pandier.intellijdiscordrp.action.DefaultDisplayModeAction">
                 </action>
                 <action id="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
-                        text="Application">
+                        class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction">
                 </action>
                 <action id="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
-                        text="Project">
+                        class="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction">
                 </action>
                 <action id="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
-                        text="File">
+                        class="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction">
                 </action>
             </group>
             <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
-                    class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
-                    text="Show Rich Presence in Project">
+                    class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction">
             </action>
         </group>
     </actions>

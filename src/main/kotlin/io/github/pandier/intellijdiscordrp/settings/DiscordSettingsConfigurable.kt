@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.ActionLink
 import com.intellij.ui.dsl.builder.*
+import io.github.pandier.intellijdiscordrp.DiscordRichPresenceBundle
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.service.DiscordService
@@ -40,7 +41,7 @@ private fun Panel.iconRow(
             .apply { iconProperty = AtomicProperty(component.item) }
 
         textField()
-            .label("Tooltip:")
+            .label(DiscordRichPresenceBundle.message("settings.display.icon.tooltip"))
             .bindText(icon.map { it::tooltip })
             .maxLength(128)
             .required()
@@ -57,16 +58,16 @@ private fun Panel.iconRow(
             configurations.remove(IconType.PROJECT)
 
             comboBox(configurations)
-                .label("Alternative:")
+                .label(DiscordRichPresenceBundle.message("settings.display.icon.alternative"))
                 .bindItem(icon.map { it::altType }.toNullableProperty())
                 .gap(RightGap.SMALL)
                 .onChanged { altIconProperty.set(it.item); }
                 .apply { altIconProperty = AtomicProperty(component.item) }
 
-            contextHelp("This icon will be shown when the project icon is not available.")
+            contextHelp(DiscordRichPresenceBundle.message("settings.display.icon.alternative.context"))
 
             textField()
-                .label("Tooltip:")
+                .label(DiscordRichPresenceBundle.message("settings.display.icon.tooltip"))
                 .bindText(icon.map { it::altTooltip })
                 .maxLength(128)
                 .required()
@@ -82,14 +83,14 @@ private fun TabbedBuilder.displayModeTab(
     timestampTargets: List<TimestampTargetSetting>,
 ) {
     tab(displayMode.toString()) {
-        row("Details:") {
+        row(DiscordRichPresenceBundle.message("settings.display.details")) {
             textField()
                 .bindText(mode.map { it::details })
                 .columns(COLUMNS_LARGE)
                 .maxLength(128)
                 .optional()
         }
-        row("State:") {
+        row(DiscordRichPresenceBundle.message("settings.display.state")) {
             textField()
                 .bindText(mode.map { it::state })
                 .columns(COLUMNS_LARGE)
@@ -97,11 +98,11 @@ private fun TabbedBuilder.displayModeTab(
                 .optional()
         }
 
-        iconRow("Large icon:", icons, mode.map { it::largeIcon })
-        iconRow("Small icon:", icons, mode.map { it::smallIcon })
+        iconRow(DiscordRichPresenceBundle.message("settings.display.largeIcon"), icons, mode.map { it::largeIcon })
+        iconRow(DiscordRichPresenceBundle.message("settings.display.smallIcon"), icons, mode.map { it::smallIcon })
 
         row {
-            checkBox("Show elapsed time in")
+            checkBox(DiscordRichPresenceBundle.message("settings.display.elapsedTime"))
                 .bindSelected(mode.map { it::timestampEnabled })
                 .gap(RightGap.SMALL)
             comboBox(timestampTargets)
@@ -122,43 +123,42 @@ private fun TabbedBuilder.displayModeTab(
     }
 }
 
-class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
+class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.message("configurable.name.discordRichPresence")) {
 
     override fun createPanel(): DialogPanel = panel {
         val state = discordSettingsComponent.settings
 
         row {
-            checkBox("Try reconnecting on every activity update if not connected")
+            checkBox(DiscordRichPresenceBundle.message("settings.reconnectOnUpdate"))
                 .bindSelected(state::reconnectOnUpdate)
                 .gap(RightGap.SMALL)
-            contextHelp("Reconnection process runs in the background and in most cases shouldn't affect performance.")
+            contextHelp(DiscordRichPresenceBundle.message("settings.reconnectOnUpdate.context"))
         }
 
         // Show full application name option only when available
         if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
             row {
-                checkBox("Show full application name with edition in title")
+                checkBox(DiscordRichPresenceBundle.message("settings.showFullApplicationName"))
                     .bindSelected(state::showFullApplicationName)
                     .gap(RightGap.SMALL)
-                contextHelp("Title is located in the Rich Presence at the top or in your Discord status. " +
-                        "Use a custom Discord application id if you want to fully adjust the title.")
+                contextHelp(DiscordRichPresenceBundle.message("settings.showFullApplicationName.context"))
             }
         }
 
         row {
-            val customApplicationIdCheckBox = checkBox("Custom Discord application id:")
+            val customApplicationIdCheckBox = checkBox(DiscordRichPresenceBundle.message("settings.customApplicationId"))
                 .bindSelected(state::customApplicationIdEnabled)
                 .gap(RightGap.SMALL)
             textField()
                 .bindText(state::customApplicationId)
                 .enabledIf(customApplicationIdCheckBox.selected)
-                .errorOnInput("Not a valid id") { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
-                .errorOnApply("Not a valid id") { it.isEnabled && it.text.toULongOrNull() == null }
+                .errorOnInput(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+                .errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.isEnabled && it.text.toULongOrNull() == null }
                 .required()
         }
 
         row {
-            val idleTimeoutEnabled = checkBox("Hide Rich Presence when IDE is out of focus for")
+            val idleTimeoutEnabled = checkBox(DiscordRichPresenceBundle.message("settings.focusTimeout"))
                 .bindSelected(state::focusTimeoutEnabled)
                 .gap(RightGap.SMALL)
             intTextField(0..Int.MAX_VALUE)
@@ -167,26 +167,26 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
                 .gap(RightGap.SMALL)
                 .enabledIf(idleTimeoutEnabled.selected)
             @Suppress("DialogTitleCapitalization")
-            label("minutes")
+            label(DiscordRichPresenceBundle.message("settings.focusTimeout.minutes"))
         }
 
         row {
-            label("IDE logo style:")
+            label(DiscordRichPresenceBundle.message("settings.logoStyle"))
                 .gap(RightGap.SMALL)
             comboBox(LogoStyleSetting.values().toList())
                 .bindItem(state::logoStyle.toNullableProperty())
                 .gap(RightGap.SMALL)
-            contextHelp("Recently JetBrains has redesigned their IDE logos. You can switch between the old (classic) design and the new (modern) one.")
+            contextHelp(DiscordRichPresenceBundle.message("settings.logoStyle.context"))
         }
 
         row {
-            label("Default display mode:")
+            label(DiscordRichPresenceBundle.message("settings.defaultDisplayMode"))
                 .gap(RightGap.SMALL)
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
         }
 
-        group("Display") {
+        group(DiscordRichPresenceBundle.message("settings.group.display")) {
             tabbed {
                 displayModeTab(
                     mode = state::applicationMode,
@@ -212,17 +212,17 @@ class DiscordSettingsConfigurable : DslConfigurable("Discord Rich Presence") {
         }
 
         row {
-            cell(ActionLink("Reset to defaults") {
+            cell(ActionLink(DiscordRichPresenceBundle.message("settings.reset")) {
                 val result = Messages.showYesNoDialog(
-                    "Are you sure you want to reset all settings to their default values?",
-                    "Reset Settings",
+                    DiscordRichPresenceBundle.message("dialog.resetSettings.content"),
+                    DiscordRichPresenceBundle.message("dialog.resetSettings.title"),
                     Messages.getQuestionIcon()
                 )
                 if (result != Messages.YES) return@ActionLink
                 discordSettingsComponent.setSettings(DiscordSettings())
                 reset()
             }.apply {
-                toolTipText = "Reset all settings to their default values"
+                toolTipText = DiscordRichPresenceBundle.message("settings.reset.tooltip")
             })
         }
     }
