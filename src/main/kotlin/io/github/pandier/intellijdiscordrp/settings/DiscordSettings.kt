@@ -29,7 +29,7 @@ data class DiscordSettings(
             type = IconType.APPLICATION,
             tooltip = "{app_name}",
         ),
-        timestampTarget = TimestampTargetSetting.FILE,
+        timestampTarget = TimestampTargetSetting.PROJECT,
     ),
 ) {
     data class Mode(
