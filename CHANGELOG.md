@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2025-10-27
+
 ### Added
 
 - Icon for shader file types
@@ -273,7 +275,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.8.0...v1.9.0
 [1.8.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.4...v1.8.0
 [1.7.4]: https://github.com/pandier/intellij-discord-rp/compare/v1.7.3...v1.7.4
