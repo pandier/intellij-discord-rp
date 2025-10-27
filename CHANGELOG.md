@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Icon for shader file types
+- Icons for Unreal Engine project and plugin file types
 
 ## [1.9.0] - 2025-07-20
 

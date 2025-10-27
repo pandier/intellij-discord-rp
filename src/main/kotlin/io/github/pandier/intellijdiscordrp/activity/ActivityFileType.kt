@@ -279,6 +279,18 @@ enum class ActivityFileType(
         regex = "^tsconfig.json$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "tsconfig.png"
     ),
+    UNREAL_ENGINE_PLUGIN(
+        friendlyName = "Unreal Engine plugin",
+        typeNames = listOf("uplugin"),
+        extensions = listOf("uplugin"),
+        iconFile = "unrealengine.png"
+    ),
+    UNREAL_ENGINE_PROJECT(
+        friendlyName = "Unreal Engine project",
+        typeNames = listOf("uproject"),
+        extensions = listOf("uproject"),
+        iconFile = "unrealengine.png"
+    ),
     VISUAL_BASIC(
         friendlyName = "Visual Basic",
         typeNames = listOf("visual basic"),
