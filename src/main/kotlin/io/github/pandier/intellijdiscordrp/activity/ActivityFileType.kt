@@ -5,9 +5,9 @@ import io.github.pandier.intellijdiscordrp.activity.icon.FILE_ICON_REPOSITORY
 
 enum class ActivityFileType(
     val friendlyName: String,
-    val typeNames: Set<String> = hashSetOf(),
+    val typeNames: List<String> = listOf(),
     val regex: Regex? = null,
-    val extensions: Set<String> = hashSetOf(),
+    val extensions: List<String> = listOf(),
     val replaceFileName: String? = null,
     iconFile: String = "fallback.png",
 ) {
@@ -16,62 +16,62 @@ enum class ActivityFileType(
      */
     ASTRO(
         friendlyName = "Astro",
-        typeNames = hashSetOf("astro"),
-        extensions = hashSetOf("astro"),
+        typeNames = listOf("astro"),
+        extensions = listOf("astro"),
         iconFile = "astro.png",
     ),
     BATCH(
         friendlyName = "Batch",
-        typeNames = hashSetOf("batch"),
-        extensions = hashSetOf("bat", "cmd"),
+        typeNames = listOf("batch"),
+        extensions = listOf("bat", "cmd"),
         iconFile = "batch.png",
     ),
     C(
         friendlyName = "C",
-        typeNames = hashSetOf("c"),
-        extensions = hashSetOf("c"),
+        typeNames = listOf("c"),
+        extensions = listOf("c"),
         iconFile = "c.png"
     ),
     CARGO(
         friendlyName = "Cargo",
-        typeNames = hashSetOf("cargo"),
+        typeNames = listOf("cargo"),
         regex = "^Cargo\\.(toml|lock)\$".toRegex(),
         iconFile = "cargo.png",
     ),
     CPP(
         friendlyName = "C++",
-        typeNames = hashSetOf("c++"),
-        extensions = hashSetOf("cpp", "h", "hpp", "tcc"),
+        typeNames = listOf("c++"),
+        extensions = listOf("cpp", "h", "hpp", "tcc"),
         iconFile = "cpp.png"
     ),
     CSHARP(
         friendlyName = "C#",
-        typeNames = hashSetOf("c#"),
-        extensions = hashSetOf("cs"),
+        typeNames = listOf("c#"),
+        extensions = listOf("cs"),
         iconFile = "csharp.png"
     ),
     CSS(
         friendlyName = "CSS",
-        typeNames = hashSetOf("css"),
-        extensions = hashSetOf("css"),
+        typeNames = listOf("css"),
+        extensions = listOf("css"),
         iconFile = "css.png"
     ),
     DART(
         friendlyName = "Dart",
-        typeNames = hashSetOf("dart"),
-        extensions = hashSetOf("dart"),
+        typeNames = listOf("dart"),
+        extensions = listOf("dart"),
         iconFile = "dart.png"
     ),
     DOCKERFILE(
         friendlyName = "Dockerfile",
-        typeNames = hashSetOf("dockerfile"),
+        typeNames = listOf("dockerfile"),
         regex = "^(.*\\.)?dockerfile\$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "docker.png"
     ),
     DOCKERIGNORE(
         friendlyName = "Dockerignore",
-        typeNames = hashSetOf("dockerignore file"),
-        extensions = hashSetOf("dockerignore"),
+        typeNames = listOf("dockerignore file"),
+        extensions = listOf("dockerignore"),
         iconFile = "docker.png",
     ),
     ENV(
@@ -81,86 +81,86 @@ enum class ActivityFileType(
     ),
     FSHARP(
         friendlyName = "F#",
-        typeNames = hashSetOf("f#"),
-        extensions = hashSetOf("fs"),
+        typeNames = listOf("f#"),
+        extensions = listOf("fs"),
         iconFile = "fsharp.png"
     ),
     GITDIFF(
         friendlyName = "Gitdiff",
-        typeNames = hashSetOf("diff"),
+        typeNames = listOf("diff"),
         replaceFileName = "diff",
         iconFile = "git.png",
     ),
     GITIGNORE(
         friendlyName = "Gitignore",
-        typeNames = hashSetOf("gitignore file"),
-        extensions = hashSetOf("gitignore"),
+        typeNames = listOf("gitignore file"),
+        extensions = listOf("gitignore"),
         iconFile = "git.png",
     ),
     GO(
         friendlyName = "Go",
-        typeNames = hashSetOf("go"),
-        extensions = hashSetOf("go"),
+        typeNames = listOf("go"),
+        extensions = listOf("go"),
         iconFile = "go.png"
     ),
     GRADLE(
         friendlyName = "Gradle",
-        typeNames = hashSetOf("gradle"),
-        extensions = hashSetOf("gradle"),
+        typeNames = listOf("gradle"),
+        extensions = listOf("gradle"),
         iconFile = "gradle.png"
     ),
     GROOVY(
         friendlyName = "Groovy",
-        typeNames = hashSetOf("groovy"),
-        extensions = hashSetOf("groovy", "gy"),
+        typeNames = listOf("groovy"),
+        extensions = listOf("groovy", "gy"),
         iconFile = "groovy.png"
     ),
     HTML(
         friendlyName = "HTML",
-        typeNames = hashSetOf("html"),
-        extensions = hashSetOf("htm", "html", "xhtm", "xhtml"),
+        typeNames = listOf("html"),
+        extensions = listOf("htm", "html", "xhtm", "xhtml"),
         iconFile = "html.png"
     ),
     HTTP(
         friendlyName = "HTTP requests",
-        typeNames = hashSetOf("http requests"),
-        extensions = hashSetOf("http", "rest"),
+        typeNames = listOf("http requests"),
+        extensions = listOf("http", "rest"),
         iconFile = "http.png"
     ),
     IMAGE(
         friendlyName = "Image",
-        typeNames = hashSetOf("image"),
-        extensions = hashSetOf("png", "gif", "jpg", "jpeg", "svg", "webp", "tif", "tiff", "ico"),
+        typeNames = listOf("image"),
+        extensions = listOf("png", "gif", "jpg", "jpeg", "svg", "webp", "tif", "tiff", "ico"),
         iconFile = "image.png"
     ),
     JAVA(
         friendlyName = "Java",
-        typeNames = hashSetOf("java"),
-        extensions = hashSetOf("java"),
+        typeNames = listOf("java"),
+        extensions = listOf("java"),
         iconFile = "java.png"
     ),
     JAVASCRIPT(
         friendlyName = "JavaScript",
-        typeNames = hashSetOf("javascript"),
-        extensions = hashSetOf("js", "mjs"),
+        typeNames = listOf("javascript"),
+        extensions = listOf("js", "mjs"),
         iconFile = "javascript.png"
     ),
     JSON(
         friendlyName = "JSON",
-        typeNames = hashSetOf("json"),
-        extensions = hashSetOf("json", "jsonc"),
+        typeNames = listOf("json"),
+        extensions = listOf("json", "jsonc"),
         iconFile = "json.png"
     ),
     JSX(
         friendlyName = "JSX",
-        typeNames = hashSetOf("jsx"),
-        extensions = hashSetOf("jsx"),
+        typeNames = listOf("jsx"),
+        extensions = listOf("jsx"),
         iconFile = "jsx.png"
     ),
     KOTLIN(
         friendlyName = "Kotlin",
-        typeNames = hashSetOf("kotlin"),
-        extensions = hashSetOf("kt", "kts"),
+        typeNames = listOf("kotlin"),
+        extensions = listOf("kt", "kts"),
         iconFile = "kotlin.png"
     ),
     LICENSE(
@@ -170,8 +170,8 @@ enum class ActivityFileType(
     ),
     MARKDOWN(
         friendlyName = "Markdown",
-        typeNames = hashSetOf("markdown"),
-        extensions = hashSetOf("md", "mdx"),
+        typeNames = listOf("markdown"),
+        extensions = listOf("md", "mdx"),
         iconFile = "markdown.png"
     ),
     NPM_PACKAGE(
@@ -186,92 +186,92 @@ enum class ActivityFileType(
     ),
     PHP(
         friendlyName = "PHP",
-        typeNames = hashSetOf("php"),
-        extensions = hashSetOf("php"),
+        typeNames = listOf("php"),
+        extensions = listOf("php"),
         iconFile = "php.png"
     ),
     PRISMA(
         friendlyName = "Prisma",
-        typeNames = hashSetOf("prisma"),
-        extensions = hashSetOf("prisma"),
+        typeNames = listOf("prisma"),
+        extensions = listOf("prisma"),
         iconFile = "prisma.png"
     ),
     PROTOBUF(
         friendlyName = "Protocol Buffer",
-        typeNames = hashSetOf("protobuf"),
-        extensions = hashSetOf("proto"),
+        typeNames = listOf("protobuf"),
+        extensions = listOf("proto"),
         iconFile = "protobuf.png"
     ),
     PYTHON(
         friendlyName = "Python",
-        typeNames = hashSetOf("python"),
-        extensions = hashSetOf("py"),
+        typeNames = listOf("python"),
+        extensions = listOf("py"),
         iconFile = "python.png"
     ),
     RUBY(
         friendlyName = "Ruby",
-        typeNames = hashSetOf("ruby"),
-        extensions = hashSetOf("rb"),
+        typeNames = listOf("ruby"),
+        extensions = listOf("rb"),
         iconFile = "ruby.png"
     ),
     RUST(
         friendlyName = "Rust",
-        typeNames = hashSetOf("rust"),
-        extensions = hashSetOf("rs"),
+        typeNames = listOf("rust"),
+        extensions = listOf("rs"),
         iconFile = "rust.png"
     ),
     SASS(
         friendlyName = "Sass",
-        typeNames = hashSetOf("sass style sheet"),
-        extensions = hashSetOf("sass", "scss"),
+        typeNames = listOf("sass style sheet"),
+        extensions = listOf("sass", "scss"),
         iconFile = "sass.png"
     ),
     SCALA(
         friendlyName = "Scala",
-        typeNames = hashSetOf("scala files"),
-        extensions = hashSetOf("scala", "sc"),
+        typeNames = listOf("scala files"),
+        extensions = listOf("scala", "sc"),
         iconFile = "scala.png"
     ),
     SHADER(
         friendlyName = "Shader",
-        typeNames = hashSetOf("glsl", "usf", "ush", "shaderlab"),
-        extensions = hashSetOf("glsl", "usf", "ush", "shader", "slsl", "vert", "frag", "geom", "comp", "tesc", "tese", "hlsl", "fx"),
+        typeNames = listOf("glsl", "usf", "ush", "shaderlab"),
+        extensions = listOf("glsl", "usf", "ush", "shader", "slsl", "vert", "frag", "geom", "comp", "tesc", "tese", "hlsl", "fx"),
         iconFile = "shader.png"
     ),
     SHELL(
         friendlyName = "Shell script",
-        typeNames = hashSetOf("shell script"),
-        extensions = hashSetOf("sh", "bash"),
+        typeNames = listOf("shell script"),
+        extensions = listOf("sh", "bash"),
         iconFile = "shell.png"
     ),
     SQL(
         friendlyName = "SQL",
-        typeNames = hashSetOf("sql"),
-        extensions = hashSetOf("sql"),
+        typeNames = listOf("sql"),
+        extensions = listOf("sql"),
         iconFile = "sql.png"
     ),
     SVELTE(
         friendlyName = "Svelte",
-        typeNames = hashSetOf("svelte"),
-        extensions = hashSetOf("svelte"),
+        typeNames = listOf("svelte"),
+        extensions = listOf("svelte"),
         iconFile = "svelte.png"
     ),
     TOML(
         friendlyName = "TOML",
-        typeNames = hashSetOf("toml"),
-        extensions = hashSetOf("toml"),
+        typeNames = listOf("toml"),
+        extensions = listOf("toml"),
         iconFile = "toml.png"
     ),
     TSX(
         friendlyName = "TSX",
-        typeNames = hashSetOf("tsx"),
-        extensions = hashSetOf("tsx"),
+        typeNames = listOf("tsx"),
+        extensions = listOf("tsx"),
         iconFile = "tsx.png"
     ),
     TYPESCRIPT(
         friendlyName = "TypeScript",
-        typeNames = hashSetOf("typescript"),
-        extensions = hashSetOf("ts"),
+        typeNames = listOf("typescript"),
+        extensions = listOf("ts"),
         iconFile = "typescript.png"
     ),
     TYPESCRIPT_CONFIG(
@@ -281,44 +281,44 @@ enum class ActivityFileType(
     ),
     VISUAL_BASIC(
         friendlyName = "Visual Basic",
-        typeNames = hashSetOf("visual basic"),
-        extensions = hashSetOf("vb"),
+        typeNames = listOf("visual basic"),
+        extensions = listOf("vb"),
         iconFile = "visualbasic.png"
     ),
     VUEJS(
         friendlyName = "Vue.js",
-        typeNames = hashSetOf("vuejs"),
-        extensions = hashSetOf("vue"),
+        typeNames = listOf("vuejs"),
+        extensions = listOf("vue"),
         iconFile = "vuejs.png"
     ),
     WRITERSIDE_TOPIC(
         friendlyName = "Writerside Topic",
-        typeNames = hashSetOf("writerside topic"),
-        extensions = hashSetOf("topic"),
+        typeNames = listOf("writerside topic"),
+        extensions = listOf("topic"),
         iconFile = "writersidetopic.png"
     ),
     WRITERSIDE_INSTANCE(
         friendlyName = "Writerside Instance",
-        typeNames = hashSetOf("writerside instance"),
-        extensions = hashSetOf("tree"),
+        typeNames = listOf("writerside instance"),
+        extensions = listOf("tree"),
         iconFile = "xml.png"
     ),
     WRITERSIDE_LIST(
         friendlyName = "Writerside List",
-        typeNames = hashSetOf("writerside list"),
-        extensions = hashSetOf("list"),
+        typeNames = listOf("writerside list"),
+        extensions = listOf("list"),
         iconFile = "xml.png"
     ),
     XML(
         friendlyName = "XML",
-        typeNames = hashSetOf("xml"),
-        extensions = hashSetOf("xml"),
+        typeNames = listOf("xml"),
+        extensions = listOf("xml"),
         iconFile = "xml.png"
     ),
     YAML(
         friendlyName = "YAML",
-        typeNames = hashSetOf("yaml"),
-        extensions = hashSetOf("yml", "yaml"),
+        typeNames = listOf("yaml"),
+        extensions = listOf("yml", "yaml"),
         iconFile = "yaml.png"
     ),
 
@@ -327,7 +327,7 @@ enum class ActivityFileType(
      */
     DATABASE_VIEWER(
         friendlyName = "Database Viewer",
-        typeNames = hashSetOf("database element"),
+        typeNames = listOf("database element"),
         iconFile = "tool/databaseviewer.png",
     ),
 
