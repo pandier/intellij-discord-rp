@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Icon for Jupyter Notebook
 - Icon for CSV, TSV
 
+### Changed
+
+- Icons now have rounded corners
+- Icons are now 256x256 instead of 512x512
+
 ## [1.9.1] - 2025-10-27
 
 ### Added
