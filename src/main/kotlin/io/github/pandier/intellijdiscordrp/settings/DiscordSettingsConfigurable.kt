@@ -246,7 +246,7 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
             // Reconnect if custom application id or show full application has been modified
             // because these changes require it
             if (applicationIdBefore != applicationIdAfter || showFullApplicationNameBefore != showFullApplicationNameAfter) {
-                discordService.reconnectBackground()
+                discordService.client.reconnect()
             } else {
                 discordService.updateBackground()
             }

@@ -2,13 +2,14 @@ import org.jetbrains.changelog.Changelog
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.23"
+    id("org.jetbrains.kotlin.jvm") version "2.2.21"
     id("org.jetbrains.intellij.platform") version "2.0.1"
     id("org.jetbrains.changelog") version "2.2.0"
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
 
     intellijPlatform {
         defaultRepositories()
@@ -26,7 +27,7 @@ dependencies {
         instrumentationTools()
     }
 
-    implementation("io.github.vyfor:kpresence:0.6.5") {
+    implementation("io.github.pandier:kpresence:0.6.6") {
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
 }

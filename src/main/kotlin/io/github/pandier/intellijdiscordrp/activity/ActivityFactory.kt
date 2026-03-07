@@ -1,12 +1,11 @@
 package io.github.pandier.intellijdiscordrp.activity
 
+import io.github.pandier.kpresence.activity.Activity
 import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
 import io.github.pandier.intellijdiscordrp.settings.IconType
 import io.github.pandier.intellijdiscordrp.settings.LogoStyleSetting
 import io.github.pandier.intellijdiscordrp.settings.TimestampTargetSetting
 import io.github.pandier.intellijdiscordrp.util.urlRegex
-import io.github.vyfor.kpresence.rpc.Activity
-import io.github.vyfor.kpresence.rpc.activity
 import java.time.Instant
 
 private fun TimestampTargetSetting.getStart(context: ActivityContext): Instant = when (this) {
@@ -40,7 +39,7 @@ class ActivityFactory(
         else -> null
     }
 
-    fun create(context: ActivityContext): Activity = activity {
+    fun create(context: ActivityContext): Activity = Activity {
         details = modeSettings.details.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
         state = modeSettings.state.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
 

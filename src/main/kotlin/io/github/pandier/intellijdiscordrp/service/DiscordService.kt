@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import io.github.pandier.intellijdiscordrp.DiscordRichPresencePlugin
+import io.github.pandier.kpresence.KPresenceClient
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceCaretListener
@@ -16,47 +16,27 @@ import io.github.pandier.intellijdiscordrp.listener.RichPresenceDocumentListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
 import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.util.KPresenceLoggerAdapter
-import io.github.pandier.intellijdiscordrp.util.MergingRunner
-import io.github.vyfor.kpresence.RichClient
-import io.github.vyfor.kpresence.exception.NotConnectedException
-import io.github.vyfor.kpresence.exception.PipeNotFoundException
-import io.github.vyfor.kpresence.rpc.Activity
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-private fun connect(): RichClient {
+private fun clientId(): Long {
     val settings = discordSettingsComponent.settings
-    val applicationId = if (settings.customApplicationIdEnabled) {
+    return if (settings.customApplicationIdEnabled) {
         settings.customApplicationId.toULong().toLong()
+    } else if (settings.showFullApplicationName) {
+        currentActivityApplicationType.fullNameDiscordApplicationId ?: currentActivityApplicationType.discordApplicationId
     } else {
-        if (settings.showFullApplicationName) {
-            currentActivityApplicationType.fullNameDiscordApplicationId ?: currentActivityApplicationType.discordApplicationId
-        } else {
-            currentActivityApplicationType.discordApplicationId
-        }
-    }
-
-    return RichClient(applicationId).apply {
-        logger = KPresenceLoggerAdapter
-        configurePaths {
-            if (!System.getProperty("os.name").lowercase().startsWith("windows")) {
-                // Add Vesktop Flatpak runtime path when on UN*X systems
-                System.getenv("XDG_RUNTIME_DIR")?.let {
-                    add("$it/.flatpak/dev.vencord.Vesktop/xdg-run")
-                }
-            }
-        }
-        connect()
+        currentActivityApplicationType.discordApplicationId
     }
 }
 
 /**
  * A service that handles a connection with the Discord client and manages Rich Presence activities.
  */
+@Suppress("DeferredResultUnused")
 @Service
 class DiscordService(
     val scope: CoroutineScope,
@@ -74,17 +54,22 @@ class DiscordService(
     /**
      * A connection with the Discord client.
      */
-    private var connection: RichClient? = null
+    val client: KPresenceClient = KPresenceClient(clientId()) {
+        parentScope = scope
+        logger = KPresenceLoggerAdapter
+
+        unixPaths {
+            // Add Vesktop Flatpak runtime path when on UNIX systems
+            System.getenv("XDG_RUNTIME_DIR")?.let {
+                add("$it/.flatpak/dev.vencord.Vesktop/xdg-run")
+            }
+        }
+    }
 
     /**
      * The latest [ActivityContext] that was changed.
      */
     private var activityContext: ActivityContext? = null
-
-    /**
-     * A [MergingRunner] for the [reconnect] function.
-     */
-    private val reconnectRunner = MergingRunner<Boolean>()
 
     init {
         // Register focus change listener
@@ -95,55 +80,10 @@ class DiscordService(
         eventMulticasterEx?.addCaretListener(RichPresenceCaretListener, this)
 
         // Connect to Discord client
-        reconnectBackground()
+        client.connect()
 
         // Initialize the idle timeout service
         FocusTimeoutService.getInstance()
-    }
-
-    /**
-     * Executes the reconnection process in the current coroutine or merges into an existing process.
-     * The reconnection process consists of closing the connection and starting a new one.
-     * It's executed using [MergingRunner].
-     *
-     * When [silent] is true, only logs related to state change will be logged.
-     */
-    suspend fun reconnect(silent: Boolean = false): Deferred<Boolean> = reconnectRunner.run {
-        try {
-            mutex.withLock {
-                connection?.shutdown()
-                connection = null
-            }
-
-            val newConnection = connect()
-            mutex.withLock {
-                connection = newConnection
-                sendActivityInternal(activityContext?.createActivity())
-            }
-
-            DiscordRichPresencePlugin.logger.info("Connected to Discord client")
-            true
-        } catch (ex: PipeNotFoundException) {
-            if (!silent)
-                DiscordRichPresencePlugin.logger.info("Could not find any Discord client instance")
-            false
-        } catch (ex: Exception) {
-            if (!silent)
-                DiscordRichPresencePlugin.logger.error("Failed to connect", ex)
-            throw ex
-        }
-    }
-
-    /**
-     * Executes the reconnection process on the background or merges into an existing one.
-     *
-     * @see reconnect
-     */
-    fun reconnectBackground(silent: Boolean = false) {
-        scope.launch(Dispatchers.IO) {
-            @Suppress("DeferredResultUnused")
-            reconnect(silent)
-        }
     }
 
     /**
@@ -237,16 +177,12 @@ class DiscordService(
      * a reconnect process is launched.
      */
     suspend fun modifyActivity(block: suspend (ActivityContext?) -> ActivityContext?) {
-        val success = mutex.withLock {
+        mutex.withLock {
             val newActivityContext = block(activityContext)
             if (newActivityContext == activityContext)
                 return@withLock true
             activityContext = newActivityContext
-            sendActivityInternal(activityContext?.createActivity())
-        }
-
-        if (!success && discordSettingsComponent.settings.reconnectOnUpdate) {
-            reconnectBackground(true)
+            client.update(activityContext?.createActivity())
         }
     }
 
@@ -265,8 +201,8 @@ class DiscordService(
      * Updates the activity.
      */
     suspend fun update() {
-        mutex.withLock {
-            sendActivityInternal(activityContext?.createActivity())
+        mutex.withLock<Unit> {
+            client.update(activityContext?.createActivity())
         }
     }
 
@@ -276,26 +212,11 @@ class DiscordService(
      *
      * The activity can be shown again by calling [update].
      */
-    suspend fun hide() {
-        mutex.withLock {
-            sendActivityInternal(null)
-        }
-    }
-
-    private fun sendActivityInternal(activity: Activity?): Boolean {
-        return try {
-            connection?.update(activity) != null
-        } catch (ex: NotConnectedException) {
-            connection = null
-            false
-        } catch (ex: Exception) {
-            DiscordRichPresencePlugin.logger.info("An error ocurred while sending activity", ex)
-            connection = null
-            false
-        }
+    fun hide() {
+        client.update(null)
     }
 
     override fun dispose() {
-        connection?.shutdown()
+        client.close()
     }
 }
