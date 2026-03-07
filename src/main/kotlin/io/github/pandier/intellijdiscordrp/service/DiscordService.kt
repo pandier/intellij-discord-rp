@@ -10,28 +10,15 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import io.github.pandier.kpresence.KPresenceClient
 import io.github.pandier.intellijdiscordrp.activity.ActivityContext
-import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceCaretListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceDocumentListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
-import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.util.KPresenceLoggerAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-
-private fun clientId(): Long {
-    val settings = discordSettingsComponent.settings
-    return if (settings.customApplicationIdEnabled) {
-        settings.customApplicationId.toULong().toLong()
-    } else if (settings.showFullApplicationName) {
-        currentActivityApplicationType.fullNameDiscordApplicationId ?: currentActivityApplicationType.discordApplicationId
-    } else {
-        currentActivityApplicationType.discordApplicationId
-    }
-}
 
 /**
  * A service that handles a connection with the Discord client and manages Rich Presence activities.
@@ -54,7 +41,7 @@ class DiscordService(
     /**
      * A connection with the Discord client.
      */
-    val client: KPresenceClient = KPresenceClient(clientId()) {
+    val client: KPresenceClient = KPresenceClient(1107202385799041054L) {
         parentScope = scope
         logger = KPresenceLoggerAdapter
 

@@ -62,6 +62,7 @@ data class DiscordSettings(
             displayMode = mode,
             modeSettings = modeSettings,
             logoStyle = logoStyle,
+            showFullApplicationName = showFullApplicationName,
             projectIcon = projectSettings?.icon,
             buttonText = if (projectSettings?.buttonEnabled == true) projectSettings.buttonText else null,
             buttonUrl = projectSettings?.buttonUrl ?: "",

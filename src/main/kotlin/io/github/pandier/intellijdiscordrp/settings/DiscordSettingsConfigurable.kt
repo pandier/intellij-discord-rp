@@ -8,11 +8,9 @@ import com.intellij.ui.components.ActionLink
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.DiscordRichPresenceBundle
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
-import io.github.pandier.intellijdiscordrp.activity.currentActivityApplicationType
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
-import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
 import io.github.pandier.intellijdiscordrp.settings.ui.map
 import io.github.pandier.intellijdiscordrp.settings.ui.maxLength
 import io.github.pandier.intellijdiscordrp.settings.ui.optional
@@ -135,27 +133,26 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
             contextHelp(DiscordRichPresenceBundle.message("settings.reconnectOnUpdate.context"))
         }
 
-        // Show full application name option only when available
-        if (currentActivityApplicationType.fullNameDiscordApplicationId != null) {
-            row {
-                checkBox(DiscordRichPresenceBundle.message("settings.showFullApplicationName"))
-                    .bindSelected(state::showFullApplicationName)
-                    .gap(RightGap.SMALL)
-                contextHelp(DiscordRichPresenceBundle.message("settings.showFullApplicationName.context"))
-            }
+        // TODO: Show full application name option only when available
+        row {
+            checkBox(DiscordRichPresenceBundle.message("settings.showFullApplicationName"))
+                .bindSelected(state::showFullApplicationName)
+                .gap(RightGap.SMALL)
+            contextHelp(DiscordRichPresenceBundle.message("settings.showFullApplicationName.context"))
         }
 
-        row {
-            val customApplicationIdCheckBox = checkBox(DiscordRichPresenceBundle.message("settings.customApplicationId"))
-                .bindSelected(state::customApplicationIdEnabled)
-                .gap(RightGap.SMALL)
-            textField()
-                .bindText(state::customApplicationId)
-                .enabledIf(customApplicationIdCheckBox.selected)
-                .errorOnInput(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
-                .errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.isEnabled && it.text.toULongOrNull() == null }
-                .required()
-        }
+//        TODO:
+//        row {
+//            val customApplicationIdCheckBox = checkBox(DiscordRichPresenceBundle.message("settings.customApplicationId"))
+//                .bindSelected(state::customApplicationIdEnabled)
+//                .gap(RightGap.SMALL)
+//            textField()
+//                .bindText(state::customApplicationId)
+//                .enabledIf(customApplicationIdCheckBox.selected)
+//                .errorOnInput(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+//                .errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.isEnabled && it.text.toULongOrNull() == null }
+//                .required()
+//        }
 
         row {
             val idleTimeoutEnabled = checkBox(DiscordRichPresenceBundle.message("settings.focusTimeout"))
@@ -228,28 +225,9 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
     }
 
     override fun apply() {
-        val applicationIdBefore =
-            if (discordSettingsComponent.settings.customApplicationIdEnabled)
-                discordSettingsComponent.settings.customApplicationId
-            else null
-        val showFullApplicationNameBefore = discordSettingsComponent.settings.showFullApplicationName
-
         if (validateAndApply()) {
-            val applicationIdAfter =
-                if (discordSettingsComponent.settings.customApplicationIdEnabled)
-                    discordSettingsComponent.settings.customApplicationId
-                else null
-            val showFullApplicationNameAfter = discordSettingsComponent.settings.showFullApplicationName
-
             val discordService = DiscordService.getInstance()
-
-            // Reconnect if custom application id or show full application has been modified
-            // because these changes require it
-            if (applicationIdBefore != applicationIdAfter || showFullApplicationNameBefore != showFullApplicationNameAfter) {
-                discordService.client.reconnect()
-            } else {
-                discordService.updateBackground()
-            }
+            discordService.updateBackground()
         }
     }
 }

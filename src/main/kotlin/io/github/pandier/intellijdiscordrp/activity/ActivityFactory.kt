@@ -21,25 +21,18 @@ class ActivityFactory(
     private val displayMode: ActivityDisplayMode,
     private val modeSettings: DiscordSettings.Mode,
     private val logoStyle: LogoStyleSetting,
+    private val showFullApplicationName: Boolean,
     private val projectIcon: String?,
     private val buttonText: String?,
     private val buttonUrl: String,
 ) {
-    private fun resolveIcon(
-        context: ActivityContext,
-        iconSettings: DiscordSettings.Icon,
-    ): Pair<String, String>? = when (iconSettings.type) {
-        IconType.APPLICATION -> when (logoStyle) {
-            LogoStyleSetting.MODERN -> currentActivityApplicationType.modernIcon to iconSettings.tooltip
-            LogoStyleSetting.CLASSIC -> currentActivityApplicationType.classicIcon to iconSettings.tooltip
-        }
-        IconType.FILE -> context.file?.type?.icon?.let { it to iconSettings.tooltip }
-        IconType.PROJECT -> projectIcon?.takeIf { it.isNotEmpty() }?.let { it to iconSettings.tooltip }
-            ?: resolveIcon(context, DiscordSettings.Icon(type = iconSettings.altType, tooltip = iconSettings.altTooltip, altType = IconType.HIDDEN))
-        else -> null
-    }
-
     fun create(context: ActivityContext): Activity = Activity {
+        if (showFullApplicationName) {
+            name = context.appFullName
+        } else {
+            name = context.appName
+        }
+
         details = modeSettings.details.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
         state = modeSettings.state.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
 
@@ -67,5 +60,19 @@ class ActivityFactory(
                 start = modeSettings.timestampTarget.getStart(context).toEpochMilli()
             }
         }
+    }
+
+    private fun resolveIcon(
+        context: ActivityContext,
+        iconSettings: DiscordSettings.Icon,
+    ): Pair<String, String>? = when (iconSettings.type) {
+        IconType.APPLICATION -> when (logoStyle) {
+            LogoStyleSetting.MODERN -> currentActivityApplicationType.modernIcon to iconSettings.tooltip
+            LogoStyleSetting.CLASSIC -> currentActivityApplicationType.classicIcon to iconSettings.tooltip
+        }
+        IconType.FILE -> context.file?.type?.icon?.let { it to iconSettings.tooltip }
+        IconType.PROJECT -> projectIcon?.takeIf { it.isNotEmpty() }?.let { it to iconSettings.tooltip }
+            ?: resolveIcon(context, DiscordSettings.Icon(type = iconSettings.altType, tooltip = iconSettings.altTooltip, altType = IconType.HIDDEN))
+        else -> null
     }
 }
