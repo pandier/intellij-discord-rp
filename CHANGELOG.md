@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Icon for Jupyter Notebook
+- Icon for CSV, TSV
+
 ## [1.9.1] - 2025-10-27
 
 ### Added

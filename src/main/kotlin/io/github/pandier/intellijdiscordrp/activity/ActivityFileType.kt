@@ -56,6 +56,12 @@ enum class ActivityFileType(
         extensions = listOf("css"),
         iconFile = "css.png"
     ),
+    CSV(
+        friendlyName = "CSV",
+        typeNames = listOf("csv"),
+        extensions = listOf("csv"),
+        iconFile = "database.png"
+    ),
     DART(
         friendlyName = "Dart",
         typeNames = listOf("dart"),
@@ -156,6 +162,12 @@ enum class ActivityFileType(
         typeNames = listOf("jsx"),
         extensions = listOf("jsx"),
         iconFile = "jsx.png"
+    ),
+    JUPYTER(
+        friendlyName = "Jupyter",
+        typeNames = listOf("jupyter"),
+        extensions = listOf("ipynb"),
+        iconFile = "jupyter.png"
     ),
     KOTLIN(
         friendlyName = "Kotlin",
@@ -262,6 +274,12 @@ enum class ActivityFileType(
         extensions = listOf("toml"),
         iconFile = "toml.png"
     ),
+    TSV(
+        friendlyName = "TSV",
+        typeNames = listOf("tsv"),
+        extensions = listOf("tsv"),
+        iconFile = "database.png"
+    ),
     TSX(
         friendlyName = "TSX",
         typeNames = listOf("tsx"),
@@ -340,7 +358,7 @@ enum class ActivityFileType(
     DATABASE_VIEWER(
         friendlyName = "Database Viewer",
         typeNames = listOf("database element"),
-        iconFile = "tool/databaseviewer.png",
+        iconFile = "database.png",
     ),
 
     /*
