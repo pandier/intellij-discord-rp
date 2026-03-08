@@ -7,8 +7,9 @@ import java.util.Locale
 
 enum class ActivityApplicationType(
     val productCode: String?,
-    iconFileName: String,
     val guessNames: List<String> = listOf(),
+    val fullName: String? = null,
+    iconFileName: String,
     hasClassicVariant: Boolean = false,
 ) {
     ANDROID_STUDIO(
@@ -54,18 +55,21 @@ enum class ActivityApplicationType(
     INTELLIJ_IDEA_EDUCATIONAL(
         productCode = "IE",
         guessNames = listOf("intellij idea educational edition", "intellij idea educational"),
+        fullName = "IntelliJ IDEA Educational",
         iconFileName = "idea.png",
         hasClassicVariant = true
     ),
     INTELLIJ_IDEA_COMMUNITY(
         productCode = "IC",
-        guessNames = listOf("intellij idea community edition", "intellij idea community", "intellij idea"),
+        guessNames = listOf("intellij idea community edition", "intellij idea community"),
+        fullName = "IntelliJ IDEA Community",
         iconFileName = "idea.png",
         hasClassicVariant = true
     ),
     INTELLIJ_IDEA_ULTIMATE(
         productCode = "IU",
-        guessNames = listOf("intellij idea ultimate edition", "intellij idea ultimate"),
+        guessNames = listOf("intellij idea ultimate edition", "intellij idea ultimate", "intellij idea"),
+        fullName = "IntelliJ IDEA Ultimate",
         iconFileName = "idea.png",
         hasClassicVariant = true
     ),
@@ -93,13 +97,13 @@ enum class ActivityApplicationType(
     ),
     PYCHARM_COMMUNITY(
         productCode = "PC",
-        guessNames = listOf("pycharm community edition", "pycharm community", "pycharm"),
+        guessNames = listOf("pycharm community edition", "pycharm community"),
         iconFileName = "pycharm.png",
         hasClassicVariant = true
     ),
     PYCHARM_PROFESSIONAL(
         productCode = "PY",
-        guessNames = listOf("pycharm professional edition", "pycharm professional"),
+        guessNames = listOf("pycharm professional edition", "pycharm professional", "pycharm"),
         iconFileName = "pycharm.png",
         hasClassicVariant = true
     ),
@@ -146,9 +150,8 @@ enum class ActivityApplicationType(
  */
 private fun guessApplicationType(): ActivityApplicationType? {
     val appNames = ApplicationNamesInfo.getInstance()
-    val name1 = appNames.fullProductName.lowercase(Locale.ROOT)
-    val name2 = appNames.fullProductNameWithEdition.lowercase(Locale.ROOT)
-    return ActivityApplicationType.values().find { it.guessNames.contains(name1) || it.guessNames.contains(name2) }
+    val name = appNames.fullProductNameWithEdition.lowercase(Locale.ROOT)
+    return ActivityApplicationType.values().find { it.guessNames.contains(name) }
 }
 
 val currentActivityApplicationType: ActivityApplicationType by lazy {

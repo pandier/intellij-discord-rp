@@ -59,7 +59,7 @@ class ActivityContext(
             val gitRepo = git?.getRepo(project, file)
             return ActivityContext(
                 appName = appNames.fullProductName,
-                appFullName = appNames.fullProductNameWithEdition,
+                appFullName = currentActivityApplicationType.fullName ?: appNames.fullProductNameWithEdition,
                 appVersion = appInfo.fullVersion,
                 appStart = timeTrackingService.getOrInit(ApplicationManager.getApplication()),
                 project = WeakReference(project),
