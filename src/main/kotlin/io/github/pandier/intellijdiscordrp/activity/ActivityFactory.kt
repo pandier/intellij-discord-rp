@@ -27,7 +27,7 @@ class ActivityFactory(
     private val buttonUrl: String,
 ) {
     fun create(context: ActivityContext): Activity = Activity {
-        name = ActivityDisplayMode.APPLICATION.format(applicationName, context)
+        name = ActivityDisplayMode.APPLICATION.format(applicationName, context).fitToRange(1, 128)
 
         details = modeSettings.details.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
         state = modeSettings.state.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
@@ -45,9 +45,9 @@ class ActivityFactory(
         }
 
         if (buttonText != null) {
-            val formattedButtonUrl = displayMode.format(buttonUrl, context)
+            val formattedButtonUrl = displayMode.format(buttonUrl, context).fitToRange(1, 512)
             if (urlRegex.matches(formattedButtonUrl)) {
-                button(displayMode.format(buttonText, context).fitToRange(2, 31), formattedButtonUrl)
+                button(displayMode.format(buttonText, context).fitToRange(1, 32), formattedButtonUrl)
             }
         }
 
