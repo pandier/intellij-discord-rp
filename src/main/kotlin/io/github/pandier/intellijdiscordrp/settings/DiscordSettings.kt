@@ -13,7 +13,7 @@ data class DiscordSettings(
     var focusTimeoutEnabled: Boolean = true,
     var focusTimeoutMinutes: Int = 20,
     var logoStyle: LogoStyleSetting = LogoStyleSetting.MODERN,
-    var showFullApplicationName: Boolean = false,
+    var applicationName: String = "{app_name}",
     var applicationMode: Mode = Mode(),
     var projectMode: Mode = Mode(
         details = "In {project_name}",
@@ -63,7 +63,7 @@ data class DiscordSettings(
             displayMode = mode,
             modeSettings = modeSettings,
             logoStyle = logoStyle,
-            showFullApplicationName = showFullApplicationName,
+            applicationName = applicationName,
             projectIcon = projectSettings?.icon,
             buttonText = if (projectSettings?.buttonEnabled == true) projectSettings.buttonText else null,
             buttonUrl = projectSettings?.buttonUrl ?: "",

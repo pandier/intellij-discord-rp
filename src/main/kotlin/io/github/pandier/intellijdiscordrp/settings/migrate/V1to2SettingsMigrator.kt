@@ -20,7 +20,7 @@ object V1to2SettingsMigrator : SettingsMigrator<V1to2SettingsMigrator.V1Model, D
             focusTimeoutEnabled = previous.focusTimeoutEnabled,
             focusTimeoutMinutes = previous.focusTimeoutMinutes,
             logoStyle = migrateLogoStyle(previous.logoStyle) ?: defaults.logoStyle,
-            showFullApplicationName = previous.showFullApplicationName,
+            applicationName = if (previous.showFullApplicationName) "{app_full_name}" else "{app_name}",
             applicationMode = DiscordSettings.Mode(
                 details = previous.applicationDetails,
                 state = previous.applicationState,

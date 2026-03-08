@@ -21,17 +21,13 @@ class ActivityFactory(
     private val displayMode: ActivityDisplayMode,
     private val modeSettings: DiscordSettings.Mode,
     private val logoStyle: LogoStyleSetting,
-    private val showFullApplicationName: Boolean,
+    private val applicationName: String,
     private val projectIcon: String?,
     private val buttonText: String?,
     private val buttonUrl: String,
 ) {
     fun create(context: ActivityContext): Activity = Activity {
-        if (showFullApplicationName) {
-            name = context.appFullName
-        } else {
-            name = context.appName
-        }
+        name = ActivityDisplayMode.APPLICATION.format(applicationName, context)
 
         details = modeSettings.details.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
         state = modeSettings.state.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }

@@ -144,14 +144,6 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
             contextHelp(DiscordRichPresenceBundle.message("settings.autoReconnect.context"))
         }
 
-        // TODO: Show full application name option only when available
-        row {
-            checkBox(DiscordRichPresenceBundle.message("settings.showFullApplicationName"))
-                .bindSelected(state::showFullApplicationName)
-                .gap(RightGap.SMALL)
-            contextHelp(DiscordRichPresenceBundle.message("settings.showFullApplicationName.context"))
-        }
-
 //        TODO:
 //        row {
 //            val customApplicationIdCheckBox = checkBox(DiscordRichPresenceBundle.message("settings.customApplicationId"))
@@ -192,6 +184,13 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                 .gap(RightGap.SMALL)
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
+        }
+
+        row(DiscordRichPresenceBundle.message("settings.applicationName")) {
+            textField()
+                .bindText(state::applicationName)
+                .maxLength(128)
+                .required()
         }
 
         group(DiscordRichPresenceBundle.message("settings.group.display")) {
