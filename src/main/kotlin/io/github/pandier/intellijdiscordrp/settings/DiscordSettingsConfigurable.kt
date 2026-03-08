@@ -16,8 +16,11 @@ import io.github.pandier.intellijdiscordrp.settings.ui.maxLength
 import io.github.pandier.intellijdiscordrp.settings.ui.optional
 import io.github.pandier.intellijdiscordrp.settings.ui.required
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.annotations.Nls
 import kotlin.reflect.KMutableProperty0
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Creates a row where the user can configure a specific icon for the activity.
@@ -127,10 +130,18 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
         val state = discordSettingsComponent.settings
 
         row {
-            checkBox(DiscordRichPresenceBundle.message("settings.reconnectOnUpdate"))
-                .bindSelected(state::reconnectOnUpdate)
+            val idleTimeoutEnabled = checkBox(DiscordRichPresenceBundle.message("settings.autoReconnect"))
+                .bindSelected(state::autoReconnect)
                 .gap(RightGap.SMALL)
-            contextHelp(DiscordRichPresenceBundle.message("settings.reconnectOnUpdate.context"))
+            intTextField(0..Int.MAX_VALUE)
+                .bindIntText(state::autoReconnectPeriod)
+                .columns(COLUMNS_TINY)
+                .gap(RightGap.SMALL)
+                .enabledIf(idleTimeoutEnabled.selected)
+            @Suppress("DialogTitleCapitalization")
+            label(DiscordRichPresenceBundle.message("settings.autoReconnect.seconds"))
+                .gap(RightGap.SMALL)
+            contextHelp(DiscordRichPresenceBundle.message("settings.autoReconnect.context"))
         }
 
         // TODO: Show full application name option only when available
@@ -226,8 +237,14 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
 
     override fun apply() {
         if (validateAndApply()) {
+            val state = discordSettingsComponent.settings
             val discordService = DiscordService.getInstance()
-            discordService.updateBackground()
+            discordService.scope.launch(Dispatchers.IO) {
+                discordService.client.changeAutoReconnect(state.autoReconnect, state.autoReconnectPeriod.seconds)
+                discordService.update()
+                @Suppress("DeferredResultUnused")
+                discordService.client.connect()
+            }
         }
     }
 }

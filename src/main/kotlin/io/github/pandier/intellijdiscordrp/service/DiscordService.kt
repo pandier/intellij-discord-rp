@@ -13,12 +13,14 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityContext
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceCaretListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceDocumentListener
 import io.github.pandier.intellijdiscordrp.listener.RichPresenceFocusChangeListener
+import io.github.pandier.intellijdiscordrp.settings.discordSettingsComponent
 import io.github.pandier.intellijdiscordrp.util.KPresenceLoggerAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * A service that handles a connection with the Discord client and manages Rich Presence activities.
@@ -51,6 +53,10 @@ class DiscordService(
                 add("$it/.flatpak/dev.vencord.Vesktop/xdg-run")
             }
         }
+
+        val settings = discordSettingsComponent.settings
+        autoReconnect = settings.autoReconnect
+        autoReconnectPeriod = settings.autoReconnectPeriod.seconds
     }
 
     /**

@@ -5,7 +5,8 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 import io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettings
 
 data class DiscordSettings(
-    var reconnectOnUpdate: Boolean = true,
+    var autoReconnect: Boolean = true,
+    var autoReconnectPeriod: Int = 20,
     var customApplicationIdEnabled: Boolean = false,
     var customApplicationId: String = "",
     var defaultDisplayMode: ActivityDisplayMode = ActivityDisplayMode.FILE,

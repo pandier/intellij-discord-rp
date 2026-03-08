@@ -14,7 +14,6 @@ object V1to2SettingsMigrator : SettingsMigrator<V1to2SettingsMigrator.V1Model, D
     override fun migrate(previous: V1Model): DiscordSettings {
         val defaults = DiscordSettings()
         return DiscordSettings(
-            reconnectOnUpdate = previous.reconnectOnUpdate,
             customApplicationIdEnabled = previous.customApplicationIdEnabled,
             customApplicationId = previous.customApplicationId,
             defaultDisplayMode = migrateDisplayMode(previous.defaultDisplayMode) ?: defaults.defaultDisplayMode,
