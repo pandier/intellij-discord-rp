@@ -90,7 +90,7 @@ private fun TabbedBuilder.displayModeTab(
                 .bindText(mode.map { it::name })
                 .columns(COLUMNS_LARGE)
                 .maxLength(128)
-                .required()
+                .optional()
         }
         row(DiscordRichPresenceBundle.message("settings.display.details")) {
             textField()
