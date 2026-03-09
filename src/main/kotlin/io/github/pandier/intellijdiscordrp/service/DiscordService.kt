@@ -43,20 +43,21 @@ class DiscordService(
     /**
      * A connection with the Discord client.
      */
-    val client: KPresenceClient = KPresenceClient(1107202385799041054L) {
-        parentScope = scope
-        logger = KPresenceLoggerAdapter
+    val client: KPresenceClient = run {
+        val settings = discordSettingsComponent.settings
+        KPresenceClient(settings.applicationId) {
+            parentScope = scope
+            logger = KPresenceLoggerAdapter
+            autoReconnect = settings.autoReconnect
+            autoReconnectPeriod = settings.autoReconnectPeriod.seconds
 
-        unixPaths {
-            // Add Vesktop Flatpak runtime path when on UNIX systems
-            System.getenv("XDG_RUNTIME_DIR")?.let {
-                add("$it/.flatpak/dev.vencord.Vesktop/xdg-run")
+            unixPaths {
+                // Add Vesktop Flatpak runtime path when on UNIX systems
+                System.getenv("XDG_RUNTIME_DIR")?.let {
+                    add("$it/.flatpak/dev.vencord.Vesktop/xdg-run")
+                }
             }
         }
-
-        val settings = discordSettingsComponent.settings
-        autoReconnect = settings.autoReconnect
-        autoReconnectPeriod = settings.autoReconnectPeriod.seconds
     }
 
     /**

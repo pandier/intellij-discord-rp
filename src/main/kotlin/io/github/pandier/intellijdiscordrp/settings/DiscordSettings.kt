@@ -32,6 +32,9 @@ data class DiscordSettings(
         timestampTarget = TimestampTargetSetting.PROJECT,
     ),
 ) {
+    val applicationId: Long
+        get() = (if (customApplicationIdEnabled) customApplicationId.toLongOrNull() else null) ?: 1107202385799041054L
+
     data class Mode(
         var name: String = "{app_name}",
         var details: String = "",

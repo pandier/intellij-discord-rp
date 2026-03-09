@@ -11,6 +11,7 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.service.DiscordService
 import io.github.pandier.intellijdiscordrp.settings.ui.DslConfigurable
 import io.github.pandier.intellijdiscordrp.settings.ui.TabbedBuilder
+import io.github.pandier.intellijdiscordrp.settings.ui.errorOnInput
 import io.github.pandier.intellijdiscordrp.settings.ui.map
 import io.github.pandier.intellijdiscordrp.settings.ui.maxLength
 import io.github.pandier.intellijdiscordrp.settings.ui.optional
@@ -137,34 +138,6 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
         val state = discordSettingsComponent.settings
 
         row {
-            val idleTimeoutEnabled = checkBox(DiscordRichPresenceBundle.message("settings.autoReconnect"))
-                .bindSelected(state::autoReconnect)
-                .gap(RightGap.SMALL)
-            intTextField(0..Int.MAX_VALUE)
-                .bindIntText(state::autoReconnectPeriod)
-                .columns(COLUMNS_TINY)
-                .gap(RightGap.SMALL)
-                .enabledIf(idleTimeoutEnabled.selected)
-            @Suppress("DialogTitleCapitalization")
-            label(DiscordRichPresenceBundle.message("settings.autoReconnect.seconds"))
-                .gap(RightGap.SMALL)
-            contextHelp(DiscordRichPresenceBundle.message("settings.autoReconnect.context"))
-        }
-
-//        TODO:
-//        row {
-//            val customApplicationIdCheckBox = checkBox(DiscordRichPresenceBundle.message("settings.customApplicationId"))
-//                .bindSelected(state::customApplicationIdEnabled)
-//                .gap(RightGap.SMALL)
-//            textField()
-//                .bindText(state::customApplicationId)
-//                .enabledIf(customApplicationIdCheckBox.selected)
-//                .errorOnInput(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
-//                .errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.isEnabled && it.text.toULongOrNull() == null }
-//                .required()
-//        }
-
-        row {
             val idleTimeoutEnabled = checkBox(DiscordRichPresenceBundle.message("settings.focusTimeout"))
                 .bindSelected(state::focusTimeoutEnabled)
                 .gap(RightGap.SMALL)
@@ -178,19 +151,19 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
         }
 
         row {
+            label(DiscordRichPresenceBundle.message("settings.defaultDisplayMode"))
+                .gap(RightGap.SMALL)
+            comboBox(ActivityDisplayMode.values().toList())
+                .bindItem(state::defaultDisplayMode.toNullableProperty())
+        }
+
+        row {
             label(DiscordRichPresenceBundle.message("settings.logoStyle"))
                 .gap(RightGap.SMALL)
             comboBox(LogoStyleSetting.values().toList())
                 .bindItem(state::logoStyle.toNullableProperty())
                 .gap(RightGap.SMALL)
             contextHelp(DiscordRichPresenceBundle.message("settings.logoStyle.context"))
-        }
-
-        row {
-            label(DiscordRichPresenceBundle.message("settings.defaultDisplayMode"))
-                .gap(RightGap.SMALL)
-            comboBox(ActivityDisplayMode.values().toList())
-                .bindItem(state::defaultDisplayMode.toNullableProperty())
         }
 
         group(DiscordRichPresenceBundle.message("settings.group.display")) {
@@ -218,6 +191,35 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
             }
         }
 
+        group(DiscordRichPresenceBundle.message("settings.group.advanced")) {
+            row {
+                val idleTimeoutEnabled = checkBox(DiscordRichPresenceBundle.message("settings.autoReconnect"))
+                    .bindSelected(state::autoReconnect)
+                    .gap(RightGap.SMALL)
+                intTextField(0..Int.MAX_VALUE)
+                    .bindIntText(state::autoReconnectPeriod)
+                    .columns(COLUMNS_TINY)
+                    .gap(RightGap.SMALL)
+                    .enabledIf(idleTimeoutEnabled.selected)
+                @Suppress("DialogTitleCapitalization")
+                label(DiscordRichPresenceBundle.message("settings.autoReconnect.seconds"))
+                    .gap(RightGap.SMALL)
+                contextHelp(DiscordRichPresenceBundle.message("settings.autoReconnect.context"))
+            }
+
+            row {
+                val customApplicationIdCheckBox = checkBox(DiscordRichPresenceBundle.message("settings.customApplicationId"))
+                    .bindSelected(state::customApplicationIdEnabled)
+                    .gap(RightGap.SMALL)
+                textField()
+                    .bindText(state::customApplicationId)
+                    .enabledIf(customApplicationIdCheckBox.selected)
+                    .errorOnInput(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.text.isNotEmpty() && it.text.toULongOrNull() == null }
+                    .errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.isEnabled && it.text.toULongOrNull() == null }
+                    .required()
+            }
+        }
+
         row {
             cell(ActionLink(DiscordRichPresenceBundle.message("settings.reset")) {
                 val result = Messages.showYesNoDialog(
@@ -240,9 +242,16 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
             val discordService = DiscordService.getInstance()
             discordService.scope.launch(Dispatchers.IO) {
                 discordService.client.changeAutoReconnect(state.autoReconnect, state.autoReconnectPeriod.seconds)
-                discordService.update()
+
+                // do a full reconnect only if we need to, otherwise just ensure that we're connected
                 @Suppress("DeferredResultUnused")
-                discordService.client.connect()
+                if (discordService.client.changeClientId(state.applicationId)) {
+                    discordService.client.reconnect()
+                } else {
+                    discordService.client.connect()
+                }
+
+                discordService.update()
             }
         }
     }
