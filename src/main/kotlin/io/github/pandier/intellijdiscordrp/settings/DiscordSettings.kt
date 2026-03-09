@@ -13,7 +13,6 @@ data class DiscordSettings(
     var focusTimeoutEnabled: Boolean = true,
     var focusTimeoutMinutes: Int = 20,
     var logoStyle: LogoStyleSetting = LogoStyleSetting.MODERN,
-    var applicationName: String = "{app_name}",
     var applicationMode: Mode = Mode(),
     var projectMode: Mode = Mode(
         details = "In {project_name}",
@@ -34,6 +33,7 @@ data class DiscordSettings(
     ),
 ) {
     data class Mode(
+        var name: String = "{app_name}",
         var details: String = "",
         var state: String = "",
         var largeIcon: Icon = Icon(
@@ -63,7 +63,6 @@ data class DiscordSettings(
             displayMode = mode,
             modeSettings = modeSettings,
             logoStyle = logoStyle,
-            applicationName = applicationName,
             projectIcon = projectSettings?.icon,
             buttonText = if (projectSettings?.buttonEnabled == true) projectSettings.buttonText else null,
             buttonUrl = projectSettings?.buttonUrl ?: "",

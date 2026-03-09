@@ -84,6 +84,13 @@ private fun TabbedBuilder.displayModeTab(
     timestampTargets: List<TimestampTargetSetting>,
 ) {
     tab(displayMode.toString()) {
+        row(DiscordRichPresenceBundle.message("settings.display.name")) {
+            textField()
+                .bindText(mode.map { it::name })
+                .columns(COLUMNS_LARGE)
+                .maxLength(128)
+                .required()
+        }
         row(DiscordRichPresenceBundle.message("settings.display.details")) {
             textField()
                 .bindText(mode.map { it::details })
@@ -184,13 +191,6 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                 .gap(RightGap.SMALL)
             comboBox(ActivityDisplayMode.values().toList())
                 .bindItem(state::defaultDisplayMode.toNullableProperty())
-        }
-
-        row(DiscordRichPresenceBundle.message("settings.applicationName")) {
-            textField()
-                .bindText(state::applicationName)
-                .maxLength(128)
-                .required()
         }
 
         group(DiscordRichPresenceBundle.message("settings.group.display")) {
