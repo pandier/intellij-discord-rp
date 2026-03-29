@@ -9,7 +9,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    mavenLocal()
 
     intellijPlatform {
         defaultRepositories()
@@ -27,7 +26,7 @@ dependencies {
         instrumentationTools()
     }
 
-    implementation("io.github.pandier:kpresence:0.6.6") {
+    implementation("io.github.pandier:kpresence:0.7.0") {
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
 }
