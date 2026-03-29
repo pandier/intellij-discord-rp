@@ -40,7 +40,6 @@ data class DiscordSettings(
             tooltip = "{app_name}",
         ),
         var smallIcon: Icon = Icon(),
-        var timestampEnabled: Boolean = true,
         var timestampTarget: TimestampTargetSetting = TimestampTargetSetting.APPLICATION,
     )
 

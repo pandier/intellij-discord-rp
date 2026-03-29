@@ -102,10 +102,8 @@ private fun TabbedBuilder.displayModeTab(
         iconRow(DiscordRichPresenceBundle.message("settings.display.smallIcon"), icons, mode.map { it::smallIcon })
 
         row {
-            checkBox(DiscordRichPresenceBundle.message("settings.display.elapsedTime"))
-                .bindSelected(mode.map { it::timestampEnabled })
-                .gap(RightGap.SMALL)
             comboBox(timestampTargets)
+                .label(DiscordRichPresenceBundle.message("settings.display.elapsedTime"))
                 .bindItem(mode.map { it::timestampTarget }.toNullableProperty())
         }
 
