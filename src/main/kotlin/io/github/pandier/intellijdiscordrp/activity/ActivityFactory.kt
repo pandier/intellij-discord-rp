@@ -51,9 +51,7 @@ class ActivityFactory(
         }
 
         timestamps {
-            if (modeSettings.timestampEnabled) {
-                start = modeSettings.timestampTarget.getStart(context).toEpochMilli()
-            }
+            start = modeSettings.timestampTarget.getStart(context).toEpochMilli()
         }
     }
 

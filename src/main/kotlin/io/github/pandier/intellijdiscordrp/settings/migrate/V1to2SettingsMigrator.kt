@@ -31,7 +31,6 @@ object V1to2SettingsMigrator : SettingsMigrator<V1to2SettingsMigrator.V1Model, D
                     type = migrateIconType(previous.applicationSmallImageEnabled, previous.applicationSmallImage) ?: defaults.applicationMode.smallIcon.type,
                     tooltip = previous.applicationSmallImageText,
                 ),
-                timestampEnabled = previous.applicationTimestampEnabled,
                 timestampTarget = TimestampTargetSetting.APPLICATION,
             ),
             projectMode = DiscordSettings.Mode(
@@ -45,7 +44,6 @@ object V1to2SettingsMigrator : SettingsMigrator<V1to2SettingsMigrator.V1Model, D
                     type = migrateIconType(previous.projectSmallImageEnabled, previous.projectSmallImage) ?: defaults.projectMode.smallIcon.type,
                     tooltip = previous.projectSmallImageText,
                 ),
-                timestampEnabled = previous.projectTimestampEnabled,
                 timestampTarget = migrateTimestampTarget(previous.projectTimestampTarget) ?: defaults.projectMode.timestampTarget,
             ),
             fileMode = DiscordSettings.Mode(
@@ -59,7 +57,6 @@ object V1to2SettingsMigrator : SettingsMigrator<V1to2SettingsMigrator.V1Model, D
                     type = migrateIconType(previous.fileSmallImageEnabled, previous.fileSmallImage) ?: defaults.fileMode.smallIcon.type,
                     tooltip = previous.fileSmallImageText,
                 ),
-                timestampEnabled = previous.fileTimestampEnabled,
                 timestampTarget = migrateTimestampTarget(previous.fileTimestampTarget) ?: defaults.fileMode.timestampTarget,
             ),
         )
