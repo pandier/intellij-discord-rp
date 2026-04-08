@@ -180,6 +180,12 @@ enum class ActivityFileType(
         regex = "^license(\\.(md|txt))?$".toRegex(RegexOption.IGNORE_CASE),
         iconFile = "license.png"
     ),
+    LUA(
+        friendlyName = "Lua",
+        typeNames = listOf("lua"),
+        extensions = listOf("lua"),
+        iconFile = "lua.png"
+    ),
     MARKDOWN(
         friendlyName = "Markdown",
         typeNames = listOf("markdown"),
