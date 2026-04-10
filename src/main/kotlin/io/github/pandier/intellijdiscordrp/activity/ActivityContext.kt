@@ -3,7 +3,7 @@ package io.github.pandier.intellijdiscordrp.activity
 import com.intellij.openapi.application.ApplicationInfo
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ApplicationNamesInfo
-import com.intellij.openapi.application.ReadAction
+import com.intellij.openapi.application.readAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
@@ -69,10 +69,10 @@ class ActivityContext(
                 projectStart = timeTrackingService.getOrInit(project),
                 file = file?.let { file ->
                     val problemCount = editor?.let { ProblemCount.get(it, project) } ?: ProblemCount()
-                    val contentRoot = ReadAction.compute<VirtualFile?, Exception> {
-                        ProjectFileIndex.getInstance(project).getContentRootForFile(file)
+                    val relativePath = readAction {
+                        val contentRoot = ProjectFileIndex.getInstance(project).getContentRootForFile(file)
+                        contentRoot?.let { VfsUtil.getRelativePath(file, it) } ?: file.name
                     }
-                    val relativePath = contentRoot?.let { i -> VfsUtil.getRelativePath(file, i) } ?: file.name
                     val activityFileType = file.activityFileType
                     ActivityFileContext(
                         name = activityFileType?.replaceFileName ?: file.name,
