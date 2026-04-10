@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Icons now have rounded corners
 - Icons are now 256x256 instead of 512x512
 - "Display mode" is now "Visibility" in some places and now also includes "Hidden"
+- Switch to a rewrite of the backend
 
 ### Removed
 
