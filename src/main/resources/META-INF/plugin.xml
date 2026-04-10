@@ -59,24 +59,24 @@
                     class="io.github.pandier.intellijdiscordrp.action.ReconnectAction">
             </action>
             <separator />
-            <group id="io.github.pandier.intellijdiscordrp.action.DiscordChangeDisplayModeActionGroup"
+            <group id="io.github.pandier.intellijdiscordrp.action.DiscordChangeVisibilityActionGroup"
                    popup="true">
-                <action id="io.github.pandier.intellijdiscordrp.action.DefaultDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.DefaultDisplayModeAction">
+                <action id="io.github.pandier.intellijdiscordrp.action.DefaultVisibilityAction"
+                        class="io.github.pandier.intellijdiscordrp.action.DefaultVisibilityAction">
                 </action>
-                <action id="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.ApplicationDisplayModeAction">
+                <action id="io.github.pandier.intellijdiscordrp.action.HiddenVisibilityAction"
+                        class="io.github.pandier.intellijdiscordrp.action.HiddenVisibilityAction">
                 </action>
-                <action id="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.ProjectDisplayModeAction">
+                <action id="io.github.pandier.intellijdiscordrp.action.ApplicationVisibilityAction"
+                        class="io.github.pandier.intellijdiscordrp.action.ApplicationVisibilityAction">
                 </action>
-                <action id="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction"
-                        class="io.github.pandier.intellijdiscordrp.action.FileDisplayModeAction">
+                <action id="io.github.pandier.intellijdiscordrp.action.ProjectVisibilityAction"
+                        class="io.github.pandier.intellijdiscordrp.action.ProjectVisibilityAction">
+                </action>
+                <action id="io.github.pandier.intellijdiscordrp.action.FileVisibilityAction"
+                        class="io.github.pandier.intellijdiscordrp.action.FileVisibilityAction">
                 </action>
             </group>
-            <action id="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction"
-                    class="io.github.pandier.intellijdiscordrp.action.ShowRichPresenceAction">
-            </action>
         </group>
     </actions>
 

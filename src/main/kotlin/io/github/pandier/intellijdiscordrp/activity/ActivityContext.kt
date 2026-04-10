@@ -112,12 +112,10 @@ class ActivityContext(
         settings: DiscordSettings,
         projectSettings: DiscordProjectSettings,
     ): Activity? {
-        if (!projectSettings.showRichPresence)
-            return null
         val displayMode = ActivityDisplayMode.getSupportedFrom(
             projectSettings.displayMode ?: settings.defaultDisplayMode,
             this
         )
-        return settings.createActivityFactory(displayMode, projectSettings).create(this)
+        return settings.createActivityFactory(displayMode, projectSettings)?.create(this)
     }
 }

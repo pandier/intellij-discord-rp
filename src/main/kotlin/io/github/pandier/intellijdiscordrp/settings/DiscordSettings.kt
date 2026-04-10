@@ -54,13 +54,14 @@ data class DiscordSettings(
         var altTooltip: String = "",
     )
 
-    fun createActivityFactory(mode: ActivityDisplayMode, projectSettings: DiscordProjectSettings?): ActivityFactory {
-        val projectSettings = projectSettings.takeIf { mode != ActivityDisplayMode.APPLICATION }
+    fun createActivityFactory(mode: ActivityDisplayMode, projectSettings: DiscordProjectSettings?): ActivityFactory? {
         val modeSettings = when (mode) {
+            ActivityDisplayMode.HIDDEN -> return null
             ActivityDisplayMode.APPLICATION -> applicationMode
             ActivityDisplayMode.PROJECT -> projectMode
             ActivityDisplayMode.FILE -> fileMode
         }
+        val projectSettings = projectSettings.takeIf { mode > ActivityDisplayMode.APPLICATION }
         return ActivityFactory(
             displayMode = mode,
             modeSettings = modeSettings,

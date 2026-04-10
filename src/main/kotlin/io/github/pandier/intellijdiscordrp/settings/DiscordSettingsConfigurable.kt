@@ -84,7 +84,7 @@ private fun TabbedBuilder.displayModeTab(
     icons: List<IconType>,
     timestampTargets: List<TimestampTargetSetting>,
 ) {
-    tab(displayMode.toString()) {
+    tab(displayMode.friendlyName) {
         row(DiscordRichPresenceBundle.message("settings.display.name")) {
             textField()
                 .bindText(mode.map { it::name })
@@ -149,10 +149,14 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
         }
 
         row {
-            label(DiscordRichPresenceBundle.message("settings.defaultDisplayMode"))
+            label(DiscordRichPresenceBundle.message("settings.defaultVisibility"))
                 .gap(RightGap.SMALL)
-            comboBox(ActivityDisplayMode.values().toList())
-                .bindItem(state::defaultDisplayMode.toNullableProperty())
+            comboBox(ActivityDisplayMode.values().map { it.visibilityName })
+                .bindItem({
+                    state.defaultDisplayMode.visibilityName
+                }, { name ->
+                    state.defaultDisplayMode = ActivityDisplayMode.values().find { it.visibilityName == name } ?: ActivityDisplayMode.FILE
+                })
         }
 
         row {

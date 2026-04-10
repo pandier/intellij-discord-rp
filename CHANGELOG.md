@@ -16,10 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Icons now have rounded corners
 - Icons are now 256x256 instead of 512x512
+- "Display mode" is now "Visibility" in some places and now also includes "Hidden"
 
 ### Removed
 
 - Toggle for "show elapsed time" because Discord now automatically generates a timestamp if it's missing
+- "Show Rich Presence in Project" in favor of "Visibility"
 
 ## [1.9.1] - 2025-10-27
 

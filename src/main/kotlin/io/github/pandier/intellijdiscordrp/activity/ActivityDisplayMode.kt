@@ -7,15 +7,23 @@ import io.github.pandier.intellijdiscordrp.util.formatFileSize
  * Represents an activity display mode.
  */
 enum class ActivityDisplayMode(
-    private val friendlyName: String,
+    val friendlyName: String,
+    val visibilityName: String,
     private val condition: ActivityContext.() -> Boolean = { true },
     val variables: List<ActivityVariable>,
 ) {
+    HIDDEN(
+        friendlyName = "Hidden",
+        visibilityName = "Hidden",
+        variables = listOf(),
+    ),
+
     /**
      * Shown only when deliberately configured in settings, mainly used for privacy reasons.
      */
     APPLICATION(
         friendlyName = "Application",
+        visibilityName = "Application",
         variables = listOf(
             ActivityVariable(
                 name = "app_name",
@@ -40,6 +48,7 @@ enum class ActivityDisplayMode(
      */
     PROJECT(
         friendlyName = "Project",
+        visibilityName = "Project",
         variables = APPLICATION.variables.plus(listOf(
             ActivityVariable(
                 name = "project_name",
@@ -66,6 +75,7 @@ enum class ActivityDisplayMode(
      */
     FILE(
         friendlyName = "File",
+        visibilityName = "Project and Files",
         condition = { file != null },
         variables = PROJECT.variables.plus(listOf(
             ActivityVariable(
@@ -170,7 +180,4 @@ enum class ActivityDisplayMode(
         variables.forEach { formatted = it.format(formatted, context) }
         return formatted
     }
-
-    override fun toString(): String =
-        friendlyName
 }

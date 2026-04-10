@@ -29,14 +29,13 @@ class DiscordProjectSettingsConfigurable(
         val state = project.discordProjectSettingsComponent.state
 
         row {
-            checkBox(DiscordRichPresenceBundle.message("settings.project.showRichPresence"))
-                .bindSelected(state::showRichPresence)
-        }
-
-        row {
-            comboBox(listOf("Default", "Application", "Project", "File"))
-                .label(DiscordRichPresenceBundle.message("settings.project.displayMode"))
-                .bindItem({ state.displayMode?.toString() ?: "Default" }, { state.displayMode = it?.let(ActivityDisplayMode::byName) })
+            comboBox(listOf("Default") + ActivityDisplayMode.values().map { it.visibilityName })
+                .label(DiscordRichPresenceBundle.message("settings.project.visibility"))
+                .bindItem({
+                    state.displayMode?.visibilityName ?: "Default"
+                }, { name ->
+                    state.displayMode = ActivityDisplayMode.values().find { it.visibilityName == name }
+                })
         }
 
         row {
