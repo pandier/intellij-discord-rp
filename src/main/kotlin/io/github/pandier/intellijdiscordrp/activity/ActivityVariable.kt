@@ -9,6 +9,7 @@ package io.github.pandier.intellijdiscordrp.activity
 class ActivityVariable(
     val name: String,
     val description: String,
+    val displayMode: ActivityDisplayMode,
     private val getter: ActivityContext.() -> String?,
     /**
      * Returns an error message if the variable is not available in the current IDE environment (or null otherwise).
@@ -31,12 +32,6 @@ class ActivityVariable(
     fun getValue(context: ActivityContext): String? =
         getter(context)
 
-    /**
-     * Replaces all occurrences of this variable in the given [string]
-     * with the value of this variable in the given [ActivityContext].
-     *
-     * An empty string is used if the retrieval of the value was unsuccessful.
-     */
-    fun format(string: String, context: ActivityContext): String =
-        string.replace(toString(), getValue(context) ?: "")
+    fun supports(displayMode: ActivityDisplayMode): Boolean =
+        this.displayMode.ordinal <= displayMode.ordinal
 }

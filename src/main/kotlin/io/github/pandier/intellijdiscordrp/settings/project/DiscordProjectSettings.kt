@@ -1,6 +1,7 @@
 package io.github.pandier.intellijdiscordrp.settings.project
 
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
+import io.github.pandier.intellijdiscordrp.template.Templates
 
 data class DiscordProjectSettings(
     @Deprecated(
@@ -26,4 +27,9 @@ data class DiscordProjectSettings(
             showRichPresence = value != ActivityDisplayMode.HIDDEN
             _displayMode = value
         }
+
+    val templates = Templates()
+
+    val buttonTextNode by templates.add { buttonText }
+    val buttonUrlNode by templates.add { buttonUrl }
 }

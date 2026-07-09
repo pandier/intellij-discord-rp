@@ -29,6 +29,9 @@ dependencies {
     implementation("io.github.pandier:kpresence:0.7.0") {
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
     }
+
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.1")
 }
 
 intellijPlatform {
@@ -65,4 +68,8 @@ kotlin {
 changelog {
     groups.empty()
     repositoryUrl.set(providers.gradleProperty("repository"))
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

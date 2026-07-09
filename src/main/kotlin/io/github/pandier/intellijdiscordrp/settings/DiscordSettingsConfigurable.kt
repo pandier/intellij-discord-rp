@@ -17,6 +17,7 @@ import io.github.pandier.intellijdiscordrp.settings.ui.maxLength
 import io.github.pandier.intellijdiscordrp.settings.ui.optional
 import io.github.pandier.intellijdiscordrp.settings.ui.required
 import io.github.pandier.intellijdiscordrp.settings.ui.tabbed
+import io.github.pandier.intellijdiscordrp.template.TemplateVariables
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.Nls
@@ -117,12 +118,15 @@ private fun TabbedBuilder.displayModeTab(
         }
 
         row {
-            val lines = displayMode.variables.map { variable ->
+            val lines = mutableListOf<String>()
+            for (variable in TemplateVariables.getAll()) {
+                if (!variable.supports(displayMode)) continue
+
                 val availabilityError = variable.availabilityCheck()
                 if (availabilityError == null) {
-                    "<code>$variable</code> - ${variable.description}"
+                    lines.add("<code>$variable</code> - ${variable.description}")
                 } else {
-                    "<s><code>$variable</code> - ${variable.description}</s> ($availabilityError)"
+                    lines.add("<s><code>$variable</code> - ${variable.description}</s> ($availabilityError)")
                 }
             }
             comment(lines.joinToString("<br/>"))
@@ -241,6 +245,9 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
     override fun apply() {
         if (validateAndApply()) {
             val state = discordSettingsComponent.settings
+
+            state.templates.invalidate()
+
             val discordService = DiscordService.getInstance()
             discordService.scope.launch(Dispatchers.IO) {
                 discordService.client.changeAutoReconnect(state.autoReconnect, state.autoReconnectPeriod.seconds)

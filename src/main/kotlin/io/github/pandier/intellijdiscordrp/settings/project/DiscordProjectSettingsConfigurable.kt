@@ -77,6 +77,10 @@ class DiscordProjectSettingsConfigurable(
 
     override fun apply() {
         if (validateAndApply()) {
+            val state = project.discordProjectSettingsComponent.state
+
+            state.templates.invalidate()
+
             val discordService = DiscordService.getInstance()
             discordService.updateBackground()
         }

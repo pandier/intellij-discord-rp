@@ -3,6 +3,8 @@ package io.github.pandier.intellijdiscordrp.settings
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 import io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettings
+import io.github.pandier.intellijdiscordrp.template.Templates
+import io.github.pandier.intellijdiscordrp.template.node.TemplateNode
 
 data class DiscordSettings(
     var autoReconnect: Boolean = true,
@@ -35,6 +37,12 @@ data class DiscordSettings(
     val applicationId: Long
         get() = (if (customApplicationIdEnabled) customApplicationId.toLongOrNull() else null) ?: 1107202385799041054L
 
+    val templates = Templates {
+        child { applicationMode.templates }
+        child { projectMode.templates }
+        child { fileMode.templates }
+    }
+
     data class Mode(
         var name: String = "{app_name}",
         var details: String = "",
@@ -45,14 +53,28 @@ data class DiscordSettings(
         ),
         var smallIcon: Icon = Icon(),
         var timestampTarget: TimestampTargetSetting = TimestampTargetSetting.APPLICATION,
-    )
+    ) {
+        val templates: Templates = Templates {
+            child { largeIcon.templates }
+            child { smallIcon.templates }
+        }
+
+        val nameNode: TemplateNode by templates.add { name }
+        val detailsNode: TemplateNode by templates.add { details }
+        val stateNode: TemplateNode by templates.add { state }
+    }
 
     data class Icon(
         var type: IconType = IconType.HIDDEN,
         var tooltip: String = "",
         var altType: IconType = IconType.HIDDEN,
         var altTooltip: String = "",
-    )
+    ) {
+        val templates: Templates = Templates()
+
+        val tooltipNode: TemplateNode by templates.add { tooltip }
+        val altTooltipNode: TemplateNode by templates.add { altTooltip }
+    }
 
     fun createActivityFactory(mode: ActivityDisplayMode, projectSettings: DiscordProjectSettings?): ActivityFactory? {
         val modeSettings = when (mode) {
@@ -67,8 +89,8 @@ data class DiscordSettings(
             modeSettings = modeSettings,
             logoStyle = logoStyle,
             projectIcon = projectSettings?.icon,
-            buttonText = if (projectSettings?.buttonEnabled == true) projectSettings.buttonText else null,
-            buttonUrl = projectSettings?.buttonUrl ?: "",
+            buttonTextNode = if (projectSettings?.buttonEnabled == true) projectSettings.buttonTextNode else null,
+            buttonUrlNode = projectSettings?.buttonUrlNode,
         )
     }
 }

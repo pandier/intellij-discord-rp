@@ -1,8 +1,5 @@
 package io.github.pandier.intellijdiscordrp.activity
 
-import io.github.pandier.intellijdiscordrp.util.git.git
-import io.github.pandier.intellijdiscordrp.util.formatFileSize
-
 /**
  * Represents an activity display mode.
  */
@@ -10,12 +7,10 @@ enum class ActivityDisplayMode(
     val friendlyName: String,
     val visibilityName: String,
     private val condition: ActivityContext.() -> Boolean = { true },
-    val variables: List<ActivityVariable>,
 ) {
     HIDDEN(
         friendlyName = "Hidden",
         visibilityName = "Hidden",
-        variables = listOf(),
     ),
 
     /**
@@ -24,23 +19,6 @@ enum class ActivityDisplayMode(
     APPLICATION(
         friendlyName = "Application",
         visibilityName = "Application",
-        variables = listOf(
-            ActivityVariable(
-                name = "app_name",
-                description = "Name of the application",
-                getter = { appName }
-            ),
-            ActivityVariable(
-                name = "app_full_name",
-                description = "Name and edition of the application",
-                getter = { appFullName }
-            ),
-            ActivityVariable(
-                name = "app_version",
-                description = "Version of the application",
-                getter = { appVersion }
-            )
-        )
     ),
 
     /**
@@ -49,25 +27,6 @@ enum class ActivityDisplayMode(
     PROJECT(
         friendlyName = "Project",
         visibilityName = "Project",
-        variables = APPLICATION.variables.plus(listOf(
-            ActivityVariable(
-                name = "project_name",
-                description = "Name of the current project",
-                getter = { projectName }
-            ),
-            ActivityVariable(
-                name = "project_repo_url",
-                description = "URL of the current project's Git repository remote",
-                availabilityCheck = { if (git != null) null else "Git plugin not installed" },
-                getter = { projectRepositoryUrl ?: "-" }
-            ),
-            ActivityVariable(
-                name = "project_repo_branch",
-                description = "Name of the current project's Git repository branch",
-                availabilityCheck = { if (git != null) null else "Git plugin not installed" },
-                getter = { projectRepositoryBranch ?: "-" }
-            ),
-        ))
     ),
 
     /**
@@ -77,63 +36,6 @@ enum class ActivityDisplayMode(
         friendlyName = "File",
         visibilityName = "Project and Files",
         condition = { file != null },
-        variables = PROJECT.variables.plus(listOf(
-            ActivityVariable(
-                name = "file_name",
-                description = "Name of the edited file",
-                getter = { file?.name }
-            ),
-            ActivityVariable(
-                name = "file_path",
-                description = "Path of the edited file",
-                getter = { file?.path }
-            ),
-            ActivityVariable(
-                name = "file_type",
-                description = "The determined type of the edited file",
-                getter = { file?.typeName }
-            ),
-            ActivityVariable(
-                name = "file_dir_name",
-                description = "Name of the directory of the edited file",
-                getter = { file?.directoryName }
-            ),
-            ActivityVariable(
-                name = "file_line",
-                description = "Line number of the caret in the edited file",
-                getter = { file?.line?.toString() ?: "-" }
-            ),
-            ActivityVariable(
-                name = "file_line_count",
-                description = "Number of lines of the edited file",
-                getter = { file?.lineCount?.toString() ?: "-" }
-            ),
-            ActivityVariable(
-                name = "file_column",
-                description = "Column number of the caret in the edited file",
-                getter = { file?.column?.toString() ?: "-" }
-            ),
-            ActivityVariable(
-                name = "file_problems_total",
-                description = "Total number of problems (warnings and errors) in the edited file",
-                getter = { file?.problemCount?.total?.toString() }
-            ),
-            ActivityVariable(
-                name = "file_problems_errors",
-                description = "Number of errors in the edited file",
-                getter = { file?.problemCount?.errors?.toString() }
-            ),
-            ActivityVariable(
-                name = "file_problems_warnings",
-                description = "Number of warnings in the edited file",
-                getter = { file?.problemCount?.warnings?.toString() }
-            ),
-            ActivityVariable(
-                name = "file_size",
-                description = "Size of the edited file",
-                getter = { file?.length?.let { formatFileSize(it) } ?: "-" }
-            ),
-        ))
     );
 
     companion object {
@@ -169,15 +71,4 @@ enum class ActivityDisplayMode(
      */
     fun supports(context: ActivityContext): Boolean =
         condition(context)
-
-    /**
-     * Formats the given [string] with all the variables in this display mode.
-     *
-     * @see ActivityVariable.format
-     */
-    fun format(string: String, context: ActivityContext): String {
-        var formatted = string
-        variables.forEach { formatted = it.format(formatted, context) }
-        return formatted
-    }
 }

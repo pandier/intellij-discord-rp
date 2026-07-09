@@ -5,6 +5,7 @@ import io.github.pandier.intellijdiscordrp.settings.DiscordSettings
 import io.github.pandier.intellijdiscordrp.settings.IconType
 import io.github.pandier.intellijdiscordrp.settings.LogoStyleSetting
 import io.github.pandier.intellijdiscordrp.settings.TimestampTargetSetting
+import io.github.pandier.intellijdiscordrp.template.node.TemplateNode
 import io.github.pandier.intellijdiscordrp.util.urlRegex
 import java.time.Instant
 
@@ -22,31 +23,31 @@ class ActivityFactory(
     private val modeSettings: DiscordSettings.Mode,
     private val logoStyle: LogoStyleSetting,
     private val projectIcon: String?,
-    private val buttonText: String?,
-    private val buttonUrl: String,
+    private val buttonTextNode: TemplateNode?,
+    private val buttonUrlNode: TemplateNode?,
 ) {
     fun create(context: ActivityContext): Activity = Activity {
-        name = modeSettings.name.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(1, 128) }
+        name = modeSettings.nameNode.resolve(context, displayMode).fitToRange(1, 128)
 
-        details = modeSettings.details.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
-        state = modeSettings.state.ifEmpty { null }?.let { displayMode.format(it, context).fitToRange(2, 128) }
+        details = modeSettings.detailsNode.resolve(context, displayMode).fitToRange(2, 128)
+        state = modeSettings.stateNode.resolve(context, displayMode).fitToRange(2, 128)
 
         assets {
-            resolveIcon(context, modeSettings.largeIcon)?.let { (image, text) ->
+            resolveIcon(context, modeSettings.largeIcon)?.let { (image, tooltipNode) ->
                 largeImage = image
-                largeText = displayMode.format(text, context).fitToRange(2, 128)
+                largeText = tooltipNode.resolve(context, displayMode).fitToRange(2, 128)
             }
 
-            resolveIcon(context, modeSettings.smallIcon)?.let { (image, text) ->
+            resolveIcon(context, modeSettings.smallIcon)?.let { (image, tooltipNode) ->
                 smallImage = image
-                smallText = displayMode.format(text, context).fitToRange(2, 128)
+                smallText = tooltipNode.resolve(context, displayMode).fitToRange(2, 128)
             }
         }
 
-        if (buttonText != null) {
-            val formattedButtonUrl = displayMode.format(buttonUrl, context).fitToRange(1, 512)
+        if (buttonTextNode != null && buttonUrlNode != null) {
+            val formattedButtonUrl = buttonUrlNode.resolve(context, displayMode).fitToRange(1, 512)
             if (urlRegex.matches(formattedButtonUrl)) {
-                button(displayMode.format(buttonText, context).fitToRange(1, 32), formattedButtonUrl)
+                button(buttonTextNode.resolve(context, displayMode).fitToRange(1, 32), formattedButtonUrl)
             }
         }
 
@@ -58,14 +59,14 @@ class ActivityFactory(
     private fun resolveIcon(
         context: ActivityContext,
         iconSettings: DiscordSettings.Icon,
-    ): Pair<String, String>? = when (iconSettings.type) {
+    ): Pair<String, TemplateNode>? = when (iconSettings.type) {
         IconType.APPLICATION -> when (logoStyle) {
-            LogoStyleSetting.MODERN -> currentActivityApplicationType.modernIcon to iconSettings.tooltip
-            LogoStyleSetting.CLASSIC -> currentActivityApplicationType.classicIcon to iconSettings.tooltip
+            LogoStyleSetting.MODERN -> currentActivityApplicationType.modernIcon to iconSettings.tooltipNode
+            LogoStyleSetting.CLASSIC -> currentActivityApplicationType.classicIcon to iconSettings.tooltipNode
         }
-        IconType.FILE -> context.file?.type?.icon?.let { it to iconSettings.tooltip }
-        IconType.PROJECT -> projectIcon?.takeIf { it.isNotEmpty() }?.let { it to iconSettings.tooltip }
-            ?: resolveIcon(context, DiscordSettings.Icon(type = iconSettings.altType, tooltip = iconSettings.altTooltip, altType = IconType.HIDDEN))
+        IconType.FILE -> context.file?.type?.icon?.let { it to iconSettings.tooltipNode }
+        IconType.PROJECT -> projectIcon?.takeIf { it.isNotEmpty() }?.let { it to iconSettings.tooltipNode }
+            ?: resolveIcon(context, DiscordSettings.Icon(type = iconSettings.altType, tooltip = iconSettings.altTooltip, altType = IconType.HIDDEN)) // TODO: this invalidates templates
         else -> null
     }
 }
