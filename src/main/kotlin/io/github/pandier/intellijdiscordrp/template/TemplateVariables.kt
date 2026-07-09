@@ -1,33 +1,32 @@
 package io.github.pandier.intellijdiscordrp.template
 
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
-import io.github.pandier.intellijdiscordrp.activity.ActivityVariable
 import io.github.pandier.intellijdiscordrp.util.formatFileSize
 import io.github.pandier.intellijdiscordrp.util.git.git
 
 @Suppress("unused")
 object TemplateVariables {
-    private val registry: MutableMap<String, ActivityVariable> = mutableMapOf()
+    private val registry: MutableMap<String, TemplateVariable> = mutableMapOf()
 
     /*
      * APP
      */
 
-    val appName = ActivityVariable(
+    val appName = TemplateVariable(
         name = "app_name",
         description = "Name of the application",
         displayMode = ActivityDisplayMode.APPLICATION,
         getter = { appName }
     ).register()
 
-    val appFullName = ActivityVariable(
+    val appFullName = TemplateVariable(
         name = "app_full_name",
         description = "Name and edition of the application",
         displayMode = ActivityDisplayMode.APPLICATION,
         getter = { appFullName }
     ).register()
 
-    val appVersion = ActivityVariable(
+    val appVersion = TemplateVariable(
         name = "app_version",
         description = "Version of the application",
         displayMode = ActivityDisplayMode.APPLICATION,
@@ -38,14 +37,14 @@ object TemplateVariables {
      * PROJECT
      */
 
-    val projectName = ActivityVariable(
+    val projectName = TemplateVariable(
         name = "project_name",
         displayMode = ActivityDisplayMode.PROJECT,
         description = "Name of the current project",
         getter = { projectName }
     ).register()
 
-    val projectRepoUrl = ActivityVariable(
+    val projectRepoUrl = TemplateVariable(
         name = "project_repo_url",
         description = "URL of the current project's Git repository remote",
         displayMode = ActivityDisplayMode.PROJECT,
@@ -53,7 +52,7 @@ object TemplateVariables {
         getter = { projectRepositoryUrl ?: "-" }
     ).register()
 
-    val projectRepoBranch = ActivityVariable(
+    val projectRepoBranch = TemplateVariable(
         name = "project_repo_branch",
         description = "Name of the current project's Git repository branch",
         displayMode = ActivityDisplayMode.PROJECT,
@@ -65,77 +64,77 @@ object TemplateVariables {
      * FILE
      */
 
-    val fileName = ActivityVariable(
+    val fileName = TemplateVariable(
         name = "file_name",
         description = "Name of the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.name }
     ).register()
 
-    val filePath = ActivityVariable(
+    val filePath = TemplateVariable(
         name = "file_path",
         description = "Path of the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.path }
     ).register()
 
-    val fileType = ActivityVariable(
+    val fileType = TemplateVariable(
         name = "file_type",
         description = "The determined type of the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.typeName }
     ).register()
 
-    val fileDirName = ActivityVariable(
+    val fileDirName = TemplateVariable(
         name = "file_dir_name",
         description = "Name of the directory of the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.directoryName }
     ).register()
 
-    val fileLine = ActivityVariable(
+    val fileLine = TemplateVariable(
         name = "file_line",
         description = "Line number of the caret in the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.line?.toString() ?: "-" }
     ).register()
 
-    val fileLineCount = ActivityVariable(
+    val fileLineCount = TemplateVariable(
         name = "file_line_count",
         description = "Number of lines of the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.lineCount?.toString() ?: "-" }
     ).register()
 
-    val fileColumn = ActivityVariable(
+    val fileColumn = TemplateVariable(
         name = "file_column",
         description = "Column number of the caret in the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.column?.toString() ?: "-" }
     ).register()
 
-    val fileProblemsTotal = ActivityVariable(
+    val fileProblemsTotal = TemplateVariable(
         name = "file_problems_total",
         description = "Total number of problems (warnings and errors) in the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.problemCount?.total?.toString() }
     ).register()
 
-    val fileProblemsError = ActivityVariable(
+    val fileProblemsError = TemplateVariable(
         name = "file_problems_errors",
         description = "Number of errors in the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.problemCount?.errors?.toString() }
     ).register()
 
-    val fileProblemsWarnings = ActivityVariable(
+    val fileProblemsWarnings = TemplateVariable(
         name = "file_problems_warnings",
         description = "Number of warnings in the edited file",
         displayMode = ActivityDisplayMode.FILE,
         getter = { file?.problemCount?.warnings?.toString() }
     ).register()
 
-    val fileSize = ActivityVariable(
+    val fileSize = TemplateVariable(
         name = "file_size",
         description = "Size of the edited file",
         displayMode = ActivityDisplayMode.FILE,
@@ -143,15 +142,15 @@ object TemplateVariables {
     ).register()
 
 
-    fun getByName(name: String): ActivityVariable? {
+    fun getByName(name: String): TemplateVariable? {
         return registry[name.lowercase()]
     }
 
-    fun getAll(): Collection<ActivityVariable> {
+    fun getAll(): Collection<TemplateVariable> {
         return registry.values
     }
 
-    private fun ActivityVariable.register(): ActivityVariable {
+    private fun TemplateVariable.register(): TemplateVariable {
         registry[name.lowercase()] = this
         return this
     }

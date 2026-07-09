@@ -1,12 +1,13 @@
-package io.github.pandier.intellijdiscordrp.activity
+package io.github.pandier.intellijdiscordrp.template
+
+import io.github.pandier.intellijdiscordrp.activity.ActivityContext
+import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
 
 /**
  * Represents a variable that can be used in text fields.
- * All variables are defined in [ActivityDisplayMode].
- *
- * @see ActivityDisplayMode
+ * All variables are defined in [TemplateVariables].
  */
-class ActivityVariable(
+class TemplateVariable(
     val name: String,
     val description: String,
     val displayMode: ActivityDisplayMode,
