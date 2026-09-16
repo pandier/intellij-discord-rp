@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.1] - 2026-09-16
+
 ### Added
 
 - Icons for CUDA and ROCm (HIP) files
@@ -303,7 +305,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release
 
-[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/pandier/intellij-discord-rp/compare/v1.10.1...HEAD
+[1.10.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.9.1...v1.10.0
 [1.9.1]: https://github.com/pandier/intellij-discord-rp/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/pandier/intellij-discord-rp/compare/v1.8.0...v1.9.0
