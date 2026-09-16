@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Icons for CUDA and ROCm (HIP) files
+
 ## [1.10.0] - 2026-04-14
 
 ### Added
