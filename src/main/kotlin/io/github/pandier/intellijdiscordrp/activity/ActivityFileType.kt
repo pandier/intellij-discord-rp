@@ -64,7 +64,7 @@ enum class ActivityFileType(
     ),
     CUDA(
         friendlyName = "CUDA",
-        regex = "^.*\\.cuh?$".toRegex(RegexOption.IGNORE_CASE),
+        extensions = listOf("cu", "cuh"),
         iconFile = "cuda.png"
     ),
     DART(
