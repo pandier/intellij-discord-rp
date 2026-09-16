@@ -129,7 +129,7 @@ enum class ActivityFileType(
     HIP(
         friendlyName = "HIP",
         regex = "^.*\\.hip(\\.cpp)?$".toRegex(RegexOption.IGNORE_CASE),
-        iconFile = "rocm.png"
+        iconFile = "hip.png"
     ),
     HTML(
         friendlyName = "HTML",
