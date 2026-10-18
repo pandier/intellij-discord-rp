@@ -5,6 +5,7 @@ import io.github.pandier.intellijdiscordrp.activity.ActivityFactory
 import io.github.pandier.intellijdiscordrp.settings.project.DiscordProjectSettings
 
 data class DiscordSettings(
+    var enabled: Boolean = true,
     var autoReconnect: Boolean = true,
     var autoReconnectPeriod: Int = 20,
     var customApplicationIdEnabled: Boolean = false,
