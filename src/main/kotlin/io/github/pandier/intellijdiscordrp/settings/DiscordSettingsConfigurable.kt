@@ -5,6 +5,7 @@ import com.intellij.openapi.observable.util.transform
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.ActionLink
+import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.*
 import io.github.pandier.intellijdiscordrp.DiscordRichPresenceBundle
 import io.github.pandier.intellijdiscordrp.activity.ActivityDisplayMode
@@ -139,6 +140,12 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
     override fun createPanel(): DialogPanel = panel {
         val state = discordSettingsComponent.settings
 
+        lateinit var enabled: Cell<JBCheckBox>
+        row {
+            enabled = checkBox(DiscordRichPresenceBundle.message("settings.enabled"))
+                .bindSelected(state::enabled)
+        }
+
         row {
             val idleTimeoutEnabled = checkBox(DiscordRichPresenceBundle.message("settings.focusTimeout"))
                 .bindSelected(state::focusTimeoutEnabled)
@@ -150,7 +157,7 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                 .enabledIf(idleTimeoutEnabled.selected)
             @Suppress("DialogTitleCapitalization")
             label(DiscordRichPresenceBundle.message("settings.focusTimeout.minutes"))
-        }
+        }.enabledIf(enabled.selected)
 
         row {
             label(DiscordRichPresenceBundle.message("settings.defaultVisibility"))
@@ -161,7 +168,7 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                 }, { name ->
                     state.defaultDisplayMode = ActivityDisplayMode.values().find { it.visibilityName == name } ?: ActivityDisplayMode.FILE
                 })
-        }
+        }.enabledIf(enabled.selected)
 
         row {
             label(DiscordRichPresenceBundle.message("settings.logoStyle"))
@@ -170,7 +177,7 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                 .bindItem(state::logoStyle.toNullableProperty())
                 .gap(RightGap.SMALL)
             contextHelp(DiscordRichPresenceBundle.message("settings.logoStyle.context"))
-        }
+        }.enabledIf(enabled.selected)
 
         group(DiscordRichPresenceBundle.message("settings.group.display")) {
             tabbed {
@@ -195,7 +202,7 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                     timestampTargets = listOf(TimestampTargetSetting.APPLICATION, TimestampTargetSetting.PROJECT, TimestampTargetSetting.FILE),
                 )
             }
-        }
+        }.enabledIf(enabled.selected)
 
         group(DiscordRichPresenceBundle.message("settings.group.advanced")) {
             row {
@@ -224,7 +231,7 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                     .errorOnApply(DiscordRichPresenceBundle.message("dialog.validation.invalidId")) { it.isEnabled && it.text.toULongOrNull() == null }
                     .required()
             }
-        }
+        }.enabledIf(enabled.selected)
 
         row {
             cell(ActionLink(DiscordRichPresenceBundle.message("settings.reset")) {
@@ -253,12 +260,8 @@ class DiscordSettingsConfigurable : DslConfigurable(DiscordRichPresenceBundle.me
                 discordService.client.changeAutoReconnect(state.autoReconnect, state.autoReconnectPeriod.seconds)
 
                 // do a full reconnect only if we need to, otherwise just ensure that we're connected
-                @Suppress("DeferredResultUnused")
-                if (discordService.client.changeClientId(state.applicationId)) {
-                    discordService.client.reconnect()
-                } else {
-                    discordService.client.connect()
-                }
+                val reconnect = discordService.client.changeClientId(state.applicationId)
+                discordService.updateConnectionState(reconnect)
 
                 discordService.update()
             }

@@ -112,6 +112,7 @@ class ActivityContext(
         settings: DiscordSettings,
         projectSettings: DiscordProjectSettings,
     ): Activity? {
+        if (!settings.enabled) return null
         val displayMode = ActivityDisplayMode.getSupportedFrom(
             projectSettings.displayMode ?: settings.defaultDisplayMode,
             this

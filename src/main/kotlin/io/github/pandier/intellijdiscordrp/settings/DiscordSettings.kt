@@ -7,6 +7,7 @@ import io.github.pandier.intellijdiscordrp.template.Templates
 import io.github.pandier.intellijdiscordrp.template.node.TemplateNode
 
 data class DiscordSettings(
+    var enabled: Boolean = true,
     var autoReconnect: Boolean = true,
     var autoReconnectPeriod: Int = 20,
     var customApplicationIdEnabled: Boolean = false,

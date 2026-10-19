@@ -62,6 +62,11 @@ enum class ActivityFileType(
         extensions = listOf("csv"),
         iconFile = "database.png"
     ),
+    CUDA(
+        friendlyName = "CUDA",
+        extensions = listOf("cu", "cuh"),
+        iconFile = "cuda.png"
+    ),
     DART(
         friendlyName = "Dart",
         typeNames = listOf("dart"),
@@ -120,6 +125,11 @@ enum class ActivityFileType(
         typeNames = listOf("groovy"),
         extensions = listOf("groovy", "gy"),
         iconFile = "groovy.png"
+    ),
+    HIP(
+        friendlyName = "HIP",
+        regex = "^.*\\.hip(\\.cpp)?$".toRegex(RegexOption.IGNORE_CASE),
+        iconFile = "hip.png"
     ),
     HTML(
         friendlyName = "HTML",

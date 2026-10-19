@@ -74,7 +74,7 @@ class DiscordService(
         eventMulticasterEx?.addCaretListener(RichPresenceCaretListener, this)
 
         // Connect to Discord client
-        client.connect()
+        updateConnectionState()
 
         // Initialize the idle timeout service
         FocusTimeoutService.getInstance()
@@ -197,6 +197,23 @@ class DiscordService(
     suspend fun update() {
         mutex.withLock<Unit> {
             client.update(activityContext?.createActivity())
+        }
+    }
+
+    /**
+     * Connects or disconnects the client depending on the "Enable Rich Presence" setting.
+     *
+     * If [reconnect] is true, the client will try to reconnect if it's already connected.
+     */
+    fun updateConnectionState(reconnect: Boolean = false) {
+        if (discordSettingsComponent.settings.enabled) {
+            if (reconnect) {
+                client.reconnect()
+            } else {
+                client.connect()
+            }
+        } else {
+            client.disconnect()
         }
     }
 
