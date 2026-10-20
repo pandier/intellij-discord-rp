@@ -5,78 +5,82 @@ import io.github.pandier.intellijdiscordrp.template.node.TemplateNode
 import io.github.pandier.intellijdiscordrp.template.node.TemplateTextNode
 import io.github.pandier.intellijdiscordrp.template.node.TemplateVariableNode
 
-object TemplateParser {
-    class Input(val string: String) {
-        var index = 0
+const val TEMPLATE_ALLOWED_CHARS: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
 
-        fun readUntil(char: Char): String {
-            var end = string.indexOf(char, index)
-            if (end < 0) end = string.length
-            val result = string.substring(index, end)
-            index = end
-            return result
-        }
+class TemplateParser(val string: String) {
+    private var cursor = 0
 
-        fun readChar(): Char? {
-            if (!hasRemaining()) return null
-            return string[index++]
-        }
-
-        fun peekChar(): Char? {
-            if (!hasRemaining()) return null
-            return string[index]
-        }
-
-        fun hasRemaining(): Boolean {
-            return index < string.length
+    companion object {
+        fun parse(string: String): TemplateNode {
+            return TemplateParser(string).parse()
         }
     }
 
-    fun parse(string: String): TemplateNode {
-        return parse(Input(string))
-    }
+    fun parse(): TemplateNode {
+        val nodes = mutableListOf<TemplateNode>()
 
-    fun parse(input: Input): TemplateNode {
-        val nodes: MutableList<TemplateNode> = mutableListOf()
-        val text: StringBuilder = StringBuilder()
+        val text = StringBuilder()
 
-        while (input.hasRemaining()) {
-            text.append(input.readUntil('{'))
+        outer@ while (true) {
+            text.append(readUntil('{'))
 
-            val start = input.index
+            val start = cursor
 
-            input.readChar()
+            if (read() == null) break // eof
 
-            if (input.peekChar() == '{') {
-                input.readChar()
+            // {{ = {
+            if (peek() == '{') {
+                read()
                 text.append('{')
                 continue
             }
 
-            val variableName = input.readUntil('}')
-
-            if (input.readChar() != '}') {
-                text.append(input.string.substring(start, input.index))
-                continue
+            while (true) {
+                val ch = read()
+                if (ch == null) { // eof
+                    text.append(string.substring(start))
+                    break@outer
+                } else if (ch == '}') {
+                    break
+                } else if (ch !in TEMPLATE_ALLOWED_CHARS) {
+                    text.append(string.substring(start, cursor))
+                    continue@outer
+                }
             }
 
-            val variable = TemplateVariables.getByName(variableName) ?: continue
+            val name = string.substring(start + 1, cursor - 1)
+            val variable = TemplateVariables.getByName(name) ?: continue
 
-            if (!text.isEmpty()) {
+            if (text.isNotEmpty()) {
                 nodes.add(TemplateTextNode(text.toString().replace("}}", "}")))
+                text.clear()
             }
-
             nodes.add(TemplateVariableNode(variable))
-            text.clear()
         }
 
-        if (!text.isEmpty()) {
+        if (text.isNotEmpty()) {
             nodes.add(TemplateTextNode(text.toString().replace("}}", "}")))
         }
 
-        if (nodes.size == 1) {
-            return nodes.first()
-        }
+        if (nodes.size == 1) return nodes[0]
         return TemplateCompositeNode(nodes)
+    }
+
+    private fun readUntil(char: Char): String {
+        var end = string.indexOf(char, cursor)
+        if (end < 0) end = string.length
+        val result = string.substring(cursor, end)
+        cursor = end
+        return result
+    }
+
+    private fun read(): Char? {
+        if (cursor >= string.length) return null
+        return string[cursor++]
+    }
+
+    private fun peek(): Char? {
+        if (cursor >= string.length) return null
+        return string[cursor]
     }
 }

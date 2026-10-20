@@ -49,7 +49,7 @@ object TemplateVariables {
         description = "URL of the current project's Git repository remote",
         displayMode = ActivityDisplayMode.PROJECT,
         availabilityCheck = { if (git != null) null else "Git plugin not installed" },
-        getter = { projectRepositoryUrl ?: "-" }
+        getter = { projectRepositoryUrl }
     ).register()
 
     val projectRepoBranch = TemplateVariable(
@@ -57,7 +57,7 @@ object TemplateVariables {
         description = "Name of the current project's Git repository branch",
         displayMode = ActivityDisplayMode.PROJECT,
         availabilityCheck = { if (git != null) null else "Git plugin not installed" },
-        getter = { projectRepositoryBranch ?: "-" }
+        getter = { projectRepositoryBranch }
     ).register()
 
     /*
@@ -96,21 +96,21 @@ object TemplateVariables {
         name = "file_line",
         description = "Line number of the caret in the edited file",
         displayMode = ActivityDisplayMode.FILE,
-        getter = { file?.line?.toString() ?: "-" }
+        getter = { file?.line?.toString() }
     ).register()
 
     val fileLineCount = TemplateVariable(
         name = "file_line_count",
         description = "Number of lines of the edited file",
         displayMode = ActivityDisplayMode.FILE,
-        getter = { file?.lineCount?.toString() ?: "-" }
+        getter = { file?.lineCount?.toString() }
     ).register()
 
     val fileColumn = TemplateVariable(
         name = "file_column",
         description = "Column number of the caret in the edited file",
         displayMode = ActivityDisplayMode.FILE,
-        getter = { file?.column?.toString() ?: "-" }
+        getter = { file?.column?.toString() }
     ).register()
 
     val fileProblemsTotal = TemplateVariable(
@@ -138,7 +138,7 @@ object TemplateVariables {
         name = "file_size",
         description = "Size of the edited file",
         displayMode = ActivityDisplayMode.FILE,
-        getter = { file?.length?.let { formatFileSize(it) } ?: "-" }
+        getter = { file?.length?.let { formatFileSize(it) } }
     ).register()
 
 

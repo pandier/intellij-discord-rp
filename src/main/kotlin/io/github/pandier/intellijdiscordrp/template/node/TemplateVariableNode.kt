@@ -9,7 +9,7 @@ data class TemplateVariableNode(
 ) : TemplateNode {
     override fun resolve(context: ActivityContext, displayMode: ActivityDisplayMode): String {
         if (!variable.supports(displayMode)) return ""
-        return variable.getValue(context) ?: ""
+        return variable.getValue(context) ?: "-"
     }
 
     override fun toString(): String {
